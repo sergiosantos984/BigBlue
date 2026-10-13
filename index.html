@@ -889,6 +889,26 @@ body.theme-light .chart .grid line{stroke:rgba(183,190,195,.35)}
 body.theme-light .chart .axis{stroke:var(--vt-cool)}
 @media (min-width:1024px){body.theme-light #nav button[aria-current="page"]{background:var(--vt-maroon);color:var(--vt-white)}}
 
+/* ---------- in-app technique video player ---------- */
+.vstage{position:relative;width:100%;aspect-ratio:16/9;border-radius:14px;overflow:hidden;background:#000}
+.vstage.short{aspect-ratio:9/16;max-height:62vh;width:auto;margin:0 auto;max-width:100%}
+.vframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vload{position:absolute;inset:0;z-index:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:18px;text-align:center;color:#FFFFFF;background:var(--g-dark);font-size:14px;pointer-events:none}
+.vload.fail{pointer-events:auto}
+.vload.fail span{color:rgba(255,255,255,.75);font-size:13px;max-width:30ch}
+.vload a.btn{margin-top:4px}
+.vspin{width:34px;height:34px;border-radius:50%;border:3px solid rgba(255,255,255,.2);border-top-color:var(--vt-orange)}
+body.amb .vspin{animation:spin .9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.vbtn svg,.vbtn i[data-lucide]{width:14px;height:14px}
+.excard .vbtn{background:var(--vt-orange)!important;color:var(--vt-charcoal)!important;border-color:var(--vt-orange)!important;font-weight:700}
+.vdot{display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;background:var(--vt-orange);color:var(--vt-charcoal);flex:none;vertical-align:middle}
+.vdot svg,.vdot i[data-lucide]{width:11px;height:11px}
+.wlist button{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px;color:var(--vt-maroon);font-weight:600;text-decoration:underline;text-underline-offset:3px}
+body:not(.theme-light) .wlist button{color:var(--vt-lorange)}
+.wlist button:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:4px}
+.vload a.btn{text-decoration:none}
+
 </style>
 </head>
 <body>
@@ -2400,7 +2420,7 @@ const Screens = {
     });
     const ico = { strength: 'dumbbell', conditioning: 'wind', agility: 'footprints', core: 'shield', test: 'flag', recovery: 'heart-pulse' };
     if (!items.length) return `<div class="empty"><span class="display">No matches</span><span>Try another search or clear a filter.</span><button class="btn sm" type="button" data-act="lib-clear">Clear filters</button></div>`;
-    return `<div class="label" style="margin-bottom:4px">${items.length} exercises</div>` + items.map(([id, e]) => `<button class="lib-item" type="button" data-act="exinfo" data-id="${id}"><span class="lib-ico">${icon(ico[e.cat] || 'dumbbell')}</span><span class="grow"><b style="display:block">${esc(e.name)}</b><span class="muted" style="font-size:12.5px">${esc(e.cat)} · ${esc(e.muscles || '')} · in ${(used[id] || []).length} workouts</span></span>${e.cat === 'core' && State.program.source === 'sample' ? '<span class="badge warn">Sample</span>' : ''}${icon('chevron-right')}</button>`).join('');
+    return `<div class="label" style="margin-bottom:4px">${items.length} exercises</div>` + items.map(([id, e]) => `<button class="lib-item" type="button" data-act="exinfo" data-id="${id}"><span class="lib-ico">${icon(ico[e.cat] || 'dumbbell')}</span><span class="grow"><b style="display:block">${esc(e.name)} ${Video.dot(id)}</b><span class="muted" style="font-size:12.5px">${esc(e.cat)} · ${esc(e.muscles || '')} · in ${(used[id] || []).length} workouts</span></span>${e.cat === 'core' && State.program.source === 'sample' ? '<span class="badge warn">Sample</span>' : ''}${icon('chevron-right')}</button>`).join('');
   },
   calc() {
     const f = UI.ui, lift = f.calcLift, ref0 = Calc.refFor(lift), u = unitW();
@@ -2470,12 +2490,12 @@ const Screens = {
         <div class="ex-tabs" role="tablist" aria-label="Exercises">${s.ex.map((z, i) => `<button type="button" role="tab" class="ex-tab ${i === ei ? 'cur' : ''} ${z.skipped ? 'skip' : exDone(z) ? 'done' : ''}" data-act="ex-go" data-i="${i}" aria-selected="${i === ei}" aria-label="Exercise ${i + 1}: ${esc(z.name)}${exDone(z) && !z.skipped ? ', done' : ''}">${exDone(z) && !z.skipped ? icon('check') : i + 1}</button>`).join('')}</div>
       </header>
       ${s.pausedAt ? `<div class="resume-banner">${icon('pause')}<div class="grow"><b>Clock paused.</b> You can still log sets.</div><button class="btn sm" type="button" data-act="pause">Resume</button></div>` : ''}
-      ${(() => { const w = Program.byId(s.tid); return w && w.warmup && w.warmup.length ? `<details class="panel flat warmup"><summary class="label" style="cursor:pointer">${icon('flame')} Pre-workout · ${w.warmup.length} drills</summary><ol class="wlist">${w.warmup.map(d => `<li>${esc(d)}</li>`).join('')}</ol></details>` : ''; })()}
+      ${(() => { const w = Program.byId(s.tid); return w && w.warmup && w.warmup.length ? `<details class="panel flat warmup"><summary class="label" style="cursor:pointer">${icon('flame')} Pre-workout · ${w.warmup.length} drills</summary><ol class="wlist">${w.warmup.map(d => `<li>${Video.forDrill(d) ? `<button type="button" data-act="video-drill" data-name="${esc(d)}">${icon('play')}${esc(d)}</button>` : esc(d)}</li>`).join('')}</ol></details>` : ''; })()}
       <div class="exstage"><article class="excard" aria-label="Current exercise">
         <div class="spread"><span class="label" data-rev>${esc(x.cat)} · ${ei + 1} of ${s.ex.length}</span>${x.skipped ? '<span class="badge">Skipped</span>' : ''}</div>
         <h2 class="ex-name" data-rev>${esc(x.name)}</h2>${focal}${sub}
         <div class="presc" data-rev>${esc(x.presc)}</div>${x.pNote ? `<div class="muted" data-rev style="font-size:14px;margin-top:4px">${esc(x.pNote)}</div>` : ''}
-        <div class="row wrap" data-rev style="margin-top:8px">${x.rest ? `<span class="badge">${icon('timer')} Rest ${fmtDur(x.rest * 1000)}</span>` : ''}${last ? `<span class="badge blue">Last: ${esc(last)}</span>` : ''}${flags}${roundedUp}</div>
+        <div class="row wrap" data-rev style="margin-top:8px">${Video.btn(x.exId, 'Watch how')}${x.rest ? `<span class="badge">${icon('timer')} Rest ${fmtDur(x.rest * 1000)}</span>` : ''}${last ? `<span class="badge blue">Last: ${esc(last)}</span>` : ''}${flags}${roundedUp}</div>
         <details style="margin-top:10px"><summary class="label" style="cursor:pointer">Technique notes</summary><p class="muted" style="margin-top:6px;font-size:14px">${esc(Program.exDef(x.exId).notes || '—')}</p></details>
       </article></div>
       <div class="sets" aria-label="Sets">${sets}</div>
@@ -2795,7 +2815,7 @@ const Sheets = {
     const exs = w.exercises.map(e => {
       const def = Program.exDef(e.ex); let tg = '';
       if (e.type === 'pct') { const ref = Calc.refFor(def.lift); tg = ref ? e.scheme.map(([r, p]) => { const t = Calc.target(ref, p); return `<span class="badge ${p > 100 ? 'red' : ''}">${r}×${fmtNum(t.rounded, 2)}${p > 100 ? ' · ' + p + '%' : ''}</span>`; }).join(' ') : `<span class="badge warn">No ${LIFTS[def.lift].name} baseline</span>`; }
-      return `<div class="list-item" style="align-items:flex-start"><div class="lib-ico">${icon({ strength: 'dumbbell', conditioning: 'wind', agility: 'footprints', core: 'shield', test: 'flag', recovery: 'heart-pulse' }[def.cat] || 'dumbbell')}</div><div class="grow"><b>${esc(def.name)}</b><div class="muted" style="font-size:12.5px">${Workout.prescText(e)}${e.rest ? ' · rest ' + fmtDur(e.rest * 1000) : ''} · ${esc(def.equip)}</div>${tg ? `<div class="row wrap" style="margin-top:6px;gap:4px">${tg}</div>` : ''}</div></div>`;
+      return `<div class="list-item" style="align-items:flex-start"><div class="lib-ico">${icon({ strength: 'dumbbell', conditioning: 'wind', agility: 'footprints', core: 'shield', test: 'flag', recovery: 'heart-pulse' }[def.cat] || 'dumbbell')}</div><div class="grow"><b>${esc(e.title || def.name)}</b><div class="muted" style="font-size:12.5px">${Workout.prescText(e)}${e.rest ? ' · rest ' + fmtDur(e.rest * 1000) : ''} · ${esc(def.equip)}</div>${tg ? `<div class="row wrap" style="margin-top:6px;gap:4px">${tg}</div>` : ''}</div>${Video.btn(e.ex, 'Video', 'btn sm icon-ish')}</div>`;
     }).join('');
     const isAct = act && act.tid === tid;
     Sheet.open({
@@ -2816,7 +2836,7 @@ const Sheets = {
     const ref = e.lift ? Calc.refFor(e.lift) : null;
     const hist = State.sessions.filter(s => s.status === 'completed').flatMap(s => s.ex.filter(x => x.exId === id && x.sets.some(t => t.done)).map(x => ({ s, x }))).sort((a, b) => b.s.date.localeCompare(a.s.date));
     Sheet.open({
-      title: e.name, html: `<div class="row wrap"><span class="badge blue">${esc(e.cat)}</span><span class="badge">${esc(e.equip)}</span>${e.muscles ? `<span class="badge">${esc(e.muscles)}</span>` : ''}${e.cat === 'core' && State.program.source === 'sample' ? '<span class="badge warn">Sample</span>' : ''}</div>
+      title: e.name, html: `${Video.btn(id, 'Watch technique video', 'btn primary block')}<div class="row wrap"><span class="badge blue">${esc(e.cat)}</span><span class="badge">${esc(e.equip)}</span>${e.muscles ? `<span class="badge">${esc(e.muscles)}</span>` : ''}${e.cat === 'core' && State.program.source === 'sample' ? '<span class="badge warn">Sample</span>' : ''}</div>
       <div><div class="label">Technique</div><p style="margin-top:4px">${esc(e.notes || '—')}</p></div>
       ${e.lift ? `<div class="kv"><span>Reference max</span><span>${ref ? `${Units.fmtW(ref.w)} ${u} · ${Calc.clsLabel(ref.cls)}` : 'Not set'}</span></div>` : ''}
       ${uses.length ? `<div><div class="label" style="margin-bottom:6px">Prescribed in the program</div><div class="tbl-wrap"><table class="tbl"><thead><tr><th>Wk·Day</th><th>Work</th><th>Target</th></tr></thead><tbody>${uses.map(({ w, x }) => { let tg = '—'; if (x.type === 'pct') { const t = ref && Calc.target(ref, x.scheme[x.scheme.length - 1][1]); tg = t ? `top ${fmtNum(t.rounded, 2)} ${u}` : 'needs baseline'; } return `<tr><td>W${w.week}·D${w.day}</td><td style="white-space:normal">${Workout.prescText(x)}</td><td>${tg}</td></tr>`; }).join('')}</tbody></table></div></div>` : '<p class="muted">Not scheduled in the current program.</p>'}
@@ -2997,6 +3017,8 @@ const Actions = {
   go: el => { const r = el.dataset.r, p = el.dataset.p || null; if (el.dataset.close) Sheet.close(); Nav.go(r, p, { replace: r === UI.route.name }); },
   start: el => { if (el.dataset.close) Sheet.close(); Workout.start(el.dataset.id); },
   preview: el => Sheets.preview(el.dataset.id),
+  video: el => Video.open(el.dataset.ex),
+  'video-drill': el => Video.open(null, el.dataset.name, Video.forDrill(el.dataset.name)),
   'go-week': el => { UI.ui.selWeek = +el.dataset.w; Nav.go('training', 'journey', { replace: UI.route.name === 'training' }); setTimeout(() => { const d = $('#weekDetail'); d && d.scrollIntoView({ behavior: Motion.off ? 'auto' : 'smooth', block: 'start' }); }, Motion.off ? 0 : 500); },
   'q-prev': () => Quotes.go(-1), 'q-next': () => Quotes.go(1), 'q-pause': el => Quotes.togglePause(el),
   exinfo: el => Sheets.exInfo(el.dataset.id),
@@ -3731,6 +3753,71 @@ const Awards = {
       <p class="muted" style="font-size:12.5px;margin-top:8px">Each level must reach the total. All Maroon requirements come first; Orange then needs 3 lifts, Hokie 2, Iron Hokie 1; Super Iron Hokie needs every Iron Hokie lift and the total. ${e.passed ? '<b>16 × 110 test passed</b>, so you are eligible.' : 'You must pass the 16 × 110 conditioning test to be eligible.'} Uses tested or recorded maxes only, never estimates.</p>
     </section>`;
   }
+};
+
+/* Technique videos linked in Cliff's "VT Workout" document, keyed by library id; [YouTube id, s=Short (vertical) | v=video] */
+const VIDEOS = {"jump_rope":[["FJmRQ5iTXKE","v"]],"dot_drills":[["PR7s4nXtWSw","v"]],"speed_ladder":[["VE9K9w6rOmM","v"]],"bench_press":[["_FkbD0FhgVE","s"]],"test_bench":[["_FkbD0FhgVE","s"]],"incline_bench_press":[["98HWfiRonkE","s"]],"standing_military_press":[["_cfNP_VXs_U","v"]],"back_squat":[["Akd5xmZlsvg","v"]],"test_squat":[["Akd5xmZlsvg","v"]],"lateral_squat":[["KAjqdl-tJ0w","v"]],"one_arm_dumbbell_row":[["IOy2k0Cb6Vo","v"],["yHqqGd0tXcw","s"]],"reverse_hyperextension":[["ROV6iVsSJSE","v"]],"glute_ham_raises":[["1TlhdiFSJrU","v"]],"abc_sit_ups":[["2kshXvw7n-4","v"]],"abcs":[["2kshXvw7n-4","v"]],"hang_clean_front_squat_combo":[["mK2TLGURoV4","v"]],"power_shrugs":[["96NFt3oTvpI","v"]],"dumbbell_incline_bench":[["JHFd-e2_M8E","v"]],"barbell_lying_tricep_extension":[["trVzEReByPg","v"]],"medicine_ball_plyo_pushups":[["6A4w-J-uyO8","v"]],"flutter_kick":[["bfMYh_-o8qA","v"]],"flutter_kicks":[["bfMYh_-o8qA","v"]],"bicycle_abs":[["VaL7XWK3MVE","v"]],"olympic_deadlift_to_knee":[["3QzHYVfVjA4","v"]],"clean_pulls":[["xx8WkFrST2Y","v"]],"barbell_lunges":[["bBrBLS7aejI","v"]],"box_step_ups":[["Bpbs8Aakw4A","v"]],"pullups":[["eDP_OOhMTZ4","s"]],"bar_hang":[["3CEmHJXbNpc","v"]],"jump_shrug":[["3z_XoJO-8lA","v"]],"snatch_high_pulls":[["SW8SRE0ayXY","v"]],"hang_snatch":[["Php-RclQ1yU","v"]],"dumbbell_bench_press":[["QHkm4xzvHlY","v"]],"incline_dumbbell_curls":[["V8H4k8lquiU","v"]],"weighted_dips":[["22JPetRuHqE","v"],["dij0l_pL0z8","s"]],"clapping_push_ups":[["EYwWCgM198U","v"]],"push_press":[["yklSQG1_Ovc","v"]],"dumbbell_alternate_bench_press":[["-umNkuKth1U","v"]],"one_dumbbell_pullovers":[["tpLnfSQJ0gg","v"]],"power_snatch":[["ydHHsju1-Nc","v"]],"single_leg_leg_press":[["3aYsOsBA7ZE","v"]],"dumbbell_lying_tricep_extension":[["P4H5p4HoJeI","v"]],"neck_iso_with_partner":[["kwKq9n8ima4","v"]],"neck_machine":[["ITSlkMDB_Fc","v"]],"medicine_ball_partner_sit_up_throws":[["ncnmxBvkQuo","v"]],"two_man_medicine_ball_sit_up_pass":[["ncnmxBvkQuo","v"]],"power_clean":[["YG8M_-11C2A","v"]],"test_clean":[["YG8M_-11C2A","v"]],"front_squat":[["Q1R0_CbgHpc","v"]],"body_weight_dips":[["sg3PTIA3rXI","v"],["4ua3MzaU0QU","s"]],"push_jerk":[["Om7vLD6x8W0","v"]],"test_jerk":[["Om7vLD6x8W0","v"]],"towel_pullups":[["Z6o1sy-sw_I","v"]],"lying_tricep_extension_with_curl_bar":[["gWu_wIn6sA0","v"]],"speed_squats":[["ZA14FPIZJM8","v"],["Akd5xmZlsvg","v"]],"close_grip_bench_with_chains":[["rFo1t4L2Gyk","v"],["43rg7fBNP2w","s"]],"series_box_jumps":[["cLSB_Zn0awM","v"]],"seated_plate_raises":[["-7AnQEQRUjs","v"]],"hanging_leg_raises":[["hGTni2P_vZg","s"]],"twisting_sit_ups":[["NscWraLOOCs","s"]],"barbell_curls":[["OTnpHe1zDrw","s"]],"curls":[["OTnpHe1zDrw","s"],["FHY_2t7R714","s"]],"lat_pulldowns":[["5YC67yVpBGE","v"],["bNmvKpJSWKM","s"]],"bear_calf_raises":[["1cvpm--Y-4I","s"]],"crunches":[["PAdTfrpgWos","v"]],"seated_dumbbell_shoulder_press":[["JGOKmqFwzEg","s"]],"seated_barbell_shoulder_press":[["lLaa7lqJfWI","v"]],"@pnf":[["Jw3bcaQBs14","v"]],"@toe":[["Gb0kNF19NfY","v"]],"@knee":[["s2emWIC58bI","v"]],"@butt":[["D_qMNWY0tHo","v"]],"@shuffle":[["ysv-XsCrb4s","v"]],"@aseries":[["y6hBI3DEe6Y","v"]],"@fastleg":[["6RAQJuM8r2s","v"]]};
+
+/* ============ IN-APP TECHNIQUE VIDEOS ============
+   Videos play inside the app in a bottom sheet (youtube-nocookie embed, inline on phones),
+   so Cliff never leaves the workout: the clock, rest timer and logged sets keep going.
+   Where a host blocks embedded players (for example a preview frame), the sheet says so
+   after a few seconds and offers the YouTube link as a fallback. */
+const WARMUP_VIDEO = [
+  [/pnf/i, '@pnf'], [/toe touch/i, '@toe'], [/knee hug/i, '@knee'], [/butt kick/i, '@butt'], [/low shuffle/i, '@shuffle'],
+  [/a-series|a-skips|a-runs/i, '@aseries'], [/fast leg/i, '@fastleg']
+];
+const Video = {
+  for(exId) { return VIDEOS[exId] || (VT_AB_ALIAS[exId] && VIDEOS[VT_AB_ALIAS[exId]]) || null; },
+  forDrill(name) { const m = WARMUP_VIDEO.find(([re]) => re.test(name)); return m ? VIDEOS[m[1]] : null; },
+  btn(exId, label = 'Watch how', cls = 'btn sm') { return this.for(exId) ? `<button type="button" class="${cls} vbtn" data-act="video" data-ex="${esc(exId)}">${icon('play')} ${esc(label)}</button>` : ''; },
+  dot(exId) { return this.for(exId) ? `<span class="vdot" title="Technique video" aria-label="Has technique video">${icon('play')}</span>` : ''; },
+  url(id, short) { return short ? `https://www.youtube.com/shorts/${id}` : `https://www.youtube.com/watch?v=${id}`; },
+  src(id) {
+    const o = /^https?:/.test(location.origin) ? `&origin=${encodeURIComponent(location.origin)}` : '';
+    return `https://www.youtube-nocookie.com/embed/${id}?playsinline=1&rel=0&modestbranding=1&enablejsapi=1&autoplay=1${o}`;
+  },
+  open(exId, title, list) {
+    list = list || this.for(exId); if (!list || !list.length) return;
+    const def = exId ? Program.exDef(exId) : null;
+    const name = title || (def ? def.name : 'Technique');
+    const notes = def && def.notes && !/^Not described/.test(def.notes) ? def.notes : '';
+    Sheet.open({
+      title: name,
+      html: `<div class="vstage ${list[0][1] === 's' ? 'short' : ''}" id="vStage"><div class="vload" id="vLoad"><span class="vspin"></span><span>Loading video…</span></div></div>
+        ${list.length > 1 ? `<div class="chips" style="margin:0">${list.map((v, i) => `<button type="button" class="chip" data-vi="${i}" aria-pressed="${i === 0}">Video ${i + 1}${v[1] === 's' ? ' · short' : ''}</button>`).join('')}</div>` : ''}
+        ${Workout.active() ? `<p class="muted" style="font-size:12.5px">${icon('timer')} Your workout clock and rest timer keep running while you watch.</p>` : ''}
+        ${notes ? `<details class="panel flat"><summary class="label" style="cursor:pointer">Coaching points from the book</summary><p style="margin-top:6px;font-size:14px">${esc(notes)}</p></details>` : ''}
+        <p class="muted" style="font-size:12px">Videos from Cliff's VT Workout document, played from YouTube.</p>`,
+      onMount: sh => {
+        this.load(list[0], sh);
+        $$('[data-vi]', sh).forEach(b => b.onclick = () => { $$('[data-vi]', sh).forEach(x => x.setAttribute('aria-pressed', x === b)); this.load(list[+b.dataset.vi], sh); });
+      },
+      onClose: () => this.stop()
+    });
+  },
+  load([id, kind], sh) {
+    this.stop();
+    const stage = $('#vStage', sh); stage.classList.toggle('short', kind === 's');
+    stage.innerHTML = `<div class="vload" id="vLoad"><span class="vspin"></span><span>Loading video…</span></div>`;
+    const f = document.createElement('iframe');
+    f.className = 'vframe'; f.title = 'Technique video'; f.allow = 'autoplay; encrypted-media; picture-in-picture; fullscreen'; f.allowFullscreen = true;
+    f.referrerPolicy = 'strict-origin-when-cross-origin'; f.src = this.src(id);
+    stage.appendChild(f);
+    this.ok = false;
+    // the YouTube player talks back via postMessage once it is running; silence means the embed was blocked
+    this.onMsg = e => { if (/youtube(-nocookie)?\.com$/.test((() => { try { return new URL(e.origin).hostname; } catch (x) { return ''; } })())) { this.ok = true; const l = $('#vLoad'); l && l.remove(); } };
+    addEventListener('message', this.onMsg);
+    f.addEventListener('load', () => { try { f.contentWindow.postMessage(JSON.stringify({ event: 'listening', id: 1, channel: 'widget' }), '*'); } catch (x) { } });
+    this.timer = setTimeout(() => {
+      if (this.ok) return;
+      const l = $('#vLoad'); if (!l) return;
+      l.classList.add('fail');
+      l.innerHTML = `${icon('circle-alert')}<b>The video can't play in this view.</b><span>Some previews block embedded players. In the installed app it plays right here. For now you can open it on YouTube.</span><a class="btn sm primary" href="${this.url(id, kind === 's')}" target="_blank" rel="noopener">${icon('play')} Open on YouTube</a>`;
+      UI.icons(l);
+    }, 6000);
+  },
+  stop() { clearTimeout(this.timer); if (this.onMsg) removeEventListener('message', this.onMsg); this.onMsg = null; const f = $('.vframe'); if (f) f.src = 'about:blank'; }
 };
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
