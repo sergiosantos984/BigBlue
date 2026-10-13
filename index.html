@@ -909,6 +909,45 @@ body:not(.theme-light) .wlist button{color:var(--vt-lorange)}
 .wlist button:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:4px}
 .vload a.btn{text-decoration:none}
 
+/* ---------- nutrition ---------- */
+.nutri-line{font-size:14.5px;margin:10px 0}
+.water-row{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.glasses{display:flex;gap:5px;flex:1;min-width:0}
+.glass{flex:1;height:26px;max-width:26px;border-radius:3px 3px 7px 7px;border:2px solid var(--vt-cool);background:transparent;padding:0;position:relative;overflow:hidden}
+.glass.on{border-color:var(--info);background:linear-gradient(0deg,rgba(25,118,210,.75),rgba(25,118,210,.35))}
+body.amb .glass.on{animation:barGrow .5s var(--ease-out) both}
+.glasses.big{gap:8px;margin:10px 0}.glasses.big .glass{height:46px;max-width:40px;cursor:pointer}
+.nbox{padding:12px;border-radius:12px;border:1px solid var(--line);font-size:14px;display:flex;flex-direction:column;gap:6px;opacity:.75}
+.nbox.on{opacity:1;border-color:var(--vt-orange);box-shadow:0 0 0 1px var(--vt-orange)}
+.medal-podium{display:flex;align-items:flex-end;gap:8px;justify-content:center;height:110px}
+.pod{width:30%;max-width:110px;border-radius:10px 10px 4px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#1A1D20;font-family:var(--f-display);text-transform:uppercase}
+.pod b{font-size:26px;line-height:1}.pod span{font-size:13px;letter-spacing:.1em}
+.pod.gold{height:100%;background:linear-gradient(180deg,#E9C75A,#C9A227);order:2}.pod.silver{height:78%;background:linear-gradient(180deg,#D3D7DA,#9AA0A6);order:1}.pod.bronze{height:60%;background:linear-gradient(180deg,#D9925A,#B06A2C);order:3}
+body.amb .pod{animation:barGrow .8s var(--ease-out) both}body.amb .pod.silver{animation-delay:.15s}body.amb .pod.bronze{animation-delay:.3s}
+.medal{padding:12px;border-radius:12px;border:1px solid var(--line);display:flex;flex-direction:column;gap:10px}
+.medal-head{display:flex;gap:10px;align-items:flex-start}
+.medal-dot{width:32px;height:32px;border-radius:50%;display:grid;place-items:center;color:#1A1D20;flex:none}
+.medal-dot svg,.medal-dot i[data-lucide]{width:16px;height:16px}
+.foods{display:flex;flex-wrap:wrap;gap:6px}
+.food{font-size:13px;padding:5px 10px;border-radius:999px;background:rgba(183,190,195,.18);border:1px solid var(--line)}
+.medal.gold .food{background:rgba(201,162,39,.14);border-color:rgba(201,162,39,.45)}
+.medal.bronze .food{background:rgba(176,106,44,.1);border-color:rgba(176,106,44,.35)}
+.nlist{margin:0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:14.5px}
+.nstep{display:flex;gap:12px;align-items:flex-start;font-size:14.5px}
+.nstep>span{width:28px;height:28px;border-radius:50%;background:var(--vt-maroon);color:#fff;display:grid;place-items:center;font-weight:700;flex:none;font-size:13px}
+.timeline{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.timeline>div{padding:10px;border-radius:10px;background:rgba(134,31,65,.08);display:flex;flex-direction:column;gap:4px;font-size:13px}
+.timeline>div.mid{background:var(--vt-orange);color:#1A1D20}
+.gi-chart .chart text{font-size:10px}
+.goal-on{box-shadow:0 0 0 2px var(--vt-orange)!important}
+.meal{display:flex;gap:12px;align-items:flex-start}
+.meal-n{width:40px;height:40px;border-radius:12px;background:var(--g-brand);color:#fff;display:grid;place-items:center;font-family:var(--f-display);font-weight:900;font-size:22px;flex:none}
+.huge-head{background:var(--g-dark)!important;color:#fff;border-color:var(--vt-deep)!important}
+.huge-head .h1{color:#fff!important}.huge-head .label{color:var(--vt-lorange)}
+.bottomline{background:var(--g-brand)!important;color:#fff;border:0!important}
+.bottomline .label{color:rgba(255,255,255,.8)}.bottomline .motto{color:#fff!important}
+.bottomline .motto em{color:#1A1D20}
+
 </style>
 </head>
 <body>
@@ -995,7 +1034,7 @@ const ICONS = {
   dumbbell: 'M6 7v10M3 9v6M18 7v10M21 9v6M6 12h12',
   activity: 'M22 12h-4l-3 9L9 3l-3 9H2',
   menu: 'M4 6h16M4 12h16M4 18h16',
-  check: 'M20 6L9 17l-5-5', flame: 'M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3.3.4 1.5 1.2 2.6 2.5 2.8z', scale: 'M12 3v18M7 21h10M3 7h18M6 7l-3 7a3 3 0 0 0 6 0zM18 7l-3 7a3 3 0 0 0 6 0z', layers: 'M12 2l10 5-10 5L2 7zM2 12l10 5 10-5M2 17l10 5 10-5', target: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12zM12 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4z', sparkles: 'M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 3v4M21 5h-4', delete: 'M10 5h11v14H10l-7-7zM18 9l-6 6M12 9l6 6',
+  check: 'M20 6L9 17l-5-5', apple: 'M12 7c-1.5-1-5-1.5-6.5 1.5S5 16 7.5 19.5c1.3 1.8 2.8 2 4.5 1 1.7 1 3.2.8 4.5-1C19 16 19.5 11.5 18 8.5S13.5 6 12 7zM12 7c0-2 1-3.5 3-4', 'cup-soda': 'M6 8l1.5 13h9L18 8zM5 8h14M12 8l1-5h3', flame: 'M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3.3.4 1.5 1.2 2.6 2.5 2.8z', scale: 'M12 3v18M7 21h10M3 7h18M6 7l-3 7a3 3 0 0 0 6 0zM18 7l-3 7a3 3 0 0 0 6 0z', layers: 'M12 2l10 5-10 5L2 7zM2 12l10 5 10-5M2 17l10 5 10-5', target: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12zM12 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4z', sparkles: 'M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 3v4M21 5h-4', delete: 'M10 5h11v14H10l-7-7zM18 9l-6 6M12 9l6 6',
   'circle-alert': 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 8v4M12 16h.01',
   'triangle-alert': 'M10.3 3.9L2 18a2 2 0 0 0 1.7 3h16.6A2 2 0 0 0 22 18L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01',
   'chevron-left': 'M15 18l-6-6 6-6', 'chevron-right': 'M9 18l6-6-6-6',
@@ -1050,7 +1089,7 @@ const MOTIVATION = [
   'BIG MOMENTS ARE BUILT IN <em>SMALL MOMENTS.</em>', 'FOURTH AND ONE. <em>YOU GO FOR IT.</em>', 'CHAMPIONS ARE BUILT <em>WHEN NOBODY IS WATCHING.</em>',
   'WIN THE REP. <em>WIN THE DAY.</em>', 'EVERY SNAP IS <em>A NEW CHANCE.</em>', 'STRONG TODAY. <em>STRONGER ON GAME DAY.</em>',
   'IF YOU CAN\'T RUN, <em>YOU CAN\'T PLAY!</em>', "THE BAR DOESN'T CARE. <em>SHOW UP ANYWAY.</em>", '<em>HIT THE GROUND</em> RUNNING!', 'MAKE YOUR FEET DO <em>WHAT YOUR MIND TELLS THEM TO!</em>',
-  'SEE YOURSELF <em>MAKING YOUR GOALS.</em>', 'WORK TO <em>MAKE IT HAPPEN!</em>', 'MAROON. ORANGE. <em>IRON HOKIE.</em>',
+  'SEE YOURSELF <em>MAKING YOUR GOALS.</em>', 'WORK TO <em>MAKE IT HAPPEN!</em>', 'MAROON. ORANGE. <em>IRON HOKIE.</em>', 'LIFT HEAVY. EAT A LOT. <em>GET BIG!!</em>', '<em>BREAK THE FAST!</em> FUEL THE WORK.',
   'RESPECT THE PROCESS. <em>TRUST THE PLAN.</em>', 'QUIET WORK. <em>LOUD RESULTS.</em>', 'ONE YARD AT A TIME, <em>CLIFF.</em>',
   'REST HARD. <em>RETURN STRONGER.</em>', 'OWN THE WARM-UP. <em>OWN THE GAME.</em>', 'THE FIELD REMEMBERS <em>WHO PUT IN THE WORK.</em>'
 ];
@@ -2307,6 +2346,7 @@ const Screens = {
       </div><div class="col">
         ${this.missionCard(st, act)}
         ${Quotes.hero()}
+        ${Nutrition.card()}
         <div class="metrics" data-stg>
           ${metric('Current streak', st.streak, 'streak', 0, '', 'workouts in a row', 'flame')}
           ${metric('Workouts done', st.doneUnique, 'done', 0, `<small>/${st.total}</small>`, 'scheduled sessions', 'target')}
@@ -2636,7 +2676,7 @@ const Screens = {
   more() {
     const it = (r, ic, t, d) => `<button class="list-item" type="button" data-act="go" data-r="${r}">${icon(ic)}<div class="grow"><b>${t}</b><div class="muted" style="font-size:12.5px">${d}</div></div>${icon('chevron-right')}</button>`;
     return `<div class="screen"><div class="topbar" data-stg>${brand()}</div>
-      <section class="panel" data-stg>${it('history', 'history', 'Workout history', 'Search, filter and edit every session')}${it('summary', 'trophy', 'Program summary', 'Completion, testing report and the Game Day finale')}${it('profile', 'user', 'Athlete profile & baselines', 'Body weight, maxima, start date, goals')}${it('settings', 'settings', 'Settings', 'Units, plates, rest timer, sound, animation')}${it('backup', 'hard-drive-download', 'Backup & restore', 'Export or import your data as JSON')}${it('about', 'info', 'About this app', 'Curriculum source, data and disclaimer')}</section>
+      <section class="panel" data-stg>${it('nutrition', 'apple', 'Nutrition', 'Gold, Silver & Bronze foods, hydration, Brutally Huge Diet')}${it('history', 'history', 'Workout history', 'Search, filter and edit every session')}${it('summary', 'trophy', 'Program summary', 'Completion, testing report and the Game Day finale')}${it('profile', 'user', 'Athlete profile & baselines', 'Body weight, maxima, start date, goals')}${it('settings', 'settings', 'Settings', 'Units, plates, rest timer, sound, animation')}${it('backup', 'hard-drive-download', 'Backup & restore', 'Export or import your data as JSON')}${it('about', 'info', 'About this app', 'Curriculum source, data and disclaimer')}</section>
       <button class="btn block" type="button" data-act="replay-intro" data-stg>${icon('clapperboard')} Replay the arrival</button></div>`;
   },
   history() {
@@ -3819,6 +3859,117 @@ const Video = {
   },
   stop() { clearTimeout(this.timer); if (this.onMsg) removeEventListener('message', this.onMsg); this.onMsg = null; const f = $('.vframe'); if (f) f.src = 'about:blank'; }
 };
+
+/* ============ NUTRITION (from the VT Summer 2005 book, "Virginia Tech Model") ============ */
+const NUTRITION = {
+  protein: {
+    intro: 'Protein: the building blocks of muscle.',
+    gold: { rule: 'Highest in protein and lowest in fat. Less than 12 grams of fat per serving.', foods: ['Roast turkey', 'Baked chicken (white meat, no skin)', 'Lean roast beef', 'Baked fish', 'Skim milk', 'Lean baked ham', 'Tuna (packed in water)', 'Yogurt (nonfat or lowfat)', 'Dried beans and peas'] },
+    silver: { rule: 'High in protein with moderate amounts of fat. 13–25 grams of fat per serving.', foods: ['85% lean ground beef', '85% lean ham', 'Trimmed choice steak', 'Trimmed pork chops', 'Baked chicken strips', '2% milk', 'Regular yogurt', 'Dark meat chicken (no skin)', 'Peanut butter'] },
+    bronze: { rule: 'Lower in protein and/or high in fat. Over 25 grams of fat per serving.', foods: ['Bacon', 'Hot dogs', 'Chicken with skin', 'Fried chicken', 'Fried fish', 'Whole eggs', 'Whole milk', 'Ham on the bone', 'Processed meats (bologna, potted meat)'] }
+  },
+  carbs: {
+    intro: 'Carbohydrates provide easily accessible fuel for working muscles and brain function. The higher the load or intensity of your exercise, the more critical carbs are; on easy or off days they matter less.',
+    gold: { rule: 'Lowest glycemic response and low in fat. Best for constant, long-lasting energy.', foods: ['Dried beans and peas', 'Squash', 'Cucumbers', 'Green beans', 'Broccoli', 'Spinach', 'Mushrooms', 'Nectarines', 'Pears', 'Plums', 'Onions', 'Eggplant'] },
+    silver: { rule: 'Moderate glycemic response. Have more of these on active days; they help restore muscle fuel if eaten within one hour after training or competing.', foods: ['Unsweetened cereal', 'Pasta', 'Whole grain breads', 'Brown or wild rice', 'Cornbread', 'Tortillas', 'Pita bread', 'Potatoes (with skin)', 'Grapes', 'Apples', 'Bananas', 'Corn', 'Carrots', 'GatorPro and GatorLode'] },
+    bronze: { rule: 'Highest glycemic response and may be high in fat. OK occasionally on high-activity days. Cutting these is the easiest way to cut calories and fat storage.', foods: ['Candy', 'Pretzels', 'Cookies and cakes', 'Sweetened cereal', 'Doughnuts and pastries', 'French and white bread', 'French fries and hash browns', 'White rice', 'Mashed potatoes', 'Sweetened and soft drinks'] }
+  },
+  glycemic: ['Some carbs release sugar into the blood more quickly than others. That speed is the glycemic index.', 'When blood sugar rises rapidly, the body produces insulin, which rapidly lowers blood sugar and promotes fat storage.', 'When blood sugar drops, energy drops, and so does your ability to train or compete at high intensity.', 'So carbs are ranked Gold, Silver and Bronze by glycemic index.'],
+  bottomLine: ['On active days, about half of the food on your plate should be Gold and Silver carbs.', 'On inactive days, reduce your total carbs, especially Bronze carbs.', 'Gold carbs are best before activity for long-lasting energy.', 'Silver and Bronze carbs are best within one hour after training or playing.'],
+  gain: ['Use the same guidelines, but eat more of the Gold and Silver choices.', 'Take a quality protein or weight-gain supplement in addition to your meals.'],
+  lose: ['Stay with Gold choices. Eat limited Silver and Bronze choices of all foods. The fat will come off.', 'More water: it is a natural diuretic.', 'Do not skip meals. Still eat breakfast, lunch and supper. Snack, but limit Silver and avoid Bronze foods.'],
+  fatTips: [['Eat breakfast.', 'It helps speed up your metabolism and gives you the energy to train hard.'], ['Eat 3 to 4 meals a day, but eat low-fat foods.', ''], ['Do not starve yourself.', 'You will only lose muscle, not fat.'], ['Do not dehydrate yourself.', 'You will be losing muscle; it is 70% water.'], ['Limit and cut back on alcohol.', 'The body breaks alcohol down as fat.']],
+  gamePlan: [['Variety', 'Your body needs 6 types of nutrients from food: water, carbohydrates, protein, fat, vitamins and minerals. A balanced diet supplies all of them.'], ['Moderation', 'You do not need to give up "junk" food; balance refined sugars and fats with nutrient-wise choices at your next meal. Avoid replacing balanced meals with sweets, soda, candy and cakes.'], ['Wholesomeness', 'Choose natural or lightly processed foods as often as possible (baked potatoes rather than chips or fries). Foods close to their original form are the most nutrient-dense.'], ['Choose nutrient-dense foods', 'Low-fat milk, lean meats, whole grain breads, dark colourful vegetables (broccoli, spinach, green peppers, tomatoes).'], ['Avoid fast food', 'A burger, fries and shake is about 1,100 calories, 55% from fat. If you must, choose grilled chicken sandwiches (no mayo), chili with beans, bean burritos, chicken soft tacos, garden salads or baked potatoes.'], ['Limit other high-fat foods', 'Hamburger, bacon, sausage, whole milk, butter, mayonnaise, oils, fries and chips: many calories, few nutrients, and they can make you sluggish close to practice.'], ['Break the fast!', 'Breakfast is the most important meal of the day for an athlete, whether you want to lose fat, gain weight or hold your weight.'], ['Eat 4–6 meals each day', 'Skipping meals is not a healthy way to change body weight. Regular meals prepare you for training and help recovery.']],
+  water: { pre: 'Prehydrate: drink 12–20 oz of water several hours before practice or lifting.', during: 'Hydrate: drink water throughout practice. Do not wait until you are thirsty; by then it is too late.', post: 'Rehydrate: drink 24 oz of water or sports drink for every pound of sweat lost.', fact: 'Water is the most important supplement we have. A 5% level of dehydration can equal a 20% loss of muscle function.' },
+  creatine: ['Helps give muscle cells a larger source of energy for high-intensity work (sprinting, lifting).', 'Helps muscles recover faster after high-intensity work.'],
+  huge: [
+    ['Meal 1 · Breakfast', ['4–5 egg whites or whole eggs', '3 slices of toast with jam', '1–2 bowls of cereal', '2 cups of milk and 1 cup of juice', '1–2 fruits']],
+    ['Meal 2 · Mid-morning snack', ['2 fruits', 'Creatine (if you use it)']],
+    ['Meal 3 · Lunch', ['2 large turkey or beef sandwiches, or meat and 3 vegetables', '2 fruits', '1 pasta and vegetable', '2 cups of milk']],
+    ['Meal 4 · Mid-afternoon snack', ['1 can of tuna or white chicken', '1–2 fruits', '1 cup of milk']],
+    ['Meal 5 · Dinner', ['1–2 chicken, beef, fish or pasta dishes', '1 baked potato and vegetable', '3 slices of whole grain bread', '1 large salad', '2 cups of milk']],
+    ['Meal 6 · Evening snack', ['1 sandwich, sub, etc. of your choice', '1 fruit', '2 cups of milk']],
+    ['Brutally Huge Shake · blender', ['1 fruit (strawberries, bananas, peaches…)', '2 eggs', '1 serving of ice cream or ice milk', '1 cup of milk']]
+  ]
+};
+const MEDAL = { gold: { label: 'Gold', n: '1st choice', c: '#C9A227' }, silver: { label: 'Silver', n: '2nd choice', c: '#9AA0A6' }, bronze: { label: 'Bronze', n: '3rd choice', c: '#B06A2C' } };
+const Water = {
+  key: 'bbp.water',
+  get() { const d = LSX.get(this.key, {}); return d[todayISO()] || 0; },
+  set(n) { const d = LSX.get(this.key, {}); d[todayISO()] = clamp(n, 0, 20); const keep = Object.keys(d).sort().slice(-60); const o = {}; keep.forEach(k => o[k] = d[k]); LSX.set(this.key, o); }
+};
+const Nutrition = {
+  /* today is a high-energy day when a workout is scheduled (or one is in progress) */
+  today() {
+    const act = Workout.active(), t = todayISO();
+    const w = act ? Program.byId(act.tid) : State.program.workouts.find(x => Program.schedDate(x) === t);
+    const rest = (State.program.restDays || []).find(r => { const p = State.profile; return p && p.startDate && addDays(p.startDate, (r.week - 1) * 7 + (State.program.dayOffsets[r.day - 1] || 0)) === t; });
+    return { high: !!w, w, rest };
+  },
+  goal() {
+    const p = State.profile; if (!p || !p.targetBw) return null;
+    const cur = Stats.currentBw(); if (!cur) return null;
+    const d = Units.showW(p.targetBw) - Units.showW(cur);
+    return Math.abs(d) < 1 ? 'hold' : d > 0 ? 'gain' : 'lose';
+  },
+  card() {
+    const t = this.today(), wc = Water.get();
+    return `<section class="panel nutri-card" data-stg aria-label="Today's fuel">
+      <div class="spread"><span class="label">Today's fuel</span><span class="badge ${t.high ? 'red' : 'blue'}">${t.high ? 'High energy day' : 'Lower activity day'}</span></div>
+      <p class="nutri-line">${t.high ? `<b>${esc(t.w.title)}</b> today. Eat more food and more <b>Silver</b> carbs (bread, pasta, baked potatoes, cereal, oatmeal). Gold carbs before training, Silver within an hour after.` : 'No training scheduled. Eat less, and cut back on Silver and especially Bronze carbs. Stay with Gold choices.'}</p>
+      <div class="water-row"><span class="label">Water</span><div class="glasses" aria-label="${wc} of 8 glasses">${Array.from({ length: 8 }, (_, i) => `<span class="glass ${i < wc ? 'on' : ''}"></span>`).join('')}</div><button class="btn sm icon" type="button" data-act="water" data-v="1" aria-label="Add a glass of water">${icon('plus')}</button></div>
+      <button class="btn block ghost" type="button" data-act="go" data-r="nutrition">${icon('apple')} Nutrition guide</button></section>`;
+  }
+};
+Screens.nutrition = function (tab) {
+  tab = tab || 'today';
+  const tabs = [['today', 'Today'], ['foods', 'Food medals'], ['carbs', 'Carb timing'], ['goals', 'Weight goals'], ['water', 'Hydration'], ['plan', 'Game plan'], ['huge', 'Brutally Huge']];
+  const N = NUTRITION, t = Nutrition.today(), g = Nutrition.goal(), wc = Water.get(), q = (UI.ui.foodQ || '').trim().toLowerCase();
+  const medalList = (cat, k) => { const m = N[cat][k], foods = m.foods.filter(f => !q || f.toLowerCase().includes(q)); return foods.length || !q ? `<div class="medal ${k}" data-stg><div class="medal-head"><span class="medal-dot" style="background:${MEDAL[k].c}">${icon('award')}</span><div><b>${MEDAL[k].label} medal ${cat === 'protein' ? 'proteins' : 'carbs'}</b><div class="muted" style="font-size:12.5px">${MEDAL[k].n} · ${esc(m.rule)}</div></div></div><div class="foods">${foods.map(f => `<span class="food">${esc(f)}</span>`).join('')}</div></div>` : ''; };
+  let body = '';
+  if (tab === 'today') body = `${Nutrition.card()}
+    <section class="panel stack" data-stg><h2 class="h3">How you eat depends on your activity</h2>
+      <div class="grid2"><div class="nbox ${t.high ? 'on' : ''}"><b>High energy days</b><p>More food, more Silver choice foods, especially Silver carbs: bread, spaghetti, pastas, baked potatoes, cereal, oatmeal.</p></div>
+      <div class="nbox ${!t.high ? 'on' : ''}"><b>Lower activity days</b><p>Less Silver and Bronze choice foods, especially Silver and Bronze carbs.</p></div></div>
+      <p class="muted" style="font-size:12.5px">Today is marked from Cliff's schedule: training days are high energy; Active Rest and days off are lower activity.</p></section>
+    <section class="panel stack" data-stg><h2 class="h3">The Virginia Tech model</h2><div class="medal-podium"><div class="pod gold"><b>1st</b><span>Gold</span></div><div class="pod silver"><b>2nd</b><span>Silver</span></div><div class="pod bronze"><b>3rd</b><span>Bronze</span></div></div>
+      <p>Every food is a Gold, Silver or Bronze choice. Build most meals from Gold, use Silver for fuel around training, and keep Bronze occasional.</p><button class="btn" type="button" data-act="go" data-r="nutrition" data-p="foods">See the food medals</button></section>`;
+  if (tab === 'foods') body = `<div class="input-unit" data-stg><input class="input" id="foodQ" type="search" placeholder="Is it Gold, Silver or Bronze? Search a food" value="${esc(UI.ui.foodQ || '')}" data-ui="foodQ" aria-label="Search foods"><span>${icon('search')}</span></div>
+    <section class="panel stack" data-stg><h2 class="h3">Protein</h2><p class="muted">${esc(N.protein.intro)}</p>${['gold', 'silver', 'bronze'].map(k => medalList('protein', k)).join('')}</section>
+    <section class="panel stack" data-stg><h2 class="h3">Carbohydrates</h2><p class="muted">${esc(N.carbs.intro)}</p>${['gold', 'silver', 'bronze'].map(k => medalList('carbs', k)).join('')}</section>`;
+  if (tab === 'carbs') body = `<section class="panel stack" data-stg><h2 class="h3">Not all carbs are created equal</h2><ol class="nlist">${N.glycemic.map(x => `<li>${esc(x)}</li>`).join('')}</ol>
+      <div class="gi-chart" aria-hidden="true"><svg viewBox="0 0 320 120" class="chart"><path d="M10 100 C60 98 70 20 110 22 C150 24 150 95 190 100 L310 100" fill="none" stroke="#E87722" stroke-width="3"/><path d="M10 100 C80 99 120 55 180 55 C240 55 260 80 310 85" fill="none" stroke="#861F41" stroke-width="3"/><text x="96" y="16" style="fill:#E87722">Bronze: spike, then crash</text><text x="170" y="48" style="fill:#861F41">Gold: steady energy</text><line x1="10" y1="100" x2="310" y2="100" class="axis"/><text x="10" y="114">time after eating →</text></svg><p class="muted" style="font-size:12px">Illustration of the idea, not measured data.</p></div></section>
+    <section class="panel stack" data-stg><h2 class="h3">Bottom line</h2>${N.bottomLine.map((x, i) => `<div class="nstep"><span>${i + 1}</span><p>${esc(x)}</p></div>`).join('')}</section>
+    <section class="panel stack" data-stg><h2 class="h3">Around a workout</h2><div class="timeline"><div><b>Before</b><span>Gold carbs for long-lasting energy</span></div><div class="mid"><b>Train</b><span>Water throughout</span></div><div><b>Within 1 hour after</b><span>Silver (and Bronze) carbs to restore muscle fuel</span></div></div></section>`;
+  if (tab === 'goals') body = `${g ? `<div class="milestone" data-stg>${icon('target')}<span>Cliff's target body weight is ${g === 'gain' ? '<b>above</b> his current weight, so the <b>gaining</b> guidelines apply' : g === 'lose' ? '<b>below</b> his current weight, so the <b>body fat</b> guidelines apply' : '<b>about his current weight</b>: use the general game plan'}.</span></div>` : `<div class="milestone" data-stg>${icon('target')}<span>Set a target body weight in the profile and log body weight to see which guidelines apply.</span></div>`}
+    <section class="panel stack ${g === 'gain' ? 'goal-on' : ''}" data-stg><h2 class="h3">Gaining body weight</h2><ul class="nlist">${N.gain.map(x => `<li>${esc(x)}</li>`).join('')}</ul><button class="btn" type="button" data-act="go" data-r="nutrition" data-p="huge">See the Brutally Huge Diet</button></section>
+    <section class="panel stack ${g === 'lose' ? 'goal-on' : ''}" data-stg><h2 class="h3">Losing body fat</h2><ul class="nlist">${N.lose.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+      <h3 class="label" style="margin-top:6px">Body fat reduction tips</h3>${N.fatTips.map(([a, b]) => `<div class="kv"><span><b>${esc(a)}</b>${b ? `<br><span class="muted" style="font-size:13px">${esc(b)}</span>` : ''}</span></div>`).join('')}</section>`;
+  if (tab === 'water') body = `<section class="panel stack" data-stg><h2 class="h3">Water</h2><p><b>${esc(N.water.fact)}</b></p>
+      <div class="water-big"><div class="glasses big">${Array.from({ length: 8 }, (_, i) => `<button type="button" class="glass ${i < wc ? 'on' : ''}" data-act="water-set" data-v="${i + 1}" aria-label="${i + 1} glasses"></button>`).join('')}</div>
+      <div class="row"><b class="num" style="font-size:22px">${wc} / 6–8 glasses today</b><button class="btn sm" type="button" data-act="water" data-v="-1" aria-label="Remove a glass">−</button><button class="btn sm primary" type="button" data-act="water" data-v="1">${icon('plus')} Glass</button></div>
+      <p class="muted" style="font-size:12.5px">Saved on this device only, as a daily reminder.</p></div></section>
+    <section class="panel stack" data-stg><h2 class="h3">Pre · During · Re-hydrate</h2>${[N.water.pre, N.water.during, N.water.post].map((x, i) => `<div class="nstep"><span>${i + 1}</span><p>${esc(x)}</p></div>`).join('')}
+      <div class="field"><label for="sweatLb">Sweat lost (body weight before minus after, lb)</label><div class="row"><div class="input-unit grow"><input class="input num" id="sweatLb" inputmode="decimal" placeholder="e.g. 2"><span>lb</span></div><b class="num" id="sweatOut" style="min-width:110px;text-align:right">—</b></div><span class="muted" style="font-size:12.5px">24 oz of water or sports drink per pound lost.</span></div></section>`;
+  if (tab === 'plan') body = `<section class="panel stack" data-stg><h2 class="h3">A game plan for good nutrition</h2>${N.gamePlan.map(([a, b], i) => `<div class="nstep"><span>${i + 1}</span><p><b>${esc(a)}.</b> ${esc(b)}</p></div>`).join('')}</section>
+    <section class="panel stack" data-stg><h2 class="h3">Supplements</h2><div class="kv"><span><b>Water</b><br><span class="muted" style="font-size:13px">The most important supplement. See Hydration.</span></span></div>
+      <div class="kv"><span><b>Creatine monohydrate</b><br><span class="muted" style="font-size:13px">The book says research shows it ${N.creatine.map(x => x.charAt(0).toLowerCase() + x.slice(1, -1)).join('; and ')}. In 2005 the team provided it voluntarily to players in the top two depth-chart spots.</span></span></div>
+      <div class="kv"><span><b>Multivitamin / multimineral</b><br><span class="muted" style="font-size:13px">The book recommends one tablet daily for maximum benefit.</span></span></div>
+      <p class="muted" style="font-size:12.5px">This is the 2005 book's advice, not medical advice. Check supplements with a doctor or sports dietitian first, especially for an athlete under 18.</p></section>`;
+  if (tab === 'huge') body = `<section class="panel huge-head" data-stg><span class="label">For gaining body weight</span><h2 class="h1" style="font-size:40px;margin:6px 0">Brutally Huge Diet</h2><p>Six meals a day plus the shake. Drink 6–8 glasses of water daily and take a multivitamin/multimineral tablet.</p></section>
+    ${N.huge.map(([m, items], i) => `<section class="panel meal" data-stg><div class="meal-n">${i < 6 ? i + 1 : icon('cup-soda')}</div><div class="grow"><h3 class="h3">${esc(m)}</h3><ul class="nlist">${items.map(x => `<li>${esc(x)}</li>`).join('')}</ul>${i === 6 ? '<p class="muted" style="font-size:12.5px">The book uses 2 raw eggs. Raw eggs carry a food-poisoning risk; use pasteurised eggs or swap in a scoop of protein powder.</p>' : ''}</div></section>`).join('')}
+    <section class="panel bottomline" data-stg><span class="label">Bottom line</span><p class="motto">Lift heavy. Eat a lot. <em>Get big!!</em></p></section>`;
+  return `<div class="screen">${backBar('Nutrition')}
+    <div class="chips" role="tablist" data-stg>${tabs.map(([k, l]) => `<button class="chip" type="button" role="tab" data-act="go" data-r="nutrition" data-p="${k}" aria-pressed="${tab === k}">${l}</button>`).join('')}</div>
+    ${body}<p class="muted" style="font-size:12px" data-stg>From the nutrition section of the Virginia Tech Summer 2005 book. General guidance, not a personal meal plan.</p></div>`;
+};
+After.nutrition = view => {
+  const s = $('#sweatLb', view); if (s) s.oninput = () => { const v = Number(s.value.replace(',', '.')); $('#sweatOut').textContent = v > 0 && v < 20 ? `${fmtNum(v * 24, 0)} oz (${fmtNum(v * 24 * 29.57 / 1000, 1)} L)` : '—'; };
+  Reveal.observe(view);
+};
+TAB_OF.nutrition = 'more';
+Actions.water = el => { Water.set(Water.get() + (+el.dataset.v)); const y = scrollY; UI.render(); scrollTo(0, y); if (+el.dataset.v > 0) Haptics.tap(); };
+Actions['water-set'] = el => { const v = +el.dataset.v; Water.set(Water.get() === v ? v - 1 : v); const y = scrollY; UI.render(); scrollTo(0, y); };
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 
