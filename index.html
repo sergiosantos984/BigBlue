@@ -166,7 +166,7 @@ p{margin:0}
 
 /* ============ BOTTOM NAV ============ */
 #nav{position:fixed;left:0;right:0;bottom:0;z-index:30;padding:0 10px calc(var(--safe-b) + 8px);pointer-events:none}
-#nav .bar{pointer-events:auto;max-width:520px;margin:0 auto;height:var(--nav-h);display:grid;grid-template-columns:repeat(5,1fr);position:relative;
+#nav .bar{pointer-events:auto;max-width:520px;margin:0 auto;height:var(--nav-h);display:grid;grid-template-columns:repeat(6,1fr);position:relative;
   background:rgba(18,9,12,.9);border:1px solid var(--line);border-radius:22px;box-shadow:0 -10px 40px -10px rgba(0,0,0,.8)}
 @supports (backdrop-filter:blur(10px)){#nav .bar{background:rgba(18,9,12,.72);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}}
 #nav button{position:relative;z-index:1;border:0;background:none;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
@@ -175,7 +175,7 @@ p{margin:0}
 #nav button svg{width:21px;height:21px;transition:transform var(--d-std) var(--ease-spring)}
 #nav button[aria-current="page"] svg{transform:translateY(-2px) scale(1.08)}
 #nav button:active svg{transform:scale(.85)}
-#nav .ind{position:absolute;top:7px;bottom:7px;left:0;width:20%;padding:0 6px;transition:transform var(--d-std) var(--ease-spring)}
+#nav .ind{position:absolute;top:7px;bottom:7px;left:0;width:calc(100% / 6);padding:0 4px;transition:transform var(--d-std) var(--ease-spring)}
 #nav .ind::before{content:"";display:block;height:100%;border-radius:15px;background:linear-gradient(180deg,rgba(160,51,90,.65),rgba(134,31,65,.8));
   box-shadow:inset 0 1px 0 rgba(255,255,255,.18),0 0 24px -4px rgba(160,51,90,.8)}
 #nav .live{position:absolute;top:9px;right:calc(50% - 18px);width:9px;height:9px;border-radius:50%;background:var(--red-lit);box-shadow:0 0 0 3px rgba(18,9,12,.9)}
@@ -502,7 +502,7 @@ body.m-minimal *,body.m-minimal *::before,body.m-minimal *::after{animation-dura
 }
 @media (min-width:1024px){
   #nav{left:0;top:0;bottom:0;right:auto;width:236px;padding:16px}
-  #nav .bar{height:100%;max-width:none;grid-template-columns:1fr;grid-template-rows:auto repeat(5,56px) 1fr;align-content:start;gap:6px;padding:14px 10px;border-radius:22px}
+  #nav .bar{height:100%;max-width:none;grid-template-columns:1fr;grid-template-rows:auto repeat(6,56px) 1fr;align-content:start;gap:6px;padding:14px 10px;border-radius:22px}
   #nav button{flex-direction:row;justify-content:flex-start;gap:12px;padding:0 14px;font-size:13px;border-radius:14px}
   #nav button[aria-current="page"]{background:linear-gradient(90deg,rgba(160,51,90,.55),rgba(134,31,65,.5));box-shadow:inset 0 1px 0 rgba(255,255,255,.12)}
   #nav .ind{display:none}
@@ -947,10 +947,83 @@ body.amb .pod{animation:barGrow .8s var(--ease-out) both}body.amb .pod.silver{an
 .bottomline{background:var(--g-brand)!important;color:#fff;border:0!important}
 .bottomline .label{color:rgba(255,255,255,.8)}.bottomline .motto{color:#fff!important}
 .bottomline .motto em{color:#1A1D20}
+/* six-tab bottom nav */
+#nav button{font-size:10px;letter-spacing:0;text-transform:none;font-weight:600;min-width:0;padding:0 1px}
+#nav button span{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media (max-width:359px){#nav{padding-left:6px;padding-right:6px}#nav button{font-size:9px}#nav button svg{width:19px;height:19px}}
+@media (min-width:1024px){#nav button{font-size:14px;padding:0 14px}}
+
+/* =====================================================================
+   LOAD-UP EFFECT (every app open) — stripes slam in, the ball spins
+   through, HOKIE / POWER hits like a scoreboard, orange flash, split reveal
+   ===================================================================== */
+#boot{position:fixed;inset:0;z-index:200;overflow:hidden;background:#141518;color:#FFFFFF;display:grid;place-items:center;cursor:pointer;
+  font-family:'Big Shoulders Display','Arial Narrow',Impact,sans-serif}
+#boot.gone{display:none}
+#boot .b-grid{position:absolute;left:-50%;right:-50%;bottom:-10%;height:70%;transform-origin:50% 0;transform:perspective(380px) rotateX(64deg);
+  background:repeating-linear-gradient(0deg,rgba(232,119,34,.45) 0 2px,transparent 2px 60px),repeating-linear-gradient(90deg,rgba(255,255,255,.08) 0 1px,transparent 1px 60px);
+  -webkit-mask-image:linear-gradient(0deg,#000 30%,transparent);mask-image:linear-gradient(0deg,#000 30%,transparent);animation:bGrid 1.1s linear infinite}
+@keyframes bGrid{to{background-position:0 60px,0 0}}
+#boot .b-stripes{position:absolute;inset:-20% -40%;display:flex;flex-direction:column;justify-content:center;gap:4vh;transform:rotate(-18deg)}
+#boot .b-stripes i{display:block;height:7vh;transform:translateX(-120%);animation:bStripe .55s cubic-bezier(.7,0,.2,1) forwards}
+#boot .b-stripes i:nth-child(odd){background:#861F41}
+#boot .b-stripes i:nth-child(even){background:#E87722;transform:translateX(120%);animation-name:bStripeR}
+#boot .b-stripes i:nth-child(2){animation-delay:.06s}#boot .b-stripes i:nth-child(3){animation-delay:.12s}#boot .b-stripes i:nth-child(4){animation-delay:.18s}#boot .b-stripes i:nth-child(5){animation-delay:.24s}
+@keyframes bStripe{0%{transform:translateX(-120%)}55%{transform:translateX(0)}100%{transform:translateX(120%)}}
+@keyframes bStripeR{0%{transform:translateX(120%)}55%{transform:translateX(0)}100%{transform:translateX(-120%)}}
+#boot .b-ring{position:absolute;width:40vmin;height:40vmin;border-radius:50%;border:3px solid #E87722;opacity:0;animation:bRing 1.1s cubic-bezier(.2,.8,.2,1) .75s forwards}
+#boot .b-ring.r2{border-color:#861F41;animation-delay:.9s}
+@keyframes bRing{0%{opacity:.9;transform:scale(.2)}100%{opacity:0;transform:scale(3.2)}}
+#boot .b-ball{position:absolute;width:min(34vmin,180px);filter:drop-shadow(0 0 30px rgba(232,119,34,.6));opacity:0;
+  animation:bBall .9s cubic-bezier(.2,.9,.25,1) .45s forwards,bSpin 1.6s linear .45s infinite}
+@keyframes bBall{0%{opacity:0;transform:translate(-90vw,40vh) scale(.3) rotate(-540deg)}70%{opacity:1}100%{opacity:1;transform:translate(0,-18vh) scale(1) rotate(0)}}
+@keyframes bSpin{to{rotate:360deg}}
+#boot .b-word{position:relative;display:flex;flex-direction:column;align-items:center;line-height:.82;font-weight:900;font-size:clamp(84px,27vw,230px);letter-spacing:-.01em;margin-top:10vh}
+#boot .b-word span{display:block;opacity:0;transform:scale(3.2);filter:blur(10px);animation:bSlam .38s cubic-bezier(.2,1.4,.3,1) forwards}
+#boot .w1{animation-delay:.95s!important;color:#FFFFFF;text-shadow:0 0 40px rgba(134,31,65,.9)}
+#boot .w2{animation-delay:1.15s!important;color:#E87722;-webkit-text-stroke:2px #E87722;text-shadow:0 0 40px rgba(232,119,34,.7)}
+@keyframes bSlam{0%{opacity:0;transform:scale(3.2);filter:blur(10px)}70%{opacity:1;transform:scale(.94);filter:blur(0)}100%{opacity:1;transform:scale(1);filter:none}}
+#boot .b-word.shake{animation:bShake .32s linear}
+@keyframes bShake{20%{transform:translate(-6px,3px)}40%{transform:translate(5px,-4px)}60%{transform:translate(-4px,2px)}80%{transform:translate(3px,-1px)}}
+#boot .b-sub{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 92px);font-family:'JetBrains Mono',ui-monospace,monospace;font-size:11px;letter-spacing:.32em;color:#B7BEC3;opacity:0;animation:bFade .4s ease 1.4s forwards}
+#boot .b-load{position:absolute;bottom:calc(env(safe-area-inset-bottom,0px) + 48px);left:50%;transform:translateX(-50%);width:min(70vw,320px);display:flex;align-items:center;gap:12px}
+#boot .b-bar{flex:1;height:6px;border-radius:4px;background:rgba(255,255,255,.12);overflow:hidden}
+#boot .b-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,#861F41,#E87722,#FFB36B);animation:bBar 1.7s cubic-bezier(.6,0,.2,1) .15s forwards}
+@keyframes bBar{to{width:100%}}
+#boot .b-load b{font-family:'JetBrains Mono',ui-monospace,monospace;font-size:14px;font-variant-numeric:tabular-nums;color:#E87722;min-width:3ch;text-align:right}
+@keyframes bFade{to{opacity:1}}
+#boot .b-flash{position:absolute;inset:0;background:radial-gradient(circle,#FFFFFF,#FFB36B 35%,rgba(232,119,34,0) 70%);opacity:0;pointer-events:none}
+#boot.hit .b-flash{animation:bFlash .45s ease-out}
+@keyframes bFlash{0%{opacity:.95}100%{opacity:0}}
+#boot .b-half{position:absolute;left:0;right:0;height:50.5%;background:#141518;transform:scaleY(0);z-index:3}
+#boot .b-half.top{top:0;transform-origin:50% 0;border-bottom:3px solid #E87722}
+#boot .b-half.bot{bottom:0;transform-origin:50% 100%;border-top:3px solid #861F41}
+/* exit: the screen splits open from the 50-yard line */
+#boot.out{background:transparent}
+#boot.out>*:not(.b-half){visibility:hidden}
+#boot.out .b-half{transform:scaleY(1);animation:bSplit .55s cubic-bezier(.7,0,.2,1) forwards}
+#boot.out .b-half.top{animation-name:bSplitTop}#boot.out .b-half.bot{animation-name:bSplitBot}
+@keyframes bSplitTop{0%{transform:translateY(0)}100%{transform:translateY(-102%)}}
+@keyframes bSplitBot{0%{transform:translateY(0)}100%{transform:translateY(102%)}}
+@media (prefers-reduced-motion:reduce){#boot *{animation-duration:.01ms!important;animation-delay:0s!important}#boot .b-word span,#boot .b-ball,#boot .b-sub{opacity:1;transform:none;filter:none}}
+#boot[style*="--speed: .7"] .b-stripes i,#boot[style*="--speed: .7"] .b-ball,#boot[style*="--speed: .7"] .b-word span{animation-duration:.3s}
+#boot[style*="--speed: 0"] *{animation-duration:.01ms!important;animation-delay:0s!important}
 
 </style>
 </head>
 <body>
+<!-- LOAD-UP: plays every time the app opens; tap to skip -->
+<div id="boot" aria-hidden="true">
+  <div class="b-grid"></div>
+  <div class="b-stripes"><i></i><i></i><i></i><i></i><i></i></div>
+  <div class="b-ring"></div><div class="b-ring r2"></div>
+  <svg class="b-ball" viewBox="0 0 120 74"><ellipse cx="60" cy="37" rx="56" ry="33" fill="#861F41" stroke="#E87722" stroke-width="5"/><path d="M22 37h76" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/><path d="M42 28v18M51 28v18M60 28v18M69 28v18M78 28v18" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round"/><path d="M10 37c8-14 20-22 30-25M110 37c-8-14-20-22-30-25" stroke="#E87722" stroke-width="3" fill="none"/></svg>
+  <div class="b-word"><span class="w1">HOKIE</span><span class="w2">POWER</span></div>
+  <div class="b-sub">CLIFF · FLIGHT 2005 TO GLORY</div>
+  <div class="b-load"><span class="b-bar"><i></i></span><b id="bootPct">00</b></div>
+  <div class="b-flash"></div>
+  <div class="b-half top"></div><div class="b-half bot"></div>
+</div>
 <div id="env" aria-hidden="true">
   <div class="wall"></div>
   <div class="beams"></div>
@@ -1015,6 +1088,7 @@ body.amb .pod{animation:barGrow .8s var(--ease-out) both}body.amb .pod.silver{an
     <button type="button" data-tab="training"><span>Training</span></button>
     <button type="button" data-tab="workout"><span>Workout</span></button>
     <button type="button" data-tab="progress"><span>Progress</span></button>
+    <button type="button" data-tab="nutrition"><span>Nutrition</span></button>
     <button type="button" data-tab="more"><span>More</span></button>
   </div>
 </nav>
@@ -1026,6 +1100,33 @@ body.amb .pod{animation:barGrow .8s var(--ease-out) both}body.amb .pod.silver{an
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="https://unpkg.com/lucide@0.454.0/dist/umd/lucide.min.js"></script>
 <script>
+/* ============ LOAD-UP EFFECT ============
+   The splash is static HTML/CSS at the top of <body>, so it paints instantly while the app boots
+   underneath. It plays for ~2 s on every open (shorter in Minimal / reduced motion); tap to skip. */
+const Splash = (() => {
+  const el = document.getElementById('boot'); if (!el) return { done: Promise.resolve() };
+  let mode = 'cinematic';
+  try { const st = JSON.parse(localStorage.getItem('bbp.settings') || '{}'); mode = st.reducedMotion === 'on' ? 'minimal' : (st.motion || 'cinematic'); } catch (e) { }
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) mode = 'minimal';
+  const total = mode === 'minimal' ? 350 : mode === 'balanced' ? 1500 : 2150;
+  let resolve, finished = false; const done = new Promise(r => resolve = r);
+  const pct = document.getElementById('bootPct'), t0 = performance.now();
+  if (mode !== 'cinematic') el.style.setProperty('--speed', mode === 'balanced' ? '.7' : '0');
+  const tick = t => { if (finished) return; const k = Math.min(1, (t - t0) / (total - 250)); if (pct) pct.textContent = String(Math.round(k * 100)).padStart(2, '0'); if (k < 1) requestAnimationFrame(tick); };
+  requestAnimationFrame(tick);
+  const hit = setTimeout(() => { el.classList.add('hit'); const w = el.querySelector('.b-word'); w && w.classList.add('shake'); try { if (navigator.vibrate) navigator.vibrate(18); } catch (e) { } }, mode === 'cinematic' ? 1220 : 10);
+  const finish = () => {
+    if (finished) return; finished = true; clearTimeout(hit); clearTimeout(auto);
+    if (pct) pct.textContent = '100';
+    el.classList.add('out'); resolve();          // the next scene renders underneath while the halves open
+    setTimeout(() => { el.classList.add('gone'); el.remove(); }, mode === 'minimal' ? 0 : 560);
+  };
+  const auto = setTimeout(finish, total);
+  el.addEventListener('click', finish); el.addEventListener('touchstart', finish, { passive: true });
+  addEventListener('keydown', function k(e) { if (!finished && (e.key === 'Enter' || e.key === ' ' || e.key === 'Escape')) { finish(); removeEventListener('keydown', k); } });
+  return { done, finish };
+})();
+
 /* Built-in icon fallbacks (Lucide-style 24px strokes). When the Lucide CDN loads it replaces
    these with the official icons; when it doesn't, every icon-only control still shows a glyph. */
 const ICONS = {
@@ -1888,7 +1989,7 @@ const Rest = {
 };
 
 /* ============ 14. NAVIGATION ============ */
-const TABS = ['home', 'training', 'workout', 'progress', 'more'];
+const TABS = ['home', 'training', 'workout', 'progress', 'nutrition', 'more'];
 const TAB_OF = { home: 'home', training: 'training', workout: 'workout', progress: 'progress', more: 'more', history: 'more', session: 'more', settings: 'more', profile: 'more', backup: 'more', summary: 'more', about: 'more' };
 const Nav = {
   stack: [],
@@ -2676,7 +2777,7 @@ const Screens = {
   more() {
     const it = (r, ic, t, d) => `<button class="list-item" type="button" data-act="go" data-r="${r}">${icon(ic)}<div class="grow"><b>${t}</b><div class="muted" style="font-size:12.5px">${d}</div></div>${icon('chevron-right')}</button>`;
     return `<div class="screen"><div class="topbar" data-stg>${brand()}</div>
-      <section class="panel" data-stg>${it('nutrition', 'apple', 'Nutrition', 'Gold, Silver & Bronze foods, hydration, Brutally Huge Diet')}${it('history', 'history', 'Workout history', 'Search, filter and edit every session')}${it('summary', 'trophy', 'Program summary', 'Completion, testing report and the Game Day finale')}${it('profile', 'user', 'Athlete profile & baselines', 'Body weight, maxima, start date, goals')}${it('settings', 'settings', 'Settings', 'Units, plates, rest timer, sound, animation')}${it('backup', 'hard-drive-download', 'Backup & restore', 'Export or import your data as JSON')}${it('about', 'info', 'About this app', 'Curriculum source, data and disclaimer')}</section>
+      <section class="panel" data-stg>${it('history', 'history', 'Workout history', 'Search, filter and edit every session')}${it('summary', 'trophy', 'Program summary', 'Completion, testing report and the Game Day finale')}${it('profile', 'user', 'Athlete profile & baselines', 'Body weight, maxima, start date, goals')}${it('settings', 'settings', 'Settings', 'Units, plates, rest timer, sound, animation')}${it('backup', 'hard-drive-download', 'Backup & restore', 'Export or import your data as JSON')}${it('about', 'info', 'About this app', 'Curriculum source, data and disclaimer')}</section>
       <button class="btn block" type="button" data-act="replay-intro" data-stg>${icon('clapperboard')} Replay the arrival</button></div>`;
   },
   history() {
@@ -3277,7 +3378,7 @@ const App = {
 };
 
 async function boot() {
-  const NAVI = { home: 'house', training: 'map', workout: 'dumbbell', progress: 'activity', more: 'menu' };
+  const NAVI = { home: 'house', training: 'map', workout: 'dumbbell', progress: 'activity', nutrition: 'apple', more: 'menu' };
   $$('#nav [data-tab]').forEach(b => b.insertAdjacentHTML('afterbegin', icon(NAVI[b.dataset.tab])));
   FX.init(); Env.init();
   State.settings = Object.assign({}, DEFAULT_SETTINGS, LSX.get(LS.settings, {}));
@@ -3311,6 +3412,7 @@ async function boot() {
   bindEvents();
   if (State.profile && State.meta.onboarded) Achievements.evaluate();
   if (State.meta.timer && State.meta.timer.running) Rest.loop();
+  await Splash.done;                          // let the load-up finish so the next scene's entrance is seen
   if (!Gate.unlocked()) await Gate.show();   // landing page: athlete code
 
   if (!State.meta.onboarded || !State.profile) {
@@ -3966,7 +4068,7 @@ Screens.nutrition = function (tab) {
   if (tab === 'huge') body = `<section class="panel huge-head" data-stg><span class="label">For gaining body weight</span><h2 class="h1" style="font-size:40px;margin:6px 0">Brutally Huge Diet</h2><p>Six meals a day plus the shake. Drink 6–8 glasses of water daily and take a multivitamin/multimineral tablet.</p></section>
     ${N.huge.map(([m, items], i) => `<section class="panel meal" data-stg><div class="meal-n">${i < 6 ? i + 1 : icon('cup-soda')}</div><div class="grow"><h3 class="h3">${esc(m)}</h3><ul class="nlist">${items.map(x => `<li>${esc(x)}</li>`).join('')}</ul>${i === 6 ? '<p class="muted" style="font-size:12.5px">The book uses 2 raw eggs. Raw eggs carry a food-poisoning risk; use pasteurised eggs or swap in a scoop of protein powder.</p>' : ''}</div></section>`).join('')}
     <section class="panel bottomline" data-stg><span class="label">Bottom line</span><p class="motto">Lift heavy. Eat a lot. <em>Get big!!</em></p></section>`;
-  return `<div class="screen">${backBar('Nutrition')}
+  return `<div class="screen"><div class="topbar" data-stg><h1 class="h2">Nutrition</h1><span class="badge blue">${t.high ? 'High energy day' : 'Lower activity day'}</span></div>
     <div class="chips" role="tablist" data-stg>${tabs.map(([k, l]) => `<button class="chip" type="button" role="tab" data-act="go" data-r="nutrition" data-p="${k}" aria-pressed="${tab === k}">${l}</button>`).join('')}</div>
     ${body}<p class="muted" style="font-size:12px" data-stg>From the nutrition section of the Virginia Tech Summer 2005 book. General guidance, not a personal meal plan.</p></div>`;
 };
@@ -3974,7 +4076,7 @@ After.nutrition = view => {
   const s = $('#sweatLb', view); if (s) s.oninput = () => { const v = Number(s.value.replace(',', '.')); $('#sweatOut').textContent = v > 0 && v < 20 ? `${fmtNum(v * 24, 0)} oz (${fmtNum(v * 24 * 29.57 / 1000, 1)} L)` : '—'; };
   Reveal.observe(view);
 };
-TAB_OF.nutrition = 'more';
+TAB_OF.nutrition = 'nutrition';
 Actions.water = el => { Water.set(Water.get() + (+el.dataset.v)); const y = scrollY; UI.render(); scrollTo(0, y); if (+el.dataset.v > 0) Haptics.tap(); };
 Actions['water-set'] = el => { const v = +el.dataset.v; Water.set(Water.get() === v ? v - 1 : v); const y = scrollY; UI.render(); scrollTo(0, y); };
 
