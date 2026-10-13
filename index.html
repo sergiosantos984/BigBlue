@@ -1606,7 +1606,7 @@ const Workout = {
     if (e.type === 'timed') return e.sec >= 90 && e.sets === 1 ? `${fmtDur(e.sec * 1000)} min` : `${e.sets} × ${e.sec}s`;
     if (e.type === 'sprint') return `${e.sets} × ${e.dist}${e.target ? ` · ${fmtDur(e.target * 1000)} target` : ''}`;
     if (e.type === 'test') return `Up to ${e.sets} attempts`;
-    if (e.type === 'check') return e.sets > 1 ? `${e.sets} sets` : 'Complete';
+    if (e.type === 'check') return Program.exDef(e.ex).steps ? `${e.sets} exercises × 10 reps · with a partner` : e.sets > 1 ? `${e.sets} sets` : 'Complete';
     return '';
   },
   nSets(e) { return e.type === 'pct' ? e.scheme.length + (e.extras || []).filter(x => !x.warm).length : e.sets || 1; },
@@ -1642,6 +1642,7 @@ const Workout = {
       const n = e.sets || 1;
       for (let i = 0; i < n; i++) {
         const st = { id: uid('set'), n: i + 1, warm: false, done: false, ts: null };
+        if (e.type === 'check' && def.steps && def.steps[i]) st.pLabel = def.steps[i];
         if (e.type === 'reps') { const r = e.repsList ? e.repsList[i] ?? e.reps : e.reps; Object.assign(st, { pReps: r, reps: r, pLabel: e.label || null, w: null }); }
         if (e.type === 'timed') Object.assign(st, { pSec: e.sec, sec: e.sec });
         if (e.type === 'sprint') Object.assign(st, { dist: e.yards || 0, sec: null });
@@ -2668,12 +2669,12 @@ const Screens = {
       if (x.ref && firstWork && firstWork.pT) { focal = `<div class="target" data-rev>${fmtNum(Units.showW({ kg: firstWork.pT.kg, v: firstWork.pT.v, u: firstWork.pT.u }), 2)}<small>${u.toUpperCase()}</small></div>`; sub = `<div class="label" data-rev>${firstWork.pPct}% ${Calc.clsLabel(x.ref.cls)} (${Units.fmtW(x.ref.w)} ${u})</div>`; }
       else focal = `<div class="panel flat" data-rev style="border-color:rgba(183,190,195,.4)"><b>No ${esc(x.lift ? LIFTS[x.lift].name : '')} baseline.</b> <span class="muted">Enter the weight you use for each set. The app will not invent a working weight.</span></div>`;
     } else if (x.type === 'test') focal = `<div class="target" data-rev style="font-size:clamp(54px,17vw,84px)">TEST</div>`;
-    else focal = `<div class="target" data-rev style="font-size:clamp(56px,18vw,88px)">${x.type === 'check' ? `${x.sets.length}<small>${x.sets.length > 1 ? 'SETS' : 'ROUND'}</small>` : x.type === 'sprint' ? (x.target ? `${fmtDur(x.target * 1000)}<small>TARGET</small>` : `${x.sets.length}<small>REPS</small>`) : x.type === 'timed' ? (x.sets[0].pSec >= 120 ? `${Math.round(x.sets[0].pSec / 60)}<small>MIN</small>` : `${x.sets[0].pSec}<small>SEC</small>`) : `${x.sets[0].pReps}<small>${(x.unitLabel || 'reps').toUpperCase()}</small>`}</div>`;
+    else focal = `<div class="target" data-rev style="font-size:clamp(56px,18vw,88px)">${x.type === 'check' ? `${x.sets.length}<small>${x.sets[0] && x.sets[0].pLabel ? 'EXERCISES' : x.sets.length > 1 ? 'SETS' : 'ROUND'}</small>` : x.type === 'sprint' ? (x.target ? `${fmtDur(x.target * 1000)}<small>TARGET</small>` : `${x.sets.length}<small>REPS</small>`) : x.type === 'timed' ? (x.sets[0].pSec >= 120 ? `${Math.round(x.sets[0].pSec / 60)}<small>MIN</small>` : `${x.sets[0].pSec}<small>SEC</small>`) : `${x.sets[0].pReps}<small>${(x.unitLabel || 'reps').toUpperCase()}</small>`}</div>`;
     const flags = x.type === 'pct' ? x.sets.filter(t => t.pPct > 100).length ? '<span class="badge red">Above 100% of reference — review load</span>' : '' : '';
     const roundedUp = x.type === 'pct' && x.sets.some(t => t.pT && t.pT.roundedUp) ? '<span class="badge warn">Some targets rounded up</span>' : '';
     const sets = x.sets.map((t, si) => this.setRow(s, x, ei, t, si, si === nextSet)).join('');
     let cta;
-    if (nextSet > -1) { const t = x.sets[nextSet]; cta = `<button class="btn big primary grow" type="button" data-act="set-next" data-e="${ei}" data-s="${nextSet}">${icon('check')} Complete ${t.warm ? 'warm-up' : (x.type === 'test' ? 'attempt ' : 'set ') + t.n}</button>`; }
+    if (nextSet > -1) { const t = x.sets[nextSet]; cta = `<button class="btn big primary grow" type="button" data-act="set-next" data-e="${ei}" data-s="${nextSet}">${icon('check')} Complete ${t.warm ? 'warm-up' : (x.type === 'test' ? 'attempt ' : t.pLabel && x.type === 'check' ? 'exercise ' : 'set ') + t.n}</button>`; }
     else if (nextEx > -1) cta = `<button class="btn big primary grow" type="button" data-act="ex-go" data-i="${nextEx}">Next exercise ${icon('chevron-right')}</button>`;
     else cta = `<button class="btn big red grow" type="button" data-act="finish">${icon('flag')} Finish mission</button>`;
     return `<div class="screen">
@@ -2721,7 +2722,7 @@ const Screens = {
     }
     else if (x.type === 'timed') { ins = inp('sec', numVal(t.sec), 'sec', 'seconds', `${lbl} seconds`); presc = `Target ${t.pSec}s`; }
     else if (x.type === 'sprint') { ins = inp('sec', numVal(t.sec), 'sec', x.testRun ? 'time' : 'time (optional)', `${lbl} time in seconds`); presc = `${x.distLabel || t.dist + ' yd'}${x.target ? ` · target ${fmtDur(x.target * 1000)}` : ''}${t.sec && x.target ? (t.sec <= x.target ? ' · made it' : ' · over') : ''}`; }
-    else if (x.type === 'check') { ins = `<span class="muted" style="align-self:center;font-size:14px">${esc(x.sets.length > 1 ? 'Tap ✓ when this set is done' : 'Tap ✓ when done')}</span>`; presc = x.sets.length > 1 ? `Set ${t.n} of ${x.sets.length}` : ''; }
+    else if (x.type === 'check') { ins = `<span class="muted" style="align-self:center;font-size:14px">${t.pLabel ? `<b style="color:var(--ink,#1A1D20)">${esc(t.pLabel.split(' — ')[0])}</b><br>${esc(t.pLabel.split(' — ')[1] || '')}` : esc(x.sets.length > 1 ? 'Tap ✓ when this set is done' : 'Tap ✓ when done')}</span>`; presc = x.sets.length > 1 ? `${t.pLabel ? 'Exercise' : 'Set'} ${t.n} of ${x.sets.length}` : ''; }
     else if (x.type === 'test') { const mu = Units.metricUnit(x.metric); ins = inp('val', t.val ? numVal(Units.metricIn(x.metric, t.val)) : '', mu, 'result', `${lbl} result in ${mu}`); presc = 'Record only a successful attempt'; }
     const rpe = x.type === 'pct' ? `<label class="sr" for="${id('rpe')}">RPE</label><select class="rpe" id="${id('rpe')}" data-f="rpe" data-e="${ei}" data-s="${si}"><option value="">RPE</option>${[6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10].map(v => `<option value="${v}" ${t.rpe === v ? 'selected' : ''}>RPE ${v}</option>`).join('')}</select>` : '';
     return `<div class="set ${t.done ? 'done' : ''} ${t.warm ? 'warm' : ''} ${isNext ? 'next' : ''}" data-set="${ei}-${si}">
@@ -4041,6 +4042,28 @@ buildVTProgram = function (track, pos) {
   P.prep = buildPrep();
   return P;
 };
+
+/* Denver Bronco Abs with Partner — definition from Cliff's coach (the book only names it) */
+const BRONCO_STEPS = [
+  '1 · Feet-up crunch & sit-up — on your back, hands behind head, legs together, soles to the sky; partner holds feet up',
+  '2 · Bent-knee sit-ups — feet on the floor, hands behind head; partner holds feet down',
+  '3 · Straight-leg sit-ups — hands behind head; partner holds legs at the ankles',
+  '4 · Side crunches, right — partner’s hands on your hip and knee',
+  '5 · Side crunches, left — partner’s hands on your hip and knee',
+  '6 · Back extensions — on your stomach, hands behind head; raise off the floor, hold the arch 1 second, hips stay down'
+];
+Object.assign(EXERCISES.denver_bronco_abs_with_partner, {
+  equip: 'Partner', muscles: 'Abs, obliques, lower back', steps: BRONCO_STEPS,
+  notes: 'One man goes through the exercises while the partner assists, then switch. Traditionally 10 reps of each exercise. ' + BRONCO_STEPS.join(' ')
+});
+(() => {
+  const prev = buildVTProgram;
+  buildVTProgram = function (track, pos) {
+    const P = prev(track, pos);
+    P.workouts.forEach(w => w.exercises.forEach(e => { if (e.ex === 'denver_bronco_abs_with_partner') Object.assign(e, { type: 'check', sets: BRONCO_STEPS.length, note: 'One man goes through all six while the partner assists, then switch.', rest: 0 }); }));
+    return P;
+  };
+})();
 
 /* Technique videos linked in Cliff's "VT Workout" document, keyed by library id; [YouTube id, s=Short (vertical) | v=video] */
 const VIDEOS = {"jump_rope":[["FJmRQ5iTXKE","v"]],"dot_drills":[["PR7s4nXtWSw","v"]],"speed_ladder":[["VE9K9w6rOmM","v"]],"bench_press":[["_FkbD0FhgVE","s"]],"test_bench":[["_FkbD0FhgVE","s"]],"incline_bench_press":[["98HWfiRonkE","s"]],"standing_military_press":[["_cfNP_VXs_U","v"]],"back_squat":[["Akd5xmZlsvg","v"]],"test_squat":[["Akd5xmZlsvg","v"]],"lateral_squat":[["KAjqdl-tJ0w","v"]],"one_arm_dumbbell_row":[["IOy2k0Cb6Vo","v"],["yHqqGd0tXcw","s"]],"reverse_hyperextension":[["ROV6iVsSJSE","v"]],"glute_ham_raises":[["1TlhdiFSJrU","v"]],"abc_sit_ups":[["2kshXvw7n-4","v"]],"abcs":[["2kshXvw7n-4","v"]],"hang_clean_front_squat_combo":[["mK2TLGURoV4","v"]],"power_shrugs":[["96NFt3oTvpI","v"]],"dumbbell_incline_bench":[["JHFd-e2_M8E","v"]],"barbell_lying_tricep_extension":[["trVzEReByPg","v"]],"medicine_ball_plyo_pushups":[["6A4w-J-uyO8","v"]],"flutter_kick":[["bfMYh_-o8qA","v"]],"flutter_kicks":[["bfMYh_-o8qA","v"]],"bicycle_abs":[["VaL7XWK3MVE","v"]],"olympic_deadlift_to_knee":[["3QzHYVfVjA4","v"]],"clean_pulls":[["xx8WkFrST2Y","v"]],"barbell_lunges":[["bBrBLS7aejI","v"]],"box_step_ups":[["Bpbs8Aakw4A","v"]],"pullups":[["eDP_OOhMTZ4","s"]],"bar_hang":[["3CEmHJXbNpc","v"]],"jump_shrug":[["3z_XoJO-8lA","v"]],"snatch_high_pulls":[["SW8SRE0ayXY","v"]],"hang_snatch":[["Php-RclQ1yU","v"]],"dumbbell_bench_press":[["QHkm4xzvHlY","v"]],"incline_dumbbell_curls":[["V8H4k8lquiU","v"]],"weighted_dips":[["22JPetRuHqE","v"],["dij0l_pL0z8","s"]],"clapping_push_ups":[["EYwWCgM198U","v"]],"push_press":[["yklSQG1_Ovc","v"]],"dumbbell_alternate_bench_press":[["-umNkuKth1U","v"]],"one_dumbbell_pullovers":[["tpLnfSQJ0gg","v"]],"power_snatch":[["ydHHsju1-Nc","v"]],"single_leg_leg_press":[["3aYsOsBA7ZE","v"]],"dumbbell_lying_tricep_extension":[["P4H5p4HoJeI","v"]],"neck_iso_with_partner":[["kwKq9n8ima4","v"]],"neck_machine":[["ITSlkMDB_Fc","v"]],"medicine_ball_partner_sit_up_throws":[["ncnmxBvkQuo","v"]],"two_man_medicine_ball_sit_up_pass":[["ncnmxBvkQuo","v"]],"power_clean":[["YG8M_-11C2A","v"]],"test_clean":[["YG8M_-11C2A","v"]],"front_squat":[["Q1R0_CbgHpc","v"]],"body_weight_dips":[["sg3PTIA3rXI","v"],["4ua3MzaU0QU","s"]],"push_jerk":[["Om7vLD6x8W0","v"]],"test_jerk":[["Om7vLD6x8W0","v"]],"towel_pullups":[["Z6o1sy-sw_I","v"]],"lying_tricep_extension_with_curl_bar":[["gWu_wIn6sA0","v"]],"speed_squats":[["ZA14FPIZJM8","v"],["Akd5xmZlsvg","v"]],"close_grip_bench_with_chains":[["rFo1t4L2Gyk","v"],["43rg7fBNP2w","s"]],"series_box_jumps":[["cLSB_Zn0awM","v"]],"seated_plate_raises":[["-7AnQEQRUjs","v"]],"hanging_leg_raises":[["hGTni2P_vZg","s"]],"twisting_sit_ups":[["NscWraLOOCs","s"]],"barbell_curls":[["OTnpHe1zDrw","s"]],"curls":[["OTnpHe1zDrw","s"],["FHY_2t7R714","s"]],"lat_pulldowns":[["5YC67yVpBGE","v"],["bNmvKpJSWKM","s"]],"bear_calf_raises":[["1cvpm--Y-4I","s"]],"crunches":[["PAdTfrpgWos","v"]],"seated_dumbbell_shoulder_press":[["JGOKmqFwzEg","s"]],"seated_barbell_shoulder_press":[["lLaa7lqJfWI","v"]],"@pnf":[["Jw3bcaQBs14","v"]],"@toe":[["Gb0kNF19NfY","v"]],"@knee":[["s2emWIC58bI","v"]],"@butt":[["D_qMNWY0tHo","v"]],"@shuffle":[["ysv-XsCrb4s","v"]],"@aseries":[["y6hBI3DEe6Y","v"]],"@fastleg":[["6RAQJuM8r2s","v"]]};
