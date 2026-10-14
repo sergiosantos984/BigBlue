@@ -1107,6 +1107,47 @@ body.amb .pod{animation:barGrow .8s var(--ease-out) both}body.amb .pod.silver{an
 #pocket .pk-exit{width:100%;max-width:460px;min-height:52px;font-size:14px;letter-spacing:.08em;text-transform:uppercase}
 #pocket .pk-hold.holding{transform:scale(.98)}
 
+/* ---- focus workout screen ---- */
+.screen.focus{gap:12px}
+.screen.focus .hud{padding-bottom:8px}
+.screen.focus .hud .h3{font-size:17px}
+.hud-clock{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 12px;border-radius:12px;border:1px solid rgba(26,29,32,.15);background:#fff;color:#1A1D20;cursor:pointer;font:inherit}
+.hud-clock .hud-time{font:800 22px/1 var(--f-mono,monospace);font-variant-numeric:tabular-nums}
+.hud-clock svg{width:16px;height:16px;opacity:.7}
+.hud-clock.paused{border-color:#E87722;animation:clkBlink 1.4s ease-in-out infinite}
+@keyframes clkBlink{50%{opacity:.55}}
+.clock-start{flex:none;white-space:nowrap;animation:clkPulse 1.6s ease-in-out infinite}
+@keyframes clkPulse{0%,100%{box-shadow:0 0 0 0 rgba(232,119,34,.55)}50%{box-shadow:0 0 0 10px rgba(232,119,34,0)}}
+.screen.focus .ex-tabs{margin-top:8px}
+button.resume-banner{width:100%;text-align:left;cursor:pointer;font:inherit}
+.ex-tools{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap}
+.ex-tools .tool{display:inline-flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;min-width:64px;min-height:56px;padding:6px 10px;border-radius:14px;border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.1);color:#fff;font:600 11.5px/1 inherit;letter-spacing:.02em;cursor:pointer}
+.ex-tools .tool svg{width:20px;height:20px}
+.ex-tools .tool:active{transform:scale(.95)}
+.pair-note{margin-top:10px;display:flex;gap:6px;align-items:center;color:#FFB36B!important}
+.pair-note svg{width:14px;height:14px}
+.set-extra{gap:6px;justify-content:center}
+.more-opts>summary{cursor:pointer;display:flex;align-items:center;gap:8px;min-height:36px;list-style:none}
+.more-opts>summary::-webkit-details-marker{display:none}
+.more-opts>summary svg{width:16px;height:16px}
+body.workout-mode #fx{opacity:.25}
+/* pocket mode v2: bigger, bolder */
+#pocket{background:linear-gradient(160deg,#9C2D55 0%,#5C102D 45%,#16030A 100%);justify-content:space-evenly}
+#pocket::before{content:"";position:absolute;inset:-30%;background:conic-gradient(from 0deg,transparent 0 40deg,rgba(255,179,107,.10) 60deg,transparent 80deg 220deg,rgba(255,255,255,.06) 240deg,transparent 260deg);animation:pkSpin 9s linear infinite;pointer-events:none}
+@keyframes pkSpin{to{transform:rotate(360deg)}}
+#pocket .pk-ring{width:min(88vw,440px);background:conic-gradient(#fff calc(var(--p)*1%),rgba(255,255,255,.12) 0);box-shadow:0 0 0 10px rgba(255,255,255,.04),0 30px 80px rgba(0,0,0,.45)}
+#pocket .pk-ring::before{content:"";position:absolute;inset:-18px;border-radius:50%;background:repeating-conic-gradient(rgba(255,255,255,.35) 0 .6deg,transparent .6deg 6deg);-webkit-mask:radial-gradient(circle,transparent 63%,#000 64%,#000 68%,transparent 69%);mask:radial-gradient(circle,transparent 63%,#000 64%,#000 68%,transparent 69%)}
+#pocket .pk-ring.rest{background:conic-gradient(#FFB36B 0,#E87722 calc(var(--p)*1%),rgba(255,255,255,.12) 0)}
+#pocket .pk-in{width:86%;background:radial-gradient(circle at 40% 28%,#A3305A,#5C102D 60%,#2A0614)}
+#pocket .pk-big{font-size:clamp(84px,28vw,150px);letter-spacing:-.02em;text-shadow:0 8px 30px rgba(0,0,0,.4)}
+#pocket .pk-sub{font-size:16px}
+#pocket .pk-orb::after{width:28px;height:28px;margin-left:-14px;top:-4px}
+#pocket .pk-name{font-size:clamp(36px,11vw,64px);letter-spacing:.01em;text-shadow:0 6px 24px rgba(0,0,0,.35)}
+#pocket .pk-target{font:800 20px/1.2 var(--f-mono,monospace);letter-spacing:.06em;color:#FFB36B}
+#pocket .pk-dots i{width:18px;height:18px}
+#pocket.go .pk-ring{animation:pkGo .6s ease-in-out 3}
+@keyframes pkGo{50%{transform:scale(1.04);box-shadow:0 0 0 18px rgba(232,119,34,.35),0 30px 80px rgba(0,0,0,.45)}}
+
 </style>
 </head>
 <body>
@@ -1455,6 +1496,7 @@ const Haptics = {
   buzz() { if (State.settings.vibrate && navigator.vibrate) try { navigator.vibrate([120, 60, 120]); } catch (e) { } },
   beep(freqs = [880, 1175], gap = .16) {
     if (!State.settings.sound) return;
+    if (typeof LockTrack !== 'undefined' && LockTrack.playing) return;   // the lock-screen card owns the audio while a workout runs
     try {
       this.ctx = this.ctx || new (window.AudioContext || window.webkitAudioContext)();
       const t = this.ctx.currentTime;
@@ -1701,7 +1743,7 @@ const Workout = {
   setCount(w) { return w.exercises.reduce((n, e) => n + this.nSets(e), 0); },
   estMinutes(w) { let s = 0; w.exercises.forEach(e => { const n = this.nSets(e) + (e.type === 'pct' && (e.extras || []).some(x => x.warm) ? 1 : 0), work = e.type === 'timed' ? e.sec : e.type === 'sprint' ? (e.target || 30) : e.type === 'test' ? 60 : e.type === 'check' ? 150 : 40; s += n * (work + Math.min(e.rest || 60, 240)); }); return Math.max(10, Math.round(s / 60 / 5) * 5); },
   build(w) {
-    const s = { id: uid('ses'), tid: w.id, week: w.week, day: w.day, cycle: w.cycle, title: w.title, category: w.category, date: todayISO(), startedAt: Date.now(), endedAt: null, pausedAt: null, pausedMs: 0, status: 'in_progress', cur: 0, notes: '', ex: [], createdAt: Date.now() };
+    const s = { id: uid('ses'), tid: w.id, week: w.week, day: w.day, cycle: w.cycle, title: w.title, category: w.category, date: todayISO(), startedAt: Date.now(), endedAt: null, pausedAt: Date.now(), pausedMs: 0, clockOn: false, status: 'in_progress', cur: 0, notes: '', ex: [], createdAt: Date.now() };
     w.exercises.forEach(e => {
       const x = this.buildEx(e);
       if (e.alts && e.alts.length) x.alts = e.alts.map((a, i) => this.buildEx(Object.assign({ uid: `${e.uid}a${i + 1}` }, a)));
@@ -2767,37 +2809,44 @@ const Screens = {
     if (nextSet > -1) { const t = x.sets[nextSet]; cta = `<button class="btn big primary grow" type="button" data-act="set-next" data-e="${ei}" data-s="${nextSet}">${icon('check')} Complete ${t.warm ? 'warm-up' : (x.type === 'test' ? 'attempt ' : t.pLabel && x.type === 'check' ? 'exercise ' : 'set ') + t.n}</button>`; }
     else if (nextEx > -1) cta = `<button class="btn big primary grow" type="button" data-act="ex-go" data-i="${nextEx}">Next exercise ${icon('chevron-right')}</button>`;
     else cta = `<button class="btn big red grow" type="button" data-act="finish">${icon('flag')} Finish mission</button>`;
-    return `<div class="screen">
+    const clockOff = s.clockOn === false, w = Program.byId(s.tid);
+    const L = x.weighted ? Workout.lastSets(x.exId, s.id) : null, lw = L && L.work.filter(t => t.w).length;
+    const tool = (act, ic, label, extra = '') => `<button class="tool" type="button" data-act="${act}" data-e="${ei}" ${extra}>${icon(ic)}<span>${label}</span></button>`;
+    const vid = Video.for(x.exId) ? `<button class="tool vbtn" type="button" data-act="video" data-ex="${esc(x.exId)}">${icon('play')}<span>Video</span></button>` : '';
+    const pairT = x.pair != null && s.ex[x.pair] ? tool('unpair', 'link', 'Unpair') : (['reps', 'pct', 'timed', 'check'].includes(x.type) && !x.skipped ? tool('pair', 'link', 'Superset') : '');
+    const swapT = x.alts && x.alts.length ? tool('swap-alt', 'repeat', 'Swap', `aria-label="Swap for ${esc(x.alts[0].name)}"`) : '';
+    return `<div class="screen focus">
       <header class="hud" aria-label="Workout status">
-        <div class="row"><button class="btn icon sm" type="button" data-act="save-exit" aria-label="Save and exit">${icon('save')}</button>
+        <div class="row"><button class="btn icon sm" type="button" data-act="save-exit" aria-label="Save and exit">${icon('chevron-left')}</button>
           <div class="grow" style="min-width:0"><div class="label">${wkLabel(s.week)} · Day ${s.day}</div><div class="h3" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(s.title)}</div></div>
-          <div style="text-align:right"><div class="hud-time" id="hudTime" aria-label="Elapsed time">${fmtDur(Workout.elapsed(s))}</div><div class="label num">${doneSets}/${total} sets · ${total ? Math.round(doneSets / total * 100) : 0}%</div></div>
-          <button class="btn icon sm" type="button" data-act="pause" aria-label="${s.pausedAt ? 'Resume clock' : 'Pause clock'}">${icon(s.pausedAt ? 'play' : 'pause')}</button></div>
+          ${clockOff ? `<button class="btn sm primary clock-start" type="button" data-act="clock-start">${icon('play')} Start clock</button>`
+            : `<button class="hud-clock ${s.pausedAt ? 'paused' : ''}" type="button" data-act="pause" aria-label="${s.pausedAt ? 'Resume clock' : 'Pause clock'}"><span class="hud-time" id="hudTime">${fmtDur(Workout.elapsed(s))}</span>${icon(s.pausedAt ? 'play' : 'pause')}</button>`}</div>
         <div class="yardbar" role="progressbar" aria-valuemin="0" aria-valuemax="${total}" aria-valuenow="${doneSets}" aria-label="Sets completed"><i style="width:${total ? doneSets / total * 100 : 0}%"></i></div>
         <div class="ex-tabs" role="tablist" aria-label="Exercises">${s.ex.map((z, i) => `<button type="button" role="tab" class="ex-tab ${i === ei ? 'cur' : ''} ${z.skipped ? 'skip' : exDone(z) ? 'done' : ''}" data-act="ex-go" data-i="${i}" aria-selected="${i === ei}" aria-label="Exercise ${i + 1}: ${esc(z.name)}${exDone(z) && !z.skipped ? ', done' : ''}${z.pair != null ? ', superset' : ''}">${exDone(z) && !z.skipped ? icon('check') : i + 1}${z.pair != null ? '<i class="pairdot" aria-hidden="true"></i>' : ''}</button>`).join('')}</div>
-        <div class="label tabhint">Tap a number to jump · ${icon('link')} Superset alternates two</div>
       </header>
-      ${s.pausedAt ? `<div class="resume-banner">${icon('pause')}<div class="grow"><b>Clock paused.</b> You can still log sets.</div><button class="btn sm" type="button" data-act="pause">Resume</button></div>` : ''}
-      ${(() => { const w = Program.byId(s.tid); return w && w.warmup && w.warmup.length ? `<details class="panel flat warmup"><summary class="label" style="cursor:pointer">${icon('flame')} Pre-workout · ${w.warmup.length} drills</summary><ol class="wlist">${w.warmup.map(d => `<li>${Video.forDrill(d) ? `<button type="button" data-act="video-drill" data-name="${esc(d)}">${icon('play')}${esc(d)}</button>` : esc(d)}</li>`).join('')}</ol></details>` : ''; })()}
+      ${!clockOff && s.pausedAt ? `<button class="resume-banner" type="button" data-act="pause">${icon('pause')}<span class="grow"><b>Clock paused.</b> Tap to resume.</span></button>` : ''}
+      ${w && w.warmup && w.warmup.length && !doneSets ? `<details class="panel flat warmup"><summary class="label" style="cursor:pointer">${icon('flame')} Pre-workout · ${w.warmup.length} drills</summary><ol class="wlist">${w.warmup.map(d => `<li>${Video.forDrill(d) ? `<button type="button" data-act="video-drill" data-name="${esc(d)}">${icon('play')}${esc(d)}</button>` : esc(d)}</li>`).join('')}</ol></details>` : ''}
       <div class="exstage"><article class="excard" aria-label="Current exercise" data-plane="${pad2(ei + 1)}">
-        <div class="spread"><span class="label" data-rev>${esc(x.cat)} · ${ei + 1} of ${s.ex.length}</span>${x.skipped ? '<span class="badge">Skipped</span>' : ''}</div>
+        <div class="spread"><span class="label" data-rev>${ei + 1} of ${s.ex.length} · ${esc(x.cat)}${x.optional ? ' · optional' : ''}</span>${x.skipped ? '<span class="badge">Skipped</span>' : ''}</div>
         <h2 class="ex-name" data-rev>${esc(x.name)}</h2>${focal}${sub}
-        <div class="presc" data-rev>${esc(x.presc)}</div>${x.pNote ? `<div class="muted" data-rev style="font-size:14px;margin-top:4px">${esc(x.pNote)}</div>` : ''}
-        <div class="row wrap" data-rev style="margin-top:8px">${Video.btn(x.exId, 'Watch how')}${x.rest ? `<span class="badge">${icon('timer')} Rest ${fmtDur(x.rest * 1000)}</span>` : ''}${last && !x.weighted ? `<span class="badge blue">Last: ${esc(last)}</span>` : ''}${x.optional ? '<span class="badge">Optional</span>' : ''}${flags}${roundedUp}</div>
-        ${(() => { if (!x.weighted) return ''; const L = Workout.lastSets(x.exId, s.id), lw = L && L.work.filter(t => t.w); if (!lw || !lw.length) return `<p class="muted" data-rev style="font-size:13px;margin-top:8px">${icon('scale')} Weight is optional here — log it and next time you'll see where you were.</p>`; return `<div class="last-box" data-rev><div class="grow"><span class="label">Last time · ${wkLabel(L.week)} · ${fmtDate(L.date)}</span><div class="num" style="font-weight:700">${L.work.map(t => (t.w ? Units.fmtW(t.w) + '×' : '') + (t.reps ?? '—')).join(' · ')} <small>${u}</small></div></div>${x.sets.some(t => !t.done && !t.warm) ? `<button class="btn sm" type="button" data-act="use-last" data-e="${ei}">${icon('undo-2')} Use last</button>` : ''}</div>`; })()}
-        <div class="row wrap" data-rev style="margin-top:10px">${x.alts && x.alts.length ? `<button class="btn sm" type="button" data-act="swap-alt" data-e="${ei}">${icon('repeat')} Swap for ${esc(x.alts[0].name)}</button>` : ''}${x.pair != null && s.ex[x.pair] ? `<span class="badge blue">${icon('link')} Superset with ${esc(s.ex[x.pair].name)}</span><button class="btn sm ghost" type="button" data-act="unpair" data-e="${ei}">${icon('x')} Unpair</button>` : (x.type === 'reps' || x.type === 'pct' || x.type === 'timed' || x.type === 'check') && !x.skipped ? `<button class="btn sm" type="button" data-act="pair" data-e="${ei}">${icon('link')} Superset</button>` : ''}</div>
-        <details style="margin-top:10px"><summary class="label" style="cursor:pointer">Technique notes</summary><p class="muted" style="margin-top:6px;font-size:14px">${esc(Program.exDef(x.exId).notes || '—')}</p></details>
+        <div class="presc" data-rev>${esc(x.presc)}${x.rest ? ` · rest ${fmtDur(x.rest * 1000)}` : ''}</div>${x.pNote ? `<div class="muted" data-rev style="font-size:14px;margin-top:4px">${esc(x.pNote)}</div>` : ''}
+        ${flags || roundedUp ? `<div class="row wrap" data-rev style="margin-top:8px">${flags}${roundedUp}</div>` : ''}
+        ${lw ? `<div class="last-box" data-rev><div class="grow"><span class="label">Last time · ${wkLabel(L.week)}</span><div class="num" style="font-weight:700">${L.work.map(t => (t.w ? Units.fmtW(t.w) + '×' : '') + (t.reps ?? '—')).join(' · ')} <small>${u}</small></div></div>${x.sets.some(t => !t.done && !t.warm) ? `<button class="btn sm" type="button" data-act="use-last" data-e="${ei}">Use last</button>` : ''}</div>` : (last && !x.weighted ? `<div class="label" data-rev style="margin-top:8px">Last: ${esc(last)}</div>` : '')}
+        ${x.pair != null && s.ex[x.pair] ? `<div class="label pair-note" data-rev>${icon('link')} Alternating with ${esc(s.ex[x.pair].name)}</div>` : ''}
+        <div class="ex-tools" data-rev>${vid}${pairT}${swapT}<button class="tool" type="button" data-act="pocket">${icon('smartphone')}<span>Pocket</span></button></div>
       </article></div>
-      <div class="row wrap lock-row"><button class="btn sm" type="button" data-act="pocket">${icon('smartphone')} Pocket mode</button><button class="btn sm ghost" type="button" data-act="lock-toggle" aria-pressed="${LockTrack.enabled()}">${icon('lock')} Lock screen: ${LockTrack.enabled() ? 'On' : 'Off'}</button></div>
       <div class="sets" aria-label="Sets">${sets}</div>
-      <div class="row wrap">${x.type === 'pct' ? `<button class="btn sm" type="button" data-act="add-set" data-e="${ei}" data-warm="1">${icon('plus')} Warm-up set</button>` : ''}<button class="btn sm" type="button" data-act="add-set" data-e="${ei}" data-warm="0">${icon('plus')} ${x.type === 'test' ? 'Attempt' : 'Set'}</button>
-        <button class="btn sm ghost" type="button" data-act="skip-ex" data-e="${ei}">${icon(x.skipped ? 'undo-2' : 'skip-forward')} ${x.skipped ? 'Unskip exercise' : 'Skip exercise'}</button></div>
-      <div class="field"><label for="exNotes">Exercise notes — discomfort, limits, substitutions</label><textarea class="input" id="exNotes" rows="2" data-xf="notes" data-e="${ei}" placeholder="Optional">${esc(x.notes)}</textarea></div>
-      <div class="row"><button class="btn grow" type="button" data-act="ex-go" data-i="${Math.max(0, ei - 1)}" ${ei === 0 ? 'disabled' : ''}>${icon('chevron-left')} Previous</button><button class="btn grow" type="button" data-act="ex-go" data-i="${Math.min(s.ex.length - 1, ei + 1)}" ${ei === s.ex.length - 1 ? 'disabled' : ''}>Next ${icon('chevron-right')}</button></div>
-      <section class="panel stack"><div class="label">Session</div>
-        <div class="field"><label for="sesNotes">Workout notes</label><textarea class="input" id="sesNotes" rows="2" data-sf="notes" placeholder="How did it feel? Any pain or limitations?">${esc(s.notes)}</textarea></div>
-        <p class="muted" style="font-size:12.5px">Stop if you feel sharp pain. Skipping or modifying an exercise is always fine — log what you actually did.</p>
-        <div class="grid2"><button class="btn red" type="button" data-act="finish">${icon('flag')} Finish workout</button><button class="btn danger" type="button" data-act="discard">${icon('trash-2')} Discard</button></div></section>
+      <div class="row wrap set-extra">${x.type === 'pct' ? `<button class="btn sm ghost" type="button" data-act="add-set" data-e="${ei}" data-warm="1">${icon('plus')} Warm-up</button>` : ''}<button class="btn sm ghost" type="button" data-act="add-set" data-e="${ei}" data-warm="0">${icon('plus')} ${x.type === 'test' ? 'Attempt' : 'Set'}</button>
+        <button class="btn sm ghost" type="button" data-act="skip-ex" data-e="${ei}">${icon(x.skipped ? 'undo-2' : 'skip-forward')} ${x.skipped ? 'Unskip' : 'Skip exercise'}</button></div>
+      <details class="panel flat more-opts"><summary class="label">${icon('menu')} Notes, settings & finish</summary>
+        <div class="stack" style="margin-top:12px">
+          <details><summary class="label" style="cursor:pointer">Technique notes</summary><p class="muted" style="margin-top:6px;font-size:14px">${esc(Program.exDef(x.exId).notes || '—')}</p></details>
+          <div class="field"><label for="exNotes">Exercise notes</label><textarea class="input" id="exNotes" rows="2" data-xf="notes" data-e="${ei}" placeholder="Discomfort, limits, substitutions">${esc(x.notes)}</textarea></div>
+          <div class="field"><label for="sesNotes">Workout notes</label><textarea class="input" id="sesNotes" rows="2" data-sf="notes" placeholder="How did it feel? Any pain or limitations?">${esc(s.notes)}</textarea></div>
+          <button class="btn sm ghost" type="button" data-act="lock-toggle" aria-pressed="${LockTrack.enabled()}">${icon('lock')} Lock-screen tracker: ${LockTrack.enabled() ? 'On' : 'Off'}</button>
+          <p class="muted" style="font-size:12.5px">Stop if you feel sharp pain. Skipping or modifying an exercise is always fine — log what you actually did.</p>
+          <div class="grid2"><button class="btn red" type="button" data-act="finish">${icon('flag')} Finish workout</button><button class="btn danger" type="button" data-act="discard">${icon('trash-2')} Discard</button></div>
+        </div></details>
       <div class="logger-actions">${cta}</div>
     </div>`;
   },
@@ -3371,6 +3420,7 @@ const Actions = {
   'rm-set': el => { const s = Workout.active(); s && SetLog.removeSet(s, +el.dataset.e, +el.dataset.s); },
   'skip-ex': el => { const s = Workout.active(); if (!s) return; const x = s.ex[+el.dataset.e]; x.skipped = !x.skipped; Workout.persist(s, true); UI.renderLogger(); },
   pause: () => { const s = Workout.active(); s && Workout.pause(s); },
+  'clock-start': async () => { const s = Workout.active(); if (!s) return; s.startedAt = Date.now(); s.pausedAt = null; s.pausedMs = 0; s.clockOn = true; Haptics.beep && Haptics.beep([523, 784], .08); await Workout.persist(s, true); UI.renderLogger(); Clock.sync(); UI.toast('Clock started. Go!'); },
   'save-exit': () => { const s = Workout.active(); s && Workout.saveExit(s); },
   finish: () => { const s = Workout.active(); s && Workout.finish(s); },
   discard: () => { const s = Workout.active(); s && Workout.abandon(s); },
@@ -4834,16 +4884,20 @@ const LockTrack = {
   },
   setup() {
     if (this.audio) return;
-    this.audio = new Audio(this.wav(2, () => (Math.random() - .5) * 6)); this.audio.loop = true; this.audio.setAttribute('playsinline', ''); this.audio.preload = 'auto';
-    // referee-style double whistle for "rest over"
-    this.beep = new Audio(this.wav(.9, t => { const on = (t < .28) || (t > .4 && t < .78); const env = on ? Math.min(1, (t % .4) * 30) : 0; return env * 9000 * Math.sin(2 * Math.PI * (2200 + 180 * Math.sin(2 * Math.PI * 40 * t)) * t); }));
+    this.silent = this.wav(6, () => (Math.random() - .5) * 6);
+    // referee double whistle, then quiet: played on the SAME element so the lock-screen card stays
+    this.whistle = this.wav(3, t => { const on = (t < .28) || (t > .4 && t < .78); if (!on) return (Math.random() - .5) * 6; const env = Math.min(1, (t % .4) * 30); return env * 9000 * Math.sin(2 * Math.PI * (2200 + 180 * Math.sin(2 * Math.PI * 40 * t)) * t); });
+    this.audio = new Audio(this.silent); this.audio.loop = true; this.audio.setAttribute('playsinline', ''); this.audio.preload = 'auto';
+    this.audio.addEventListener('ended', () => { if (this.audio.src !== this.silent) { this.audio.src = this.silent; this.audio.loop = true; this.audio.play().catch(() => { this.playing = false; }); } });
+    this.audio.addEventListener('pause', () => { if (!this.stopping && !this.swapping) { this.playing = false; } });
     const ms = navigator.mediaSession; if (!ms) return;
     const h = (a, f) => { try { ms.setActionHandler(a, f); } catch (e) { } };
-    h('play', () => { this.toggleRest(); }); h('pause', () => { this.toggleRest(); });
+    h('play', () => { if (this.audio.paused) this.audio.play().then(() => { this.playing = true; }).catch(() => { }); this.toggleRest(); });
+    h('pause', () => { this.toggleRest(); });
     h('nexttrack', () => this.completeSet()); h('previoustrack', () => { Rest.stop(); this.update(true); });
     h('seekforward', () => { Rest.add(15); this.update(true); }); h('seekbackward', () => { Rest.add(-15); this.update(true); });
-    try { ms.setActionHandler('stop', () => this.stop()); } catch (e) { }
   },
+  ring() { if (!this.audio) return; this.swapping = true; this.audio.loop = false; this.audio.src = this.whistle; this.audio.play().catch(() => { }).finally(() => { this.swapping = false; }); },
   async start() {
     if (this.playing || !this.enabled() || !Workout.active()) return;
     this.setup();
@@ -4851,8 +4905,8 @@ const LockTrack = {
     clearInterval(this.iv); this.iv = setInterval(() => this.update(), 1000); this.update(true);
   },
   stop() {
-    clearInterval(this.iv); this.iv = null; this.playing = false;
-    try { this.audio && this.audio.pause(); } catch (e) { }
+    clearInterval(this.iv); this.iv = null; this.playing = false; this.stopping = true;
+    try { this.audio && this.audio.pause(); } catch (e) { } this.stopping = false;
     if (navigator.mediaSession) { try { navigator.mediaSession.metadata = null; navigator.mediaSession.playbackState = 'none'; } catch (e) { } }
   },
   toggleRest() { const t = Rest.st; if (!t) return; if (t.running) Rest.pause(); else Rest.start(); this.update(true); },
@@ -4871,42 +4925,55 @@ const LockTrack = {
     const r = Rest.st, resting = !!(r && (r.running || r.remaining > 0) && !r.done), left = Rest.left();
     let target = '';
     if (t) { if (x.type === 'pct' && t.w) target = `${Units.fmtW(t.w)} ${unitW()} × ${t.pReps || t.reps || ''}`; else if (x.type === 'reps') target = `${t.w ? Units.fmtW(t.w) + ' ' + unitW() + ' × ' : ''}${t.pLabel || t.pReps || ''} ${x.unitLabel || 'reps'}`; else if (x.type === 'timed') target = `${t.pSec}s`; else if (x.type === 'sprint') target = x.distLabel || ''; else if (x.type === 'check') target = t.pLabel ? t.pLabel.split(' — ')[0] : 'Tap ⏭ when done'; }
-    return { s, x, t, setN: t ? (t.warm ? 'W' : t.n) : doneX, setOf: work.length, doneX, total, done, resting, left, dur: r ? r.duration : 0, paused: r && !r.running, target, rDone: r && r.done };
+    let bigNum = '', bigUnit = '';
+    if (t) { if ((x.type === 'pct' || x.type === 'reps') && t.w) { bigNum = String(Units.fmtW(t.w)); bigUnit = `${unitW().toUpperCase()} × ${t.pReps || t.reps || ''}`; } else if (x.type === 'reps') { bigNum = String(t.pLabel || t.pReps || ''); bigUnit = (x.unitLabel || 'reps').toUpperCase(); } else if (x.type === 'timed') { bigNum = String(t.pSec); bigUnit = 'SECONDS'; } }
+    return { bigNum, bigUnit, s, x, t, setN: t ? (t.warm ? 'W' : t.n) : doneX, setOf: work.length, doneX, total, done, resting, left, dur: r ? r.duration : 0, paused: r && !r.running, target, rDone: r && r.done };
   },
   fmt(sec) { sec = Math.max(0, Math.ceil(sec)); return `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`; },
   /* animated lock-screen picture */
   art(st) {
-    const c = this.cv || (this.cv = Object.assign(document.createElement('canvas'), { width: 512, height: 512 })), g = c.getContext('2d'), f = this.frame;
-    const bg = g.createRadialGradient(256, 200, 40, 256, 256, 380); bg.addColorStop(0, '#A3305A'); bg.addColorStop(.55, '#861F41'); bg.addColorStop(1, '#3A0718');
-    g.fillStyle = bg; g.fillRect(0, 0, 512, 512);
-    // moving stripes for life
-    g.save(); g.globalAlpha = .08; g.fillStyle = '#fff'; for (let i = -4; i < 10; i++) { const x0 = ((i * 80 + f * 6) % 960) - 240; g.beginPath(); g.moveTo(x0, 0); g.lineTo(x0 + 40, 0); g.lineTo(x0 - 160, 512); g.lineTo(x0 - 200, 512); g.fill(); } g.restore();
-    g.fillStyle = 'rgba(255,255,255,.7)'; g.font = '600 22px sans-serif'; g.textAlign = 'center'; g.fillText('HOKIE POWER', 256, 46);
-    // ring
-    const cx = 256, cy = 250, R = 150, frac = st.resting ? (st.dur ? st.left / st.dur : 0) : (st.total ? st.done / st.total : 0);
-    g.lineWidth = 22; g.strokeStyle = 'rgba(255,255,255,.14)'; g.beginPath(); g.arc(cx, cy, R, 0, Math.PI * 2); g.stroke();
-    g.strokeStyle = st.resting ? '#E87722' : '#FFFFFF'; g.lineCap = 'round'; g.beginPath(); g.arc(cx, cy, R, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * Math.max(.002, frac)); g.stroke();
-    // orbiting spark
-    const a = -Math.PI / 2 + Math.PI * 2 * frac; g.fillStyle = '#FFB36B'; g.shadowColor = '#FFB36B'; g.shadowBlur = 24 + 10 * Math.sin(f / 2); g.beginPath(); g.arc(cx + R * Math.cos(a), cy + R * Math.sin(a), 13, 0, Math.PI * 2); g.fill(); g.shadowBlur = 0;
-    g.fillStyle = '#fff';
+    const S = 512, c = this.cv || (this.cv = Object.assign(document.createElement('canvas'), { width: S, height: S })), g = c.getContext('2d'), f = this.frame;
+    const ink = '#FFFFFF', orange = '#E87722', light = '#FFB36B';
+    // stadium night: maroon → black, with a light sweep that moves every frame
+    const bg = g.createLinearGradient(0, 0, S, S); bg.addColorStop(0, '#9C2D55'); bg.addColorStop(.5, '#5C102D'); bg.addColorStop(1, '#16030A');
+    g.fillStyle = bg; g.fillRect(0, 0, S, S);
+    const sx = ((f * 37) % (S * 2)) - S / 2, sw = g.createLinearGradient(sx - 120, 0, sx + 120, S); sw.addColorStop(0, 'rgba(255,255,255,0)'); sw.addColorStop(.5, 'rgba(255,255,255,.10)'); sw.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = sw; g.fillRect(0, 0, S, S);
+    // giant outlined set number behind everything
+    g.save(); g.font = '900 360px Impact, "Arial Black", sans-serif'; g.textAlign = 'right'; g.lineWidth = 3; g.strokeStyle = 'rgba(255,255,255,.07)'; g.strokeText(String(st.setN), S + 20, S - 40); g.restore();
+    // header + whole-workout progress
+    g.textAlign = 'left'; g.fillStyle = 'rgba(255,255,255,.85)'; g.font = '800 20px sans-serif'; g.fillText('HOKIE POWER', 28, 42);
+    g.textAlign = 'right'; g.font = '700 18px sans-serif'; g.fillText(`${st.done}/${st.total} SETS`, S - 28, 42);
+    g.fillStyle = 'rgba(255,255,255,.18)'; g.fillRect(28, 54, S - 56, 6); g.fillStyle = orange; g.fillRect(28, 54, (S - 56) * (st.total ? st.done / st.total : 0), 6);
+    // stopwatch ring with ticks
+    const cx = S / 2, cy = 262, R = 158, frac = st.resting ? (st.dur ? st.left / st.dur : 0) : (st.setOf ? st.doneX / st.setOf : 0);
+    for (let k = 0; k < 60; k++) { const a = -Math.PI / 2 + k / 60 * Math.PI * 2, on = k / 60 < frac, big = k % 5 === 0; g.strokeStyle = on ? (st.resting ? light : ink) : 'rgba(255,255,255,.22)'; g.lineWidth = big ? 4 : 2; g.beginPath(); g.moveTo(cx + (R + 22) * Math.cos(a), cy + (R + 22) * Math.sin(a)); g.lineTo(cx + (R + (big ? 38 : 32)) * Math.cos(a), cy + (R + (big ? 38 : 32)) * Math.sin(a)); g.stroke(); }
+    g.lineWidth = 26; g.strokeStyle = 'rgba(255,255,255,.12)'; g.beginPath(); g.arc(cx, cy, R, 0, Math.PI * 2); g.stroke();
+    const rg = g.createLinearGradient(cx - R, cy - R, cx + R, cy + R); rg.addColorStop(0, st.resting ? light : '#FFFFFF'); rg.addColorStop(1, st.resting ? orange : '#FFD9B3');
+    g.strokeStyle = rg; g.lineCap = 'round'; g.shadowColor = st.resting ? orange : 'rgba(255,255,255,.6)'; g.shadowBlur = 18; g.beginPath(); g.arc(cx, cy, R, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * Math.max(.003, frac)); g.stroke(); g.shadowBlur = 0;
+    const a = -Math.PI / 2 + Math.PI * 2 * frac; g.fillStyle = '#fff'; g.shadowColor = light; g.shadowBlur = 26 + 12 * Math.sin(f); g.beginPath(); g.arc(cx + R * Math.cos(a), cy + R * Math.sin(a), 15, 0, Math.PI * 2); g.fill(); g.shadowBlur = 0;
+    // centre
+    g.textAlign = 'center'; g.fillStyle = ink;
     if (st.resting) {
-      g.font = '800 104px sans-serif'; g.fillText(this.fmt(st.left), cx, cy + 30);
-      g.font = '700 26px sans-serif'; g.fillStyle = st.paused ? '#FFB36B' : 'rgba(255,255,255,.8)'; g.fillText(st.paused ? 'REST PAUSED' : 'REST', cx, cy + 72);
+      g.font = '900 118px Impact, "Arial Black", sans-serif'; g.fillText(this.fmt(st.left), cx, cy + 40);
+      g.font = '800 24px sans-serif'; g.fillStyle = st.paused ? light : 'rgba(255,255,255,.85)'; g.fillText(st.paused ? '❚❚ REST PAUSED' : 'REST', cx, cy + 82);
     } else if (st.rDone) {
-      g.font = '800 64px sans-serif'; g.fillText('GO!', cx, cy + 10); g.font = '700 24px sans-serif'; g.fillText(`SET ${st.setN} OF ${st.setOf}`, cx, cy + 52);
+      g.font = '900 120px Impact, "Arial Black", sans-serif'; g.fillStyle = light; g.fillText('GO!', cx, cy + 42);
+      g.font = '800 24px sans-serif'; g.fillStyle = ink; g.fillText(`SET ${st.setN} OF ${st.setOf}`, cx, cy + 84);
     } else {
-      g.font = '700 26px sans-serif'; g.fillStyle = 'rgba(255,255,255,.8)'; g.fillText('SET', cx, cy - 46);
-      g.fillStyle = '#fff'; g.font = '800 110px sans-serif'; g.fillText(`${st.setN}/${st.setOf}`, cx, cy + 40);
+      g.font = '800 24px sans-serif'; g.fillStyle = 'rgba(255,255,255,.85)'; g.fillText(`SET ${st.setN} OF ${st.setOf}`, cx, cy - 58);
+      const big = st.bigNum || String(st.setN); g.fillStyle = ink; g.font = `900 ${big.length > 4 ? 92 : 118}px Impact, "Arial Black", sans-serif`; g.fillText(big, cx, cy + 40);
+      if (st.bigUnit) { g.font = '800 24px sans-serif'; g.fillStyle = light; g.fillText(st.bigUnit, cx, cy + 82); }
     }
-    // set dots
-    const n = Math.min(st.setOf, 10), w = 26; for (let i = 0; i < n; i++) { g.fillStyle = i < st.doneX ? '#E87722' : 'rgba(255,255,255,.25)'; g.beginPath(); g.arc(256 - (n - 1) * w / 2 + i * w, 432, 8, 0, Math.PI * 2); g.fill(); }
-    g.fillStyle = '#fff'; g.font = '800 34px sans-serif'; let name = st.x.name.toUpperCase(); while (g.measureText(name).width > 470 && name.length > 4) name = name.slice(0, -2) + '…'; g.fillText(name, 256, 482);
-    return c.toDataURL('image/jpeg', .82);
+    // exercise name + what's next
+    g.fillStyle = ink; g.font = '900 40px Impact, "Arial Black", sans-serif'; let name = st.x.name.toUpperCase(); while (g.measureText(name).width > S - 48 && name.length > 4) name = name.slice(0, -2) + '…'; g.fillText(name, cx, 476);
+    g.font = '700 17px sans-serif'; g.fillStyle = 'rgba(255,255,255,.7)'; g.fillText(st.resting ? 'NEXT: ' + (st.target || `SET ${st.setN}`) : (st.target || ''), cx, 500);
+    return c;
   },
   update(force) {
     const st = this.state(); if (!st) { this.stop(); return; }
     this.frame++;
-    if (this.wasResting && st.rDone) { try { this.beep.currentTime = 0; this.beep.play(); } catch (e) { } }
+    if (this.wasResting && st.rDone && this.playing) this.ring();
     this.wasResting = st.resting;
     if (Pocket.open) Pocket.paint(st);
     const ms = navigator.mediaSession; if (!ms || !this.playing) return;
@@ -4914,7 +4981,10 @@ const LockTrack = {
     if (force || st.resting || now - this.lastArt > 4000) {
       this.lastArt = now;
       const title = st.resting ? `Rest ${this.fmt(st.left)} · then ${st.x.name}` : st.rDone ? `Rest over — ${st.x.name}` : `${st.x.name} · Set ${st.setN} of ${st.setOf}`;
-      try { ms.metadata = new MediaMetadata({ title, artist: st.target || 'Hokie Power', album: `Hokie Power · ${st.done}/${st.total} sets`, artwork: [{ src: this.art(st), sizes: '512x512', type: 'image/jpeg' }] }); } catch (e) { }
+      const meta = src => { try { ms.metadata = new MediaMetadata({ title, artist: st.target || 'Hokie Power', album: `Hokie Power · ${st.done}/${st.total} sets`, artwork: [96, 192, 256, 384, 512].map(n => ({ src, sizes: `${n}x${n}`, type: 'image/png' })) }); } catch (e) { } };
+      const c = this.art(st);
+      if (c.toBlob) c.toBlob(b => { if (!b) return; const u = URL.createObjectURL(b); meta(u); if (this.lastUrl) setTimeout(((o) => () => URL.revokeObjectURL(o))(this.lastUrl), 3000); this.lastUrl = u; }, 'image/png');
+      else meta(c.toDataURL('image/png'));
     }
     try {
       ms.playbackState = st.resting && st.paused ? 'paused' : 'playing';
@@ -4967,7 +5037,8 @@ const Pocket = {
     $('#pkSets').textContent = `${st.done}/${st.total} sets`;
     $('#pkDots').innerHTML = Array.from({ length: Math.min(st.setOf, 12) }, (_, i) => `<i class="${i < st.doneX ? 'on' : ''}"></i>`).join('');
     const nm = $('#pkName'); if (nm.dataset.v !== st.x.name) { nm.dataset.v = st.x.name; nm.textContent = st.x.name; delete nm.dataset.kSplit; if (!Motion.off && Kinetic.letters(nm)) nm.classList.add('k-on'); }
-    $('#pkTarget').textContent = st.target;
+    $('#pkTarget').textContent = st.resting ? 'Next · ' + (st.target || 'set ' + st.setN) : st.target;
+    el.classList.toggle('go', !!st.rDone);
   }
 };
 
