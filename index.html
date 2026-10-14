@@ -2,6 +2,17 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<!-- ================= HOKIE POWER · ACCOUNTS SETUP =================
+     Paste your two Supabase values between the quotes (setup guide, step 4).
+     Leave them empty to run without accounts (athlete code, data on this phone only). -->
+<script>
+window.HOKIE_CLOUD = {
+  url: '',                       // Project URL, e.g. https://abcdefghijkl.supabase.co
+  anonKey: '',                   // Publishable key (starts with sb_publishable_) or the legacy anon key (starts with eyJ)
+  loginDomain: 'hokiepower.app'  // leave as is unless the guide's troubleshooting says otherwise
+};
+</script>
+<!-- ================================================================ -->
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#F8F5EF">
 <meta name="color-scheme" content="dark">
@@ -1019,6 +1030,27 @@ body.amb .pod{animation:barGrow .8s var(--ease-out) both}body.amb .pod.silver{an
 .tabhint svg{width:12px;height:12px}
 .prep-card{display:flex;align-items:center;gap:12px;width:100%;cursor:pointer;color:inherit;font:inherit;border-left:4px solid #861F41}
 
+/* ---- accounts: login screen + team access ---- */
+#gate.auth .gwrap{grid-template-columns:minmax(0,520px);justify-content:center}
+#gate .gauth{gap:12px}
+#gate .gauth .field{display:flex;flex-direction:column;gap:6px}
+#gate .gauth label{font:600 12px/1.2 var(--f-mono,monospace);letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.75)}
+#gate .gauth .input{background:rgba(255,255,255,.08);color:#fff;border:1px solid rgba(183,190,195,.35);min-height:50px;font-size:17px;border-radius:12px;padding:0 14px;width:100%;box-sizing:border-box}
+#gate .gauth .input:focus{outline:none;border-color:#E87722;box-shadow:0 0 0 3px rgba(232,119,34,.35)}
+#gate .auth-seg{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;border-radius:12px;background:rgba(255,255,255,.06)}
+#gate .auth-seg button{min-height:42px;border:0;border-radius:9px;background:transparent;color:rgba(255,255,255,.7);font:700 15px/1 inherit;cursor:pointer}
+#gate .auth-seg button[aria-pressed="true"]{background:#fff;color:#1A1D20}
+#gate .gnote{font-size:12.5px;color:rgba(255,255,255,.6);margin:0}
+#gate.auth .gmsg{min-height:1.2em;color:#FFB36B;margin:0}
+#gate.auth.err .gauth{animation:authShake .4s}
+@keyframes authShake{25%{transform:translateX(-10px)}50%{transform:translateX(8px)}75%{transform:translateX(-4px)}}
+#gate.auth .stack .btn.ghost{color:#fff;border-color:rgba(255,255,255,.35)}
+.adm-row{display:flex;flex-direction:column;gap:8px;padding:12px 0;border-top:1px solid rgba(26,29,32,.1)}
+.adm-row:first-of-type{border-top:0}
+.adm-row.pending{background:rgba(134,31,65,.05);margin:0 -12px;padding:12px;border-radius:12px}
+.adm-acts{gap:6px}
+.acct .lib-ico{flex:none}
+
 </style>
 </head>
 <body>
@@ -1145,7 +1177,7 @@ const ICONS = {
   dumbbell: 'M6 7v10M3 9v6M18 7v10M21 9v6M6 12h12',
   activity: 'M22 12h-4l-3 9L9 3l-3 9H2',
   menu: 'M4 6h16M4 12h16M4 18h16',
-  check: 'M20 6L9 17l-5-5', repeat: 'M17 2l4 4-4 4M3 11V10a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v1a4 4 0 0 1-4 4H3', link: 'M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7', apple: 'M12 7c-1.5-1-5-1.5-6.5 1.5S5 16 7.5 19.5c1.3 1.8 2.8 2 4.5 1 1.7 1 3.2.8 4.5-1C19 16 19.5 11.5 18 8.5S13.5 6 12 7zM12 7c0-2 1-3.5 3-4', 'cup-soda': 'M6 8l1.5 13h9L18 8zM5 8h14M12 8l1-5h3', flame: 'M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3.3.4 1.5 1.2 2.6 2.5 2.8z', scale: 'M12 3v18M7 21h10M3 7h18M6 7l-3 7a3 3 0 0 0 6 0zM18 7l-3 7a3 3 0 0 0 6 0z', layers: 'M12 2l10 5-10 5L2 7zM2 12l10 5 10-5M2 17l10 5 10-5', target: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12zM12 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4z', sparkles: 'M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 3v4M21 5h-4', delete: 'M10 5h11v14H10l-7-7zM18 9l-6 6M12 9l6 6',
+  check: 'M20 6L9 17l-5-5', cloud: 'M17.5 19H9a7 7 0 1 1 6.7-9h1.8a4.5 4.5 0 1 1 0 9z', 'cloud-off': 'M2 2l20 20M5.8 5.8A7 7 0 0 0 9 19h8.5a4.5 4.5 0 0 0 1.3-.2M21.5 15.5A4.5 4.5 0 0 0 17.5 10h-1.8A7 7 0 0 0 10 5.1', 'refresh-cw': 'M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5', 'log-out': 'M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9', 'key-round': 'M2.6 18.2A2 2 0 0 0 2 19.6V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.2a2 2 0 0 0 1.4-.6l.8-.8a6.5 6.5 0 1 0-4-4zM16.5 7.5h.01', repeat: 'M17 2l4 4-4 4M3 11V10a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v1a4 4 0 0 1-4 4H3', link: 'M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7', apple: 'M12 7c-1.5-1-5-1.5-6.5 1.5S5 16 7.5 19.5c1.3 1.8 2.8 2 4.5 1 1.7 1 3.2.8 4.5-1C19 16 19.5 11.5 18 8.5S13.5 6 12 7zM12 7c0-2 1-3.5 3-4', 'cup-soda': 'M6 8l1.5 13h9L18 8zM5 8h14M12 8l1-5h3', flame: 'M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3.3.4 1.5 1.2 2.6 2.5 2.8z', scale: 'M12 3v18M7 21h10M3 7h18M6 7l-3 7a3 3 0 0 0 6 0zM18 7l-3 7a3 3 0 0 0 6 0z', layers: 'M12 2l10 5-10 5L2 7zM2 12l10 5 10-5M2 17l10 5 10-5', target: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12zM12 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4z', sparkles: 'M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 3v4M21 5h-4', delete: 'M10 5h11v14H10l-7-7zM18 9l-6 6M12 9l6 6',
   'circle-alert': 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 8v4M12 16h.01',
   'triangle-alert': 'M10.3 3.9L2 18a2 2 0 0 0 1.7 3h16.6A2 2 0 0 0 22 18L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01',
   'chevron-left': 'M15 18l-6-6 6-6', 'chevron-right': 'M9 18l6-6-6-6',
@@ -1478,11 +1510,11 @@ const LSX = {
 };
 const STORES = ['sessions', 'results', 'bodyweight', 'achievements'];
 const DB = {
-  db: null, mode: 'idb',
+  db: null, mode: 'idb', name: null, lsPrefix: 'bbp.store.',
   open() {
     return new Promise(res => {
       if (!window.indexedDB) return res(this.useFallback());
-      let req; try { req = indexedDB.open(APP_ID, 1); } catch (e) { return res(this.useFallback()); }
+      let req; try { req = indexedDB.open(this.name || APP_ID, 1); } catch (e) { return res(this.useFallback()); }
       const timer = setTimeout(() => res(this.useFallback()), 2500);
       req.onupgradeneeded = () => { const d = req.result; STORES.forEach(s => { if (!d.objectStoreNames.contains(s)) d.createObjectStore(s, { keyPath: 'id' }); }); };
       req.onsuccess = () => { clearTimeout(timer); this.db = req.result; this.mode = 'idb'; res('idb'); };
@@ -1495,26 +1527,26 @@ const DB = {
   },
   all(store) {
     if (this.mode === 'idb') return new Promise((res, rej) => { try { const r = this.db.transaction(store).objectStore(store).getAll(); r.onsuccess = () => res(r.result || []); r.onerror = () => rej(r.error); } catch (e) { rej(e); } });
-    if (this.mode === 'ls') return Promise.resolve(LSX.get('bbp.store.' + store, []));
+    if (this.mode === 'ls') return Promise.resolve(LSX.get(this.lsPrefix + store, []));
     return Promise.resolve([]);
   },
-  put(store, obj) {
-    obj.updatedAt = Date.now();
+  put(store, obj, keepTs) {
+    if (!keepTs || !obj.updatedAt) obj.updatedAt = Date.now();
     if (this.mode === 'idb') return new Promise(res => {
       try { const tx = this.db.transaction(store, 'readwrite'); tx.objectStore(store).put(JSON.parse(JSON.stringify(obj))); tx.oncomplete = () => res(true); tx.onerror = tx.onabort = () => { LSX.fail(tx.error); UI.toast("Couldn't save to this device. Export a backup soon.", 'bad'); res(false); }; }
       catch (e) { UI.toast("Couldn't save to this device.", 'bad'); res(false); }
     });
-    if (this.mode === 'ls') return Promise.resolve(LSX.set('bbp.store.' + store, State[store]));
+    if (this.mode === 'ls') return Promise.resolve(LSX.set(this.lsPrefix + store, State[store]));
     return Promise.resolve(false);
   },
   del(store, id) {
     if (this.mode === 'idb') return new Promise(res => { try { const tx = this.db.transaction(store, 'readwrite'); tx.objectStore(store).delete(id); tx.oncomplete = () => res(true); tx.onerror = () => res(false); } catch (e) { res(false); } });
-    if (this.mode === 'ls') return Promise.resolve(LSX.set('bbp.store.' + store, State[store]));
+    if (this.mode === 'ls') return Promise.resolve(LSX.set(this.lsPrefix + store, State[store]));
     return Promise.resolve(false);
   },
   clear(store) {
     if (this.mode === 'idb') return new Promise(res => { try { const tx = this.db.transaction(store, 'readwrite'); tx.objectStore(store).clear(); tx.oncomplete = () => res(true); tx.onerror = () => res(false); } catch (e) { res(false); } });
-    if (this.mode === 'ls') LSX.del('bbp.store.' + store);
+    if (this.mode === 'ls') LSX.del(this.lsPrefix + store);
     return Promise.resolve(true);
   }
 };
@@ -2339,7 +2371,7 @@ const DAYN = d => (State.program.dayNames || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri']
 const restItem = r => `<div class="wk-item rest" data-stg><span class="wk-day" style="font-size:13px">${DAYN(r.day)}</span><span class="grow"><b style="display:block">${esc(r.title)}</b><span class="muted" style="font-size:12.5px">${esc(r.note)}</span></span><span class="st upcoming">Rest</span></div>`;
 const stBadge = st => `<span class="st ${st}">${ST_LABEL[st] || st}</span>`;
 const shield = (s = 30) => `<svg class="shield" width="${s}" height="${s}" viewBox="0 0 40 40" aria-hidden="true"><g transform="rotate(-35 20 20)"><ellipse cx="20" cy="20" rx="17" ry="10.5" fill="#861F41" stroke="#E87722" stroke-width="2"/><path d="M10 20h20" stroke="#fff" stroke-width="1.6"/><path d="M14 17.5v5M17.3 17.5v5M20.6 17.5v5M23.9 17.5v5M27 18v4" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></g></svg>`;
-const brand = () => `<div class="brandmark">${shield()}<div><b>HOKIE POWER</b><small>SUMMER 2005 · CLIFF</small></div></div>`;
+const brand = () => `<div class="brandmark">${shield()}<div><b>HOKIE POWER</b><small>SUMMER 2005 · ${esc(String(State.settings.name || 'Cliff').toUpperCase())}</small></div></div>`;
 const sampleTag = () => State.program.source === 'vt2005' ? `<span class="badge blue">${esc(TRACKS[State.program.track])}${State.profile && State.profile.position ? ' · ' + esc(State.profile.position) : ''}</span>` : `<span class="badge ok">${esc(State.program.name || 'Imported program')}</span>`;
 const backBar = (title, extra = '') => `<div class="topbar" data-stg><button class="btn icon" type="button" data-act="back" aria-label="Back">${icon('chevron-left')}</button><h1 class="h2 grow">${title}</h1>${extra}</div>`;
 const unitW = () => State.settings.unit;
@@ -2839,7 +2871,10 @@ const Screens = {
   /* ---------- More ---------- */
   more() {
     const it = (r, ic, t, d) => `<button class="list-item" type="button" data-act="go" data-r="${r}">${icon(ic)}<div class="grow"><b>${t}</b><div class="muted" style="font-size:12.5px">${d}</div></div>${icon('chevron-right')}</button>`;
-    return `<div class="screen"><div class="topbar" data-stg>${brand()}</div>
+    const acct = Cloud.on && Cloud.profile ? `<section class="panel stack acct" data-stg><div class="row"><span class="lib-ico">${icon('user')}</span><div class="grow"><span class="label">Signed in as</span><b style="display:block;font-size:18px">${esc(Cloud.profile.username)}</b></div>${Cloud.isAdmin() ? '<span class="badge blue">Admin</span>' : ''}</div>
+      <div class="row wrap">${Cloud.badge()}</div><div class="row wrap"><button class="btn sm" type="button" data-act="cloud-sync">${icon('refresh-cw')} Sync now</button><button class="btn sm ghost" type="button" data-act="cloud-logout">${icon('log-out')} Log out</button></div></section>` : '';
+    const adm = Cloud.isAdmin() ? `<section class="panel" data-stg>${it('admin', 'shield', 'Team access', 'Approve new athletes, revoke access, reset passwords')}</section>` : '';
+    return `<div class="screen"><div class="topbar" data-stg>${brand()}</div>${acct}${adm}
       <section class="panel" data-stg>${it('history', 'history', 'Workout history', 'Search, filter and edit every session')}${it('summary', 'trophy', 'Program summary', 'Completion, testing report and the Game Day finale')}${it('profile', 'user', 'Athlete profile & baselines', 'Body weight, maxima, start date, goals')}${it('settings', 'settings', 'Settings', 'Units, plates, rest timer, sound, animation')}${it('backup', 'hard-drive-download', 'Backup & restore', 'Export or import your data as JSON')}${it('about', 'info', 'About this app', 'Curriculum source, data and disclaimer')}</section>
       <button class="btn block" type="button" data-act="replay-intro" data-stg>${icon('clapperboard')} Replay the arrival</button></div>`;
   },
@@ -2938,7 +2973,7 @@ const Screens = {
   },
   backup() {
     return `<div class="screen">${backBar('Backup & restore')}
-      <section class="panel stack" data-stg><h2 class="h3">Back up my data</h2><p class="muted" style="font-size:14px">Your training history lives only in this browser on this device. Clearing browser data, private browsing or switching devices can remove it. Nothing is ever sent to a server.</p>
+      <section class="panel stack" data-stg><h2 class="h3">Back up my data</h2><p class="muted" style="font-size:14px">${Cloud.on && Cloud.profile ? 'Your training is saved to your account and on this phone. A backup file is an extra copy you keep yourself.' : 'Your training history lives only in this browser on this device. Clearing browser data, private browsing or switching devices can remove it. Nothing is ever sent to a server.'}</p>
         <button class="btn big primary block" type="button" data-act="export">${icon('download')} Back up my data</button><div id="exportOut"></div></section>
       <section class="panel stack" data-stg><h2 class="h3">Restore from backup</h2><p class="muted" style="font-size:14px">Choose a backup file, or paste its JSON. It is checked before anything changes. A file with a <code>program</code> key can also replace the sample curriculum.</p>
         <div class="field"><label for="impFile">Backup file (.json)</label><input class="input" type="file" id="impFile" accept=".json,application/json"></div>
@@ -3351,15 +3386,16 @@ const Actions = {
     Store.saveProfile(); Achievements.evaluate(); UI.render(); UI.toast('Athletic baselines saved.');
   },
   reset: async () => {
-    const ok = await Sheet.confirm({ title: 'Reset the application?', body: '<p>This permanently deletes your profile, baselines, workouts, results and settings from this device. Export a backup first if you might want them.</p>', ok: 'Delete everything', danger: true, typed: 'RESET' });
+    const ok = await Sheet.confirm({ title: 'Reset the application?', body: `<p>This permanently deletes your profile, baselines, workouts, results and settings ${Cloud.on ? 'from your account — on every phone you use' : 'from this device'}. Export a backup first if you might want them.</p>`, ok: 'Delete everything', danger: true, typed: 'RESET' });
     if (!ok) return;
     for (const s of STORES) await DB.clear(s);
-    Object.values(LS).forEach(k => LSX.del(k)); ['sessions', 'results', 'bodyweight', 'achievements'].forEach(s => LSX.del('bbp.store.' + s));
+    Object.values(LS).forEach(k => LSX.del(k)); ['sessions', 'results', 'bodyweight', 'achievements'].forEach(s => LSX.del(DB.lsPrefix + s));
     Rest.stop(); WakeLock.off();
     Object.assign(State, { settings: Object.assign({}, DEFAULT_SETTINGS), profile: null, meta: { schema: SCHEMA_VERSION, onboarded: false, introSeen: false, activeSessionId: null, finaleSeen: false, timer: null, dashSeen: false }, program: buildVTProgram(), sessions: [], results: [], bodyweight: [], achievements: [] });
+    if (Cloud.on && Cloud.user) { State.meta.cloudResetAt = Date.now(); State.meta.deleted = {}; Cloud.dirty(0); }
     State.version++; Store.saveMeta(); Motion.apply();
     $('#app').hidden = true; $('#nav').hidden = true; Nav.stack = []; UI.route = { name: 'home', param: null };
-    await Gate.show();
+    if (!Cloud.on) await Gate.show();
     Intro.play(() => { State.meta.introSeen = true; Store.saveMeta(); App.locker(); });
   },
   'replay-intro': () => { $('#app').hidden = true; $('#nav').hidden = true; Intro.play(() => App.show(false)); },
@@ -3471,7 +3507,9 @@ async function boot() {
   const NAVI = { home: 'house', training: 'map', workout: 'dumbbell', progress: 'activity', nutrition: 'apple', more: 'menu' };
   $$('#nav [data-tab]').forEach(b => b.insertAdjacentHTML('afterbegin', icon(NAVI[b.dataset.tab])));
   FX.init(); Env.init();
+  if (Cloud.on) { await Splash.done; if (!(await Cloud.start())) return; }   // accounts: log in first, then load that person's data
   State.settings = Object.assign({}, DEFAULT_SETTINGS, LSX.get(LS.settings, {}));
+  if (Cloud.on) Cloud.personalize();
   const storedMeta = LSX.get(LS.meta, null), storedProfile = LSX.get(LS.profile, null);
   if (storedMeta) State.meta = Object.assign(State.meta, storedMeta);
   Motion.apply();
@@ -3489,6 +3527,7 @@ async function boot() {
   State.storageMode = await DB.open();
   try { for (const s of STORES) State[s] = await DB.all(s); }
   catch (e) { State.storageMode = 'memory'; UI.toast('Could not read saved workouts. Nothing was deleted.', 'bad'); }
+  if (Cloud.on && Cloud.sb) { const t0 = State.profile && State.profile.position; await Cloud.pull(); if (State.profile && State.profile.position !== t0 && !LSX.get(LS.program, null)) State.program = buildVTProgram(State.profile.track, State.profile.position); }
   // crash recovery: the synchronous mirror may be newer than the async store
   const mirror = LSX.get(LS.active, null);
   if (mirror && mirror.status === 'in_progress') {
@@ -3503,7 +3542,7 @@ async function boot() {
   if (State.profile && State.meta.onboarded) Achievements.evaluate();
   if (State.meta.timer && State.meta.timer.running) Rest.loop();
   await Splash.done;                          // let the load-up finish so the next scene's entrance is seen
-  if (!Gate.unlocked()) await Gate.show();   // landing page: athlete code
+  if (!Cloud.on && !Gate.unlocked()) await Gate.show();   // landing page: athlete code (accounts replace it when the cloud is set up)
 
   if (!State.meta.onboarded || !State.profile) {
     const hasDraft = !!LSX.get(LS.draft, null);
@@ -4260,6 +4299,348 @@ After.nutrition = view => {
 TAB_OF.nutrition = 'nutrition';
 Actions.water = el => { Water.set(Water.get() + (+el.dataset.v)); const y = scrollY; UI.render(); scrollTo(0, y); if (+el.dataset.v > 0) Haptics.tap(); };
 Actions['water-set'] = el => { const v = +el.dataset.v; Water.set(Water.get() === v ? v - 1 : v); const y = scrollY; UI.render(); scrollTo(0, y); };
+
+/* ============ ACCOUNTS & CLOUD SYNC (Supabase) ============
+   Turned on only when index.html carries a HOKIE_CLOUD config (Project URL + anon key) and the
+   page is served from a web address. Without it the app runs exactly as before (code gate, data on
+   this device only).
+   • Each person logs in with a username + password (stored by Supabase as username@loginDomain).
+   • Everything is saved on the phone under that person's own namespace, so two people sharing a
+     phone never see each other's data, and copied to the cloud so it follows them to any phone.
+   • New accounts wait for the admin's approval; the admin can approve, revoke, reset or delete. */
+const CLOUD_CFG = (typeof window !== 'undefined' && window.HOKIE_CLOUD) || {};
+const SUPABASE_JS = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js';
+const USER_RE = /^[a-z0-9][a-z0-9._-]{2,23}$/;
+
+const Cloud = {
+  on: !!(CLOUD_CFG.url && CLOUD_CFG.anonKey) && /^https?:$/.test(location.protocol),
+  sb: null, user: null, profile: null, ns: '',
+  status: 'idle', lastSync: null, lastPull: 0, timer: null, retry: null, pushing: false, again: false, admin: { list: null, at: 0, err: '' },
+
+  email(u) { return `${u}@${CLOUD_CFG.loginDomain || 'hokiepower.app'}`; },
+  load() {
+    if (window.supabase && window.supabase.createClient) return Promise.resolve();
+    return new Promise((res, rej) => { const s = document.createElement('script'); s.src = SUPABASE_JS; s.onload = () => res(); s.onerror = () => rej(new Error('offline')); document.head.appendChild(s); });
+  },
+  msg(e) {
+    const m = String((e && (e.message || e.error_description || e.msg)) || e || '');
+    if (/invalid login credentials/i.test(m)) return 'Username or password is wrong.';
+    if (/already registered|already exists|duplicate key/i.test(m)) return 'That username is taken. Pick another one.';
+    if (/email.*(invalid|not authorized)|invalid.*email/i.test(m)) return 'Supabase rejected the login name. In index.html, set loginDomain to a domain you own (see the setup guide).';
+    if (/signups? not allowed|signup.*disabled/i.test(m)) return 'New accounts are switched off in Supabase (Authentication → Sign In / Providers → Allow new users to sign up).';
+    if (/password/i.test(m) && /(short|least|weak)/i.test(m)) return 'Password is too short — use at least 8 characters.';
+    if (/rate limit|too many/i.test(m)) return 'Too many tries. Wait a minute and try again.';
+    if (/failed to fetch|network|offline|load failed/i.test(m)) return 'No connection. Check your internet and try again.';
+    if (/relation .*profiles.* does not exist|profiles/i.test(m) && /exist|schema/i.test(m)) return 'The database is not set up yet — run setup.sql in Supabase (setup guide, step 3).';
+    return m || 'Something went wrong.';
+  },
+
+  /* ---------- start-up: log in, check access, pick this person's storage ---------- */
+  async start() {
+    try { await this.load(); }
+    catch (e) {
+      // offline with a saved login: keep training on this phone, sync later
+      const last = LSX.get('bbp.cloud.last', null);
+      if (last && last.status === 'active') { this.useNamespace(last.id); this.user = { id: last.id }; this.profile = last; this.status = 'offline'; return true; }
+      await this.screen('offline'); return false;
+    }
+    this.sb = window.supabase.createClient(CLOUD_CFG.url, CLOUD_CFG.anonKey, { auth: { persistSession: true, autoRefreshToken: true, storageKey: 'bbp.auth' } });
+    let sess = null;
+    try { const { data } = await this.sb.auth.getSession(); sess = data && data.session; } catch (e) { }
+    if (!sess) { const ok = await this.authScreen(); if (!ok) return false; }
+    else this.user = sess.user;
+    // access check
+    for (;;) {
+      const r = await this.fetchProfile();
+      if (r === 'ok') break;
+      if (r === 'offline') {
+        const last = LSX.get('bbp.cloud.last', null);
+        if (last && last.id === this.user.id && last.status === 'active') { this.profile = last; this.status = 'offline'; break; }
+        await this.screen('offline'); return false;
+      }
+      const again = await this.screen(r);   // pending / revoked / nodb
+      if (again === 'logout') { await this.logout(true); return false; }
+    }
+    this.useNamespace(this.user.id);
+    await this.claimLegacy();
+    if (!LSX.get(LS.settings, null)) {   // a new athlete: the intro and locker greet them by name
+      const u = this.profile.username, nm = u.charAt(0).toUpperCase() + u.slice(1).replace(/[._-].*$/, '');
+      DEFAULT_SETTINGS.name = nm;
+    }
+    this.sb.rpc('touch_last_seen').then(() => { }, () => { });
+    this.watch();
+    return true;
+  },
+  async fetchProfile() {
+    try {
+      const { data, error } = await this.sb.from('profiles').select('id,username,role,status').eq('id', this.user.id).maybeSingle();
+      if (error) return /fetch|network/i.test(error.message) ? 'offline' : /does not exist|schema cache/i.test(error.message) ? 'nodb' : 'nodb';
+      if (!data) return 'nodb';
+      this.profile = data; LSX.set('bbp.cloud.last', data);
+      return data.status === 'active' ? 'ok' : data.status;
+    } catch (e) { return 'offline'; }
+  },
+  useNamespace(uid) {
+    this.ns = 'u' + String(uid).replace(/-/g, '').slice(0, 12);
+    Object.keys(LS).forEach(k => { LS[k] = LS[k].replace(/^bbp\.(u[0-9a-f]{12}\.)?/, `bbp.${this.ns}.`); });
+    DB.name = `${APP_ID}.${this.ns}`; DB.lsPrefix = `bbp.${this.ns}.store.`;
+    Water.key = `bbp.${this.ns}.water`;
+  },
+
+  /* ---------- the login / sign-up screen (stadium look, in the gate layer) ---------- */
+  shell(inner) {
+    const g = $('#gate'); g.hidden = false; g.className = 'auth';
+    g.innerHTML = `<div class="gbg" aria-hidden="true"><div class="gbeam" style="left:4%"></div><div class="gbeam" style="left:96%;transform:translateX(-50%) rotate(14deg)"></div><div class="gfield"></div><div class="gendzone">HOKIES</div></div>
+      <div class="gwrap"><div class="gcol"><header class="ghead" data-gs>${shield(40)}<div><b>HOKIE POWER</b><small>FLIGHT 2005 TO GLORY</small></div></header>${inner}</div></div>`;
+    UI.icons(g);
+    $$('[data-gs]', g).forEach((el, k) => Motion.anim(el, [{ opacity: 0, transform: 'translateY(20px)' }, { opacity: 1, transform: 'none' }], { duration: Motion.m.std + 160, delay: 60 + k * Motion.m.stagger * 1.4 }));
+    return g;
+  },
+  close() { const g = $('#gate'); return Motion.anim(g, [{ opacity: 1 }, { opacity: 0 }], { duration: Motion.m.std + 120, fill: 'forwards' }).then(() => { g.hidden = true; g.innerHTML = ''; g.className = ''; g.style.opacity = ''; g.getAnimations && g.getAnimations().forEach(a => a.cancel()); }); },
+  authScreen(mode = 'login') {
+    return new Promise(res => {
+      const draw = m => {
+        mode = m;
+        const g = this.shell(`
+          <div class="ghero" data-gs><span class="label">Athlete entrance</span>
+            <h1 class="gtitle">${m === 'login' ? 'Welcome back' : 'Join the team'}<span>.</span></h1>
+            <p class="gsub">${m === 'login' ? 'Log in with your username and password.' : 'Pick a username and password. The coach approves new accounts before you can train.'}</p></div>
+          <form class="gcode gauth" data-gs id="authForm" novalidate>
+            <div class="seg auth-seg" role="tablist"><button type="button" role="tab" data-auth-mode="login" aria-selected="${m === 'login'}" aria-pressed="${m === 'login'}">Log in</button><button type="button" role="tab" data-auth-mode="signup" aria-selected="${m === 'signup'}" aria-pressed="${m === 'signup'}">Create account</button></div>
+            <div class="field"><label for="authUser">Username</label><input class="input" id="authUser" name="username" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="text" required></div>
+            <div class="field"><label for="authPass">Password</label><input class="input" id="authPass" name="password" type="password" autocomplete="${m === 'login' ? 'current-password' : 'new-password'}" required minlength="8"></div>
+            ${m === 'signup' ? '<div class="field"><label for="authPass2">Repeat password</label><input class="input" id="authPass2" type="password" autocomplete="new-password" required></div><p class="gnote">3–24 characters: letters, numbers, dot, dash or underscore. Password: at least 8 characters.</p>' : ''}
+            <p class="gmsg" id="authMsg" role="status" aria-live="polite"></p>
+            <button type="submit" class="btn big red block" id="authGo">${m === 'login' ? 'Enter the facility' : 'Create my account'}</button>
+          </form>
+          <p class="gfoot" data-gs>Forgot your password? Ask the coach to reset it.</p>`);
+        $$('[data-auth-mode]', g).forEach(b => b.onclick = () => { if (b.dataset.authMode !== mode) draw(b.dataset.authMode); });
+        $('#authForm', g).onsubmit = async e => {
+          e.preventDefault();
+          const u = $('#authUser').value.trim().toLowerCase(), p = $('#authPass').value, msg = $('#authMsg'), go = $('#authGo');
+          const fail = t => { msg.textContent = t; g.classList.add('err'); Haptics.buzz(); setTimeout(() => g.classList.remove('err'), 500); };
+          if (!USER_RE.test(u)) return fail('Usernames are 3–24 characters: letters, numbers, dot, dash or underscore.');
+          if (p.length < 8) return fail('Password must be at least 8 characters.');
+          if (mode === 'signup' && p !== $('#authPass2').value) return fail("The two passwords don't match.");
+          go.disabled = true; msg.textContent = mode === 'login' ? 'Checking…' : 'Creating your account…';
+          try {
+            const r = mode === 'login'
+              ? await this.sb.auth.signInWithPassword({ email: this.email(u), password: p })
+              : await this.sb.auth.signUp({ email: this.email(u), password: p, options: { data: { username: u } } });
+            if (r.error) throw r.error;
+            if (!r.data.session) { go.disabled = false; return fail('Account created, but Supabase is asking for email confirmation. Turn "Confirm email" off (setup guide, step 2), then log in.'); }
+            this.user = r.data.session.user; msg.textContent = 'Welcome.'; Haptics.beep([523, 784], .1);
+            await this.close(); res(true);
+          } catch (err) { go.disabled = false; fail(this.msg(err)); }
+        };
+        setTimeout(() => { const f = $('#authUser'); f && f.focus({ preventScroll: true }); }, 80);
+      };
+      draw(mode);
+    });
+  },
+  /* waiting / revoked / not set up / offline */
+  screen(kind) {
+    const T = {
+      pending: ['Waiting for approval', `Your account <b>${esc(this.profile ? this.profile.username : '')}</b> is created. The coach needs to approve it before you can train. Ask them to open Admin in the app.`],
+      revoked: ['Access switched off', 'Your access to this app has been turned off by the coach. Your saved training is kept. Ask the coach if you think this is a mistake.'],
+      nodb: ['Database not set up', 'You are logged in, but the app could not find its tables. The admin needs to run setup.sql in Supabase (setup guide, step 3).'],
+      offline: ['No connection', 'The app needs the internet the first time you log in on this phone. Connect and try again.']
+    }[kind];
+    return new Promise(res => {
+      const g = this.shell(`<div class="ghero" data-gs><span class="label">Athlete entrance</span><h1 class="gtitle">${T[0]}<span>.</span></h1><p class="gsub">${T[1]}</p></div>
+        <div class="stack" data-gs><button class="btn big red block" type="button" id="authAgain">${icon('refresh-cw')} Check again</button>${kind !== 'offline' ? '<button class="btn block ghost" type="button" id="authOut">Log out</button>' : ''}</div>`);
+      $('#authAgain', g).onclick = async () => { if (kind === 'offline') { location.reload(); return; } await this.close(); res('again'); };
+      const o = $('#authOut', g); if (o) o.onclick = async () => { await this.close(); res('logout'); };
+    });
+  },
+
+  /* ---------- this phone had data from before accounts existed ---------- */
+  legacyFound() { try { return !!localStorage.getItem('bbp.profile') && !localStorage.getItem('bbp.legacyClaimed'); } catch (e) { return false; } },
+  async claimLegacy() {
+    if (!this.legacyFound() || LSX.get(LS.profile, null)) return;
+    const old = LSX.get('bbp.profile', {}), name = esc((old && old.name) || 'an athlete');
+    const yes = await new Promise(res => {
+      const g = this.shell(`<div class="ghero" data-gs><span class="label">Training found on this phone</span><h1 class="gtitle">Is this yours<span>?</span></h1>
+        <p class="gsub">This phone has training saved from before accounts (profile: <b>${name}</b>). Move it into <b>${esc(this.profile.username)}</b>'s account so it is backed up and follows you to any phone?</p></div>
+        <div class="stack" data-gs><button class="btn big red block" type="button" id="lgYes">Yes, it's mine — move it</button><button class="btn block ghost" type="button" id="lgNo">No, start fresh</button></div>`);
+      $('#lgYes', g).onclick = () => res(true); $('#lgNo', g).onclick = () => res(false);
+    });
+    if (yes) {
+      Object.keys(LS).forEach(k => { const legacy = 'bbp.' + LS[k].split('.').pop(); try { const v = localStorage.getItem(legacy); if (v != null && k !== 'gate') localStorage.setItem(LS[k], v); } catch (e) { } });
+      try { const w = localStorage.getItem('bbp.water'); if (w) localStorage.setItem(Water.key, w); } catch (e) { }
+      const stores = await this.readLegacyStores();
+      const mode = await DB.open();
+      for (const s of STORES) { if (mode === 'idb') { for (const o of (stores[s] || [])) await DB.put(s, o, true); } else if (mode === 'ls') LSX.set(DB.lsPrefix + s, stores[s] || []); }
+      if (mode === 'idb' && DB.db) { DB.db.close(); DB.db = null; }
+    }
+    try { localStorage.setItem('bbp.legacyClaimed', this.profile.username); } catch (e) { }
+    await this.close();
+  },
+  readLegacyStores() {
+    return new Promise(res => {
+      const out = {}; STORES.forEach(s => out[s] = LSX.get('bbp.store.' + s, []) || []);
+      if (!window.indexedDB) return res(out);
+      let req; try { req = indexedDB.open(APP_ID, 1); } catch (e) { return res(out); }
+      req.onupgradeneeded = () => { const d = req.result; STORES.forEach(s => { if (!d.objectStoreNames.contains(s)) d.createObjectStore(s, { keyPath: 'id' }); }); };
+      req.onerror = () => res(out);
+      req.onsuccess = async () => {
+        const db = req.result;
+        for (const s of STORES) out[s] = out[s].concat(await new Promise(r => { try { const q = db.transaction(s).objectStore(s).getAll(); q.onsuccess = () => r(q.result || []); q.onerror = () => r([]); } catch (e) { r([]); } }));
+        db.close(); res(out);
+      };
+    });
+  },
+
+  /* ---------- sync ---------- */
+  snapshot() {
+    const strip = (k, v) => (k.startsWith('_') ? undefined : v);
+    return JSON.parse(JSON.stringify({ v: 1, app: APP_ID, schema: SCHEMA_VERSION, savedAt: Date.now(), resetAt: State.meta.cloudResetAt || 0,
+      settings: State.settings, profile: State.profile, meta: { onboarded: !!State.meta.onboarded, introSeen: !!State.meta.introSeen, finaleSeen: !!State.meta.finaleSeen },
+      water: LSX.get(Water.key, {}), deleted: State.meta.deleted || {}, sessions: State.sessions, results: State.results, bodyweight: State.bodyweight, achievements: State.achievements }, strip));
+  },
+  /* merge the cloud copy into this phone: newest version of each record wins, deletions travel too */
+  async merge(r) {
+    if (!r || r.app !== APP_ID) return false;
+    let changed = false;
+    if (r.resetAt && r.resetAt > (State.meta.cloudResetAt || 0)) {          // someone pressed "erase all" on another phone
+      for (const s of STORES) { await DB.clear(s); State[s] = []; }
+      State.meta.cloudResetAt = r.resetAt; State.meta.deleted = {}; changed = true;
+      State.profile = r.profile || null; LSX.set(LS.profile, State.profile); State.meta.onboarded = !!(r.meta && r.meta.onboarded); State.meta.activeSessionId = null;
+    }
+    const del = State.meta.deleted = State.meta.deleted || {};
+    for (const s of STORES) {
+      const rd = (r.deleted || {})[s] || {}; del[s] = Object.assign({}, del[s] || {}, rd);
+      for (const o of (r[s] || [])) {
+        if (!o || !o.id || (del[s][o.id] && del[s][o.id] >= (o.updatedAt || 0))) continue;
+        const i = State[s].findIndex(x => x.id === o.id), cur = i >= 0 ? State[s][i] : null;
+        if (!cur || (o.updatedAt || 0) > (cur.updatedAt || 0)) { if (i >= 0) State[s][i] = o; else State[s].push(o); await DB.put(s, o, true); changed = true; }
+      }
+      for (const id in del[s]) { const i = State[s].findIndex(x => x.id === id); if (i >= 0 && (State[s][i].updatedAt || 0) <= del[s][id]) { State[s].splice(i, 1); await DB.del(s, id); changed = true; } }
+    }
+    if (r.profile && (!State.profile || (r.profile.updatedAt || 0) > (State.profile.updatedAt || 0))) { State.profile = r.profile; LSX.set(LS.profile, r.profile); changed = true; }
+    if (r.settings && (r.settings.savedAt || 0) > (State.settings.savedAt || 0)) { State.settings = Object.assign({}, DEFAULT_SETTINGS, r.settings); LSX.set(LS.settings, State.settings); Motion.apply && Motion.apply(); changed = true; }
+    const m = r.meta || {}; ['onboarded', 'introSeen', 'finaleSeen'].forEach(k => { if (m[k] && !State.meta[k]) { State.meta[k] = true; changed = true; } });
+    if (r.water) { const w = LSX.get(Water.key, {}); let wc = false; for (const d in r.water) if ((r.water[d] || 0) > (w[d] || 0)) { w[d] = r.water[d]; wc = true; } if (wc) { LSX.set(Water.key, w); changed = true; } }
+    LSX.set(LS.meta, State.meta);
+    if (changed) State.version++;
+    return changed;
+  },
+  async pull() {
+    if (!this.sb || !this.user) return false;
+    try {
+      const { data, error } = await this.sb.from('user_data').select('data,updated_at').eq('user_id', this.user.id).maybeSingle();
+      if (error) throw error;
+      this.lastPull = Date.now();
+      const changed = data ? await this.merge(data.data) : false;
+      if (!data || changed) this.dirty(0);
+      this.set('synced');
+      return changed;
+    } catch (e) { this.set('offline'); return false; }
+  },
+  dirty(ms = 2500) {
+    if (!this.on || !this.user || !this.sb) return;
+    clearTimeout(this.timer); this.timer = setTimeout(() => this.push(), ms);
+    if (this.status !== 'saving') this.set('pending');
+  },
+  async push() {
+    if (!this.sb || !this.user) return;
+    if (this.pushing) { this.again = true; return; }
+    this.pushing = true; this.set('saving');
+    try {
+      const { error } = await this.sb.from('user_data').upsert({ user_id: this.user.id, data: this.snapshot(), updated_at: new Date().toISOString() });
+      if (error) throw error;
+      this.lastSync = Date.now(); this.set('synced'); clearTimeout(this.retry);
+    } catch (e) {
+      this.set(/row-level security|permission|42501/i.test(String(e && e.message)) ? 'denied' : 'offline');
+      clearTimeout(this.retry); this.retry = setTimeout(() => this.push(), 60000);
+    } finally { this.pushing = false; if (this.again) { this.again = false; this.push(); } }
+  },
+  set(st) {
+    this.status = st;
+    const el = $('#syncState'); if (el) el.outerHTML = this.badge();
+  },
+  badge() {
+    const m = { synced: ['ok', 'cloud', `Saved to your account${this.lastSync ? ' · ' + new Date(this.lastSync).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}`], saving: ['', 'refresh-cw', 'Saving…'], pending: ['', 'refresh-cw', 'Changes waiting to save'], offline: ['warn', 'cloud-off', 'Offline — saved on this phone, will sync later'], denied: ['red', 'cloud-off', 'Not saved to the cloud — your access may be off'], idle: ['', 'cloud', 'Connecting…'] }[this.status] || ['', 'cloud', ''];
+    return `<span class="badge ${m[0]}" id="syncState">${icon(m[1])} ${esc(m[2])}</span>`;
+  },
+  watch() {
+    window.addEventListener('online', () => this.dirty(500));
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'hidden') { if (this.status === 'pending') { clearTimeout(this.timer); this.push(); } }
+      else if (Date.now() - this.lastPull > 60000) this.pull().then(ch => { if (ch && !$('#sheet-root').innerHTML && UI.route.name !== 'workout') UI.render(); });
+    });
+  },
+  async logout(silent) {
+    if (!silent && this.status === 'pending') await this.push();
+    try { await this.sb.auth.signOut(); } catch (e) { }
+    LSX.del('bbp.cloud.last'); location.reload();
+  },
+
+  /* ---------- admin ---------- */
+  /* the intro, locker and quotes greet each athlete by their own name */
+  personalize() {
+    const nm = String(State.settings.name || 'Cliff').trim(), up = nm.toUpperCase(); if (up === 'CLIFF') return;
+    MOTIVATION.forEach((q, i) => { MOTIVATION[i] = q.replace(/\bCLIFF\b/g, esc(up)); });
+    const t = $('.t-cliff'), np = $('#nameplate'); if (t) t.textContent = up; if (np) np.textContent = up;
+  },
+  isAdmin() { return !!(this.on && this.profile && this.profile.role === 'admin' && this.profile.status === 'active'); },
+  async adminLoad(force) {
+    if (!force && this.admin.list && Date.now() - this.admin.at < 15000) return;
+    try { const { data, error } = await this.sb.rpc('admin_list_users'); if (error) throw error; this.admin = { list: data || [], at: Date.now(), err: '' }; }
+    catch (e) { this.admin.err = this.msg(e); this.admin.list = this.admin.list || []; this.admin.at = Date.now(); }
+    if (UI.route.name === 'admin') UI.render();
+  },
+  async adminDo(fn, args, ok) {
+    try { const { error } = await this.sb.rpc(fn, args); if (error) throw error; UI.toast(ok); await this.adminLoad(true); }
+    catch (e) { UI.toast(this.msg(e), 'bad'); }
+  }
+};
+
+/* every local save also schedules a cloud save; deletions leave a dated marker so they sync too */
+(() => {
+  const wrap = k => { const f = Store[k]; Store[k] = function (...a) { const r = f.apply(Store, a); Cloud.dirty(); return r; }; };
+  const rm = Store.remove; Store.remove = function (store, id) { const d = State.meta.deleted = State.meta.deleted || {}; (d[store] = d[store] || {})[id] = Date.now(); LSX.set(LS.meta, State.meta); return rm.call(Store, store, id); };
+  const ss = Store.saveSettings; Store.saveSettings = function () { State.settings.savedAt = Date.now(); return ss.call(Store); };
+  ['save', 'remove', 'saveSettings', 'saveProfile'].forEach(wrap);
+  const wset = Water.set; Water.set = function (n) { const r = wset.call(Water, n); Cloud.dirty(); return r; };
+})();
+
+/* ---------- Admin screen (More → Team access) ---------- */
+Screens.admin = function () {
+  if (!Cloud.isAdmin()) return `<div class="screen">${backBar('Team access')}<section class="panel"><p>Only an admin can open this page.</p></section></div>`;
+  Cloud.adminLoad();
+  const L = Cloud.admin.list, me = Cloud.user.id, ago = t => { if (!t) return 'never'; const d = Math.round((Date.now() - Date.parse(t)) / 864e5); return d <= 0 ? 'today' : d === 1 ? 'yesterday' : `${d} days ago`; };
+  const row = p => {
+    const self = p.id === me, b = (act, label, cls = '') => `<button class="btn sm ${cls}" type="button" data-act="adm" data-op="${act}" data-id="${p.id}" data-name="${esc(p.username)}">${label}</button>`;
+    const acts = self ? '<span class="label">This is you</span>' : p.status === 'pending' ? b('active', `${icon('check')} Approve`, 'primary') + b('revoked', 'Decline', 'ghost')
+      : p.status === 'active' ? b('revoked', `${icon('x')} Revoke access`) + b(p.role === 'admin' ? 'athlete' : 'admin', p.role === 'admin' ? 'Remove admin' : 'Make admin', 'ghost') + b('pw', `${icon('key-round')} Reset password`, 'ghost')
+      : b('active', `${icon('undo-2')} Restore access`, 'primary') + b('delete', `${icon('trash-2')} Delete account`, 'danger');
+    return `<div class="adm-row ${p.status}"><div class="grow"><b>${esc(p.username)}</b> ${p.role === 'admin' ? '<span class="badge blue">Admin</span>' : ''}<div class="muted" style="font-size:12.5px">Joined ${fmtDate(String(p.created_at).slice(0, 10))} · last seen ${ago(p.last_seen)} · ${p.workouts} workout${p.workouts === 1 ? '' : 's'} done</div></div><div class="row wrap adm-acts">${acts}</div></div>`;
+  };
+  const group = (st, title, empty) => { const g = (L || []).filter(p => p.status === st); return `<section class="panel stack" data-stg><div class="spread"><h2 class="h3">${title}</h2><span class="label">${g.length}</span></div>${g.length ? g.map(row).join('') : `<p class="muted" style="font-size:14px">${empty}</p>`}</section>`; };
+  return `<div class="screen">${backBar('Team access', `<button class="btn icon sm" type="button" data-act="adm-refresh" aria-label="Refresh">${icon('refresh-cw')}</button>`)}
+    <section class="panel flat" data-stg><p style="font-size:14px"><b>How people join:</b> send them the app link. They tap <b>Create account</b>, pick a username and password, and appear under “Waiting for approval”. Nobody can see or save anything until you approve them, and everyone only ever sees their own training.</p></section>
+    ${Cloud.admin.err ? `<section class="panel" data-stg><p class="err-msg">${esc(Cloud.admin.err)}</p></section>` : ''}
+    ${L == null ? '<section class="panel" data-stg><p class="muted">Loading the team…</p></section>' : group('pending', 'Waiting for approval', 'Nobody is waiting.') + group('active', 'Active', 'No active athletes yet.') + group('revoked', 'Access off', 'Nobody has been switched off.')}
+  </div>`;
+};
+TAB_OF.admin = 'more';
+Object.assign(Actions, {
+  'adm-refresh': () => Cloud.adminLoad(true),
+  'cloud-logout': async () => { const ok = await Sheet.confirm({ title: 'Log out?', body: `<p>Your training is saved to your account${Cloud.status === 'synced' ? '' : ' as soon as you are online'}. Log back in on any phone to continue.</p>`, ok: 'Log out' }); if (ok) Cloud.logout(); },
+  'cloud-sync': async () => { Cloud.set('saving'); await Cloud.pull(); await Cloud.push(); UI.render(); },
+  adm: async el => {
+    const id = el.dataset.id, name = el.dataset.name, op = el.dataset.op;
+    if (op === 'active') return Cloud.adminDo('admin_set_status', { target: id, new_status: 'active' }, `${name} can now train.`);
+    if (op === 'revoked') { const ok = await Sheet.confirm({ title: `Turn off ${name}'s access?`, body: `<p>${esc(name)} will not be able to open or save training until you restore access. Their saved training is kept.</p>`, ok: 'Turn off access', danger: true }); if (ok) Cloud.adminDo('admin_set_status', { target: id, new_status: 'revoked' }, `${name}'s access is off.`); return; }
+    if (op === 'admin' || op === 'athlete') { const ok = await Sheet.confirm({ title: op === 'admin' ? `Make ${name} an admin?` : `Remove ${name}'s admin rights?`, body: op === 'admin' ? '<p>Admins can approve, revoke, reset passwords and delete accounts.</p>' : '<p>They keep their own training; they lose access to Team access.</p>', ok: op === 'admin' ? 'Make admin' : 'Remove admin' }); if (ok) Cloud.adminDo('admin_set_role', { target: id, new_role: op }, 'Role updated.'); return; }
+    if (op === 'delete') { const ok = await Sheet.confirm({ title: `Delete ${name}'s account?`, body: `<p>This permanently deletes the account and all of ${esc(name)}'s training from the cloud. It cannot be undone.</p>`, ok: 'Delete forever', danger: true, typed: name.toUpperCase() }); if (ok) Cloud.adminDo('admin_delete_user', { target: id }, `${name}'s account was deleted.`); return; }
+    if (op === 'pw') {
+      Sheet.open({ title: `New password for ${name}`, html: `<p class="muted" style="font-size:14px">Type a new password (at least 8 characters) and send it to ${esc(name)} privately. They can log in with it straight away.</p><div class="field"><label for="admPw">New password</label><input class="input" id="admPw" type="text" autocomplete="off" autocapitalize="none" spellcheck="false"></div><p class="err-msg" id="admPwErr"></p><button class="btn big primary block" type="button" id="admPwGo">Set password</button>`,
+        onMount: sh => { $('#admPwGo', sh).onclick = async () => { const v = $('#admPw', sh).value; if (v.length < 8) { $('#admPwErr', sh).textContent = 'At least 8 characters.'; return; } await Sheet.close(); Cloud.adminDo('admin_reset_password', { target: id, new_password: v }, `Password changed for ${name}.`); }; } });
+    }
+  }
+});
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 
