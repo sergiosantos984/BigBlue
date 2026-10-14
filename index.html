@@ -2,17 +2,8 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<!-- ================= HOKIE POWER · ACCOUNTS SETUP =================
-     Paste your two Supabase values between the quotes (setup guide, step 4).
-     Leave them empty to run without accounts (athlete code, data on this phone only). -->
-<script>
-window.HOKIE_CLOUD = {
-  url: '',                       // Project URL, e.g. https://abcdefghijkl.supabase.co
-  anonKey: '',                   // Publishable key (starts with sb_publishable_) or the legacy anon key (starts with eyJ)
-  loginDomain: 'hokiepower.app'  // leave as is unless the guide's troubleshooting says otherwise
-};
-</script>
-<!-- ================================================================ -->
+<!-- Accounts: your Supabase values live in config.js (next to this file), so uploading a new index.html never wipes them. -->
+<script src="config.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#F8F5EF">
 <meta name="color-scheme" content="dark">
