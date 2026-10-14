@@ -1178,6 +1178,45 @@ body.workout-mode #fx{opacity:.25}
 #pocket .pk-bg{position:absolute;inset:0;pointer-events:none}
 #pocket[hidden]{display:none!important}
 
+/* ---- safe areas: nothing under the phone's status bar / notch ---- */
+#view{padding-top:calc(var(--safe-t) + 14px)}
+@media (min-width:1024px){#view{padding-top:calc(var(--safe-t) + 28px)}}
+body::before{content:"";position:fixed;left:0;right:0;top:0;height:var(--safe-t);z-index:29;pointer-events:none;background:#F8F5EF}
+body:not(.theme-light)::before{background:#16171A}
+#pocket .pk-top{padding-top:0}
+.topbar{flex-wrap:wrap;row-gap:10px}
+.topbar .brandmark{min-width:0}
+
+/* ---- depth: cards float above the floor ---- */
+body.theme-light{background:radial-gradient(120% 70% at 50% -10%,#FFFFFF 0%,#F8F5EF 45%,#EDE6DC 100%) fixed}
+body.theme-light #app :is(.panel:not(.flat),.mission,.wk-item,.metric,.lift-card,.set){
+  position:relative;
+  box-shadow:0 1px 0 rgba(255,255,255,.95) inset,0 -1px 0 rgba(92,16,45,.05) inset,0 1px 2px rgba(60,10,30,.06),0 6px 12px -4px rgba(60,10,30,.10),0 22px 40px -18px rgba(92,16,45,.28)!important;
+  transform:translateZ(0);transition:transform .25s cubic-bezier(.2,.8,.2,1),box-shadow .25s}
+body.theme-light #app .panel.flat{background:rgba(255,255,255,.55)!important;border:1px solid rgba(134,31,65,.08)!important;box-shadow:0 1px 0 rgba(255,255,255,.9) inset,0 8px 20px -14px rgba(92,16,45,.25)!important}
+body.theme-light #app :is(.panel:not(.flat):not(.hero),.wk-item,.metric,.set)::after{content:"";position:absolute;left:10%;right:10%;bottom:-14px;height:14px;border-radius:50%;background:radial-gradient(closest-side,rgba(60,10,30,.18),transparent);filter:blur(4px);z-index:-1;pointer-events:none}
+#app :is(.hero,.excard,.mission .mhead){box-shadow:0 2px 0 rgba(255,255,255,.18) inset,0 -6px 18px rgba(0,0,0,.18) inset,0 4px 8px rgba(60,10,30,.18),0 26px 50px -18px rgba(92,16,45,.6)!important}
+#app :is(.wk-item,.metric,.panel:not(.flat)):active{transform:translateY(1px) scale(.992)}
+body.theme-light #app .tilt{will-change:transform}
+/* section entrance: rise out of the floor */
+.screen [data-stg].rise{animation:riseIn .6s cubic-bezier(.2,.9,.25,1.1) both}
+@keyframes riseIn{0%{opacity:0;transform:perspective(900px) translateY(26px) rotateX(10deg) scale(.97)}100%{opacity:1;transform:none}}
+
+/* ---- spacing audit: big display type never collides with the lines around it ---- */
+#view .hero .h1{line-height:.9!important;margin:6px 0 10px!important}
+#view .hero .label{position:relative;z-index:1}
+#view .excard .target,#view .excard .target[style]{line-height:.9!important;margin:6px 0 10px!important}
+#view .excard .ex-name{margin-bottom:8px!important}
+#view .calc-out{line-height:.9!important;margin-bottom:8px}
+#view .motto{line-height:1.15!important}
+#view .quote-hero .qtext,#view .qtext{line-height:1.02!important}
+#view .topbar>h1.h2{line-height:.92!important}
+#pocket{padding-top:calc(var(--safe-t) + 18px)}
+#pocket .pk-big{line-height:.95}
+#pocket .pk-in{gap:8px}
+#view .qtext,#view .qtext .w{line-height:1.12!important}
+#view .excard .target,#view .excard .target[style]{margin-top:14px!important}
+
 </style>
 </head>
 <body>
@@ -4890,6 +4929,24 @@ const Kinetic = {
     const set = Cloud.set.bind(Cloud); let busy = false;
     Cloud.set = function (st) { const b = st === 'saving'; if (b !== busy) { busy = b; Kinetic.busy(b); } return set(st); };
   }
+})();
+
+/* ---------- depth: cards tilt toward the finger / mouse ---------- */
+(() => {
+  const SEL = '.hero, .excard, .mission, #app .panel:not(.flat)';
+  let cur = null;
+  const off = () => { if (cur) { cur.style.transform = ''; cur.classList.remove('tilt'); cur = null; } };
+  const move = e => {
+    if (Motion.off) return;
+    const el = e.target.closest && e.target.closest(SEL); if (!el || el.closest('#pocket')) { off(); return; }
+    if (cur && cur !== el) off(); cur = el; el.classList.add('tilt');
+    const r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5, k = Math.min(1, 520 / Math.max(r.width, 200));
+    el.style.transform = `perspective(900px) rotateX(${(-y * 5 * k).toFixed(2)}deg) rotateY(${(x * 6 * k).toFixed(2)}deg) translateY(-2px)`;
+  };
+  document.addEventListener('pointermove', e => { if (e.pointerType === 'mouse') move(e); }, { passive: true });
+  document.addEventListener('pointerdown', e => { if (e.pointerType !== 'mouse') move(e); }, { passive: true });
+  ['pointerup', 'pointercancel', 'scroll'].forEach(ev => document.addEventListener(ev, () => setTimeout(off, 120), { passive: true }));
+  document.addEventListener('pointerleave', off);
 })();
 
 /* ============ LOCK-SCREEN TRACKER + POCKET MODE ============
