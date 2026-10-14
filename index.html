@@ -1147,6 +1147,36 @@ body.workout-mode #fx{opacity:.25}
 #pocket .pk-dots i{width:18px;height:18px}
 #pocket.go .pk-ring{animation:pkGo .6s ease-in-out 3}
 @keyframes pkGo{50%{transform:scale(1.04);box-shadow:0 0 0 18px rgba(232,119,34,.35),0 30px 80px rgba(0,0,0,.45)}}
+/* pocket mode v3: taps, set stopwatch, steppers */
+#pocket{z-index:60;justify-content:flex-start;gap:clamp(8px,1.6vh,16px);overflow-y:auto;touch-action:manipulation;-webkit-touch-callout:none}
+#pocket .pk-top{gap:10px}
+#pocket .pk-top .pk-sets{margin-left:auto}
+#pocket .pk-x{display:inline-flex;align-items:center;gap:6px;min-height:44px;padding:0 14px;border-radius:999px;border:1px solid rgba(255,255,255,.4);background:rgba(255,255,255,.12);color:#fff;font:700 14px/1 inherit;cursor:pointer;position:relative;z-index:2}
+#pocket .pk-x svg{width:18px;height:18px}
+#pocket .pk-clock{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 18px;border-radius:999px;border:0;background:#fff;color:#5C102D;font:800 15px/1 inherit;cursor:pointer;animation:clkPulse 1.6s ease-in-out infinite;position:relative}
+#pocket .pk-clock svg{width:16px;height:16px}
+#pocket .pk-ring{width:min(78vw,38vh,400px);border:0;padding:0;cursor:pointer;color:#fff;flex:none}
+#pocket .pk-ring.work{background:conic-gradient(#fff calc(var(--p)*1%),rgba(255,255,255,.12) 0)}
+#pocket .pk-big{font-size:clamp(64px,min(22vw,11vh),130px)}
+#pocket .pk-sub{font-size:13px}
+#pocket .pk-in{gap:4px}
+#pocket .pk-name{font-size:clamp(28px,min(9vw,5vh),56px)}
+#pocket .pk-inputs{display:flex;gap:10px;width:100%;max-width:460px;justify-content:center;position:relative}
+#pocket .pk-step{flex:1;display:flex;flex-direction:column;gap:6px;align-items:stretch;min-width:0}
+#pocket .pk-step .label{color:rgba(255,255,255,.75);text-align:center}
+#pocket .pk-stepbox{display:grid;grid-template-columns:52px 1fr 52px;align-items:center;border-radius:16px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.25);overflow:hidden}
+#pocket .pk-stepbox button{height:58px;border:0;background:rgba(255,255,255,.08);color:#fff;font:700 30px/1 inherit;cursor:pointer}
+#pocket .pk-stepbox button:active{background:rgba(232,119,34,.5)}
+#pocket .pk-stepbox b{text-align:center;font:900 30px/1 var(--f-display,Impact,sans-serif);font-variant-numeric:tabular-nums}
+#pocket .pk-stepbox b small{font:600 12px/1 var(--f-mono,monospace);margin-left:3px;opacity:.7}
+#pocket .pk-acts{display:flex;gap:10px;width:100%;max-width:460px;position:relative}
+#pocket .pk-btn{flex:1;display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:64px;border-radius:18px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.1);color:#fff;font:800 18px/1 inherit;cursor:pointer}
+#pocket .pk-btn.primary{flex:1.6;background:#E87722;border-color:#E87722;color:#1A1D20;box-shadow:0 14px 30px -12px rgba(232,119,34,.9)}
+#pocket .pk-btn svg{width:22px;height:22px}
+#pocket .pk-btn:active{transform:scale(.97)}
+#pocket > *{position:relative}
+#pocket .pk-bg{position:absolute;inset:0;pointer-events:none}
+#pocket[hidden]{display:none!important}
 
 </style>
 </head>
@@ -1811,6 +1841,7 @@ const Workout = {
       WakeLock.on();
       Nav.go('workout', null, { big: true });
       Quotes.flash(s);
+      if (typeof Pocket !== 'undefined') { Pocket.workFrom = Date.now(); setTimeout(() => { if (Workout.active() && Workout.active().id === s.id) Pocket.show(); }, Motion.off ? 0 : 450); }
     } finally { this.busy = false; }
   },
   async persist(s, now = false) {
@@ -4996,51 +5027,101 @@ const LockTrack = {
   }
 };
 
-/* ---------- Pocket mode: full-screen tracker, hold to act ---------- */
+/* ---------- Pocket mode: the full-screen workout view ----------
+   Opens by itself when a workout starts. Shows a stopwatch for the set being worked (counts up)
+   and the rest countdown, lets the athlete set reps/weight with big +/− buttons and log the set,
+   all without leaving. Tap ✕ (top right) to go back to the full logger. */
 const Pocket = {
-  open: false,
+  open: false, workFrom: Date.now(),
   show() {
     if (!Workout.active()) return;
     let el = $('#pocket'); if (!el) { el = document.createElement('div'); el.id = 'pocket'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Pocket mode'); document.body.appendChild(el); }
     el.innerHTML = `<div class="pk-bg" aria-hidden="true"><i></i><i></i><i></i></div>
-      <div class="pk-top"><span class="label">POCKET MODE · SCREEN STAYS ON</span><span class="pk-sets" id="pkSets"></span></div>
-      <div class="pk-ring" id="pkRing"><div class="pk-in"><div class="pk-big" id="pkBig"></div><div class="pk-sub" id="pkSub"></div></div><i class="pk-orb" id="pkOrb"></i></div>
+      <div class="pk-top"><span class="label">POCKET MODE</span><span class="pk-sets" id="pkSets"></span><button class="pk-x" type="button" data-pk="exit" aria-label="Leave pocket mode">${icon('x')}<span>Exit</span></button></div>
+      <div id="pkClock"></div>
+      <button class="pk-ring" id="pkRing" type="button" data-pk="ring" aria-label="Restart the set timer"><div class="pk-in"><div class="pk-sub" id="pkKind"></div><div class="pk-big" id="pkBig"></div><div class="pk-sub" id="pkSub"></div></div><i class="pk-orb" id="pkOrb"></i></button>
       <div class="pk-dots" id="pkDots"></div>
       <h2 class="pk-name" id="pkName"></h2><div class="pk-target" id="pkTarget"></div>
-      <div class="pk-acts"><button class="pk-hold primary" type="button" data-hold="done"><span class="pk-fill"></span><b>Hold · set done</b></button>
-        <button class="pk-hold" type="button" data-hold="rest"><span class="pk-fill"></span><b>Hold · skip rest</b></button></div>
-      <button class="pk-hold pk-exit" type="button" data-hold="exit"><span class="pk-fill"></span><b>Hold to unlock</b></button>`;
-    el.hidden = false; this.open = true; WakeLock.on(); LockTrack.start();
-    $$('[data-hold]', el).forEach(b => this.hold(b));
-    const st = LockTrack.state(); st && this.paint(st, true);
-    Motion.anim(el, [{ opacity: 0, transform: 'scale(1.08)' }, { opacity: 1, transform: 'none' }], { duration: 420 });
-    clearInterval(this.iv); this.iv = setInterval(() => { const s2 = LockTrack.state(); if (!s2) return this.hide(); this.paint(s2); }, 500);
+      <div class="pk-inputs" id="pkInputs"></div>
+      <div class="pk-acts" id="pkActs"></div>`;
+    el.hidden = false; this.open = true; this.sig = ''; WakeLock.on(); LockTrack.start();
+    el.onclick = e => { const b = e.target.closest('[data-pk]'); if (!b) return; Haptics.tap(); this.act(b.dataset.pk, b); };
+    const st = LockTrack.state(); st && this.paint(st);
+    Motion.anim(el, [{ opacity: 0, transform: 'scale(1.06)' }, { opacity: 1, transform: 'none' }], { duration: 380 });
+    clearInterval(this.iv); this.iv = setInterval(() => { const s2 = LockTrack.state(); if (!s2) return this.hide(); this.paint(s2); }, 250);
   },
-  hide() { clearInterval(this.iv); this.open = false; const el = $('#pocket'); if (el) { el.hidden = true; el.innerHTML = ''; } UI.renderLogger(); },
-  hold(b) {
-    let t = null, raf = null; const fill = $('.pk-fill', b), need = b.dataset.hold === 'exit' ? 900 : 650;
-    const reset = () => { clearTimeout(t); cancelAnimationFrame(raf); fill.style.transition = 'transform .2s'; fill.style.transform = 'scaleX(0)'; b.classList.remove('holding'); };
-    b.addEventListener('pointerdown', e => {
-      e.preventDefault(); b.classList.add('holding'); fill.style.transition = `transform ${need}ms linear`; requestAnimationFrame(() => fill.style.transform = 'scaleX(1)');
-      t = setTimeout(() => { reset(); Haptics.tap && Haptics.tap(); const a = b.dataset.hold; if (a === 'exit') this.hide(); else if (a === 'done') LockTrack.completeSet(); else { Rest.stop(); LockTrack.update(true); } }, need);
-    });
-    ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => b.addEventListener(ev, reset));
-    b.addEventListener('contextmenu', e => e.preventDefault());
+  hide() { clearInterval(this.iv); this.open = false; const el = $('#pocket'); if (el) { el.hidden = true; el.innerHTML = ''; el.onclick = null; } if (UI.route.name === 'workout') UI.renderLogger(); },
+  act(a, b) {
+    const s = Workout.active(); if (!s) return this.hide();
+    const x = s.ex[s.cur], si = x ? x.sets.findIndex(t => !t.done) : -1, t = si > -1 ? x.sets[si] : null;
+    if (a === 'exit') return this.hide();
+    if (a === 'ring') { if (!(Rest.st && Rest.st.running)) { this.workFrom = Date.now(); this.paint(LockTrack.state()); } return; }
+    if (a === 'clock') return Actions['clock-start']();
+    if (a === 'rest') { Rest.stop(); LockTrack.update(true); return; }
+    if (a === 'restpause') { LockTrack.toggleRest(); return; }
+    if (a === 'next') { const nx = s.ex.findIndex(z => !z.skipped && z.sets.some(q => !q.done && !q.warm)); if (nx > -1) { s.cur = nx; Workout.persist(s); this.workFrom = Date.now(); this.sig = ''; } return; }
+    if (a === 'finish') { this.hide(); Workout.finish(s); return; }
+    if (a === 'step' && t) {
+      const f = b.dataset.f, d = +b.dataset.d;
+      if (f === 'w' && !t.w) {   // first tap: start from last time's weight (or the previous set) instead of zero
+        const prev = x.sets.slice(0, si).reverse().find(q => q.w), L = Workout.lastSets(x.exId, s.id), lt = L && (L.work[Math.min(x.sets.filter(q => !q.warm).indexOf(t), L.work.length - 1)] || {}).w;
+        const base = prev ? prev.w : lt; if (base) { SetLog.setField(s, s.cur, si, 'w', Units.showW(base)); this.sig = ''; this.paint(LockTrack.state()); return; }
+      }
+      if (f === 'w') { const cur = Units.showW(t.w) || 0, nv = Math.max(0, Math.round((cur + d * Units.inc()) * 100) / 100); SetLog.setField(s, s.cur, si, 'w', nv || ''); }
+      else if (f === 'reps') SetLog.setField(s, s.cur, si, 'reps', Math.max(0, (t.reps ?? t.pReps ?? 0) + d));
+      else if (f === 'sec') SetLog.setField(s, s.cur, si, 'sec', Math.max(0, Math.round(((t.sec ?? t.pSec ?? 0) + d) * 10) / 10));
+      this.sig = ''; this.paint(LockTrack.state()); return;
+    }
+    if (a === 'done' && t) {
+      if (x.type === 'sprint' && t.sec == null) SetLog.setField(s, s.cur, si, 'sec', Math.round((Date.now() - this.workFrom) / 100) / 10);
+      t.workSec = Math.round((Date.now() - this.workFrom) / 1000);
+      const err = SetLog.validate(x, t); if (err) { UI.toast(err, 'bad'); return; }
+      SetLog.toggle(s, s.cur, si); this.workFrom = Date.now(); this.sig = '';
+      const r = $('#pkRing'); r && Motion.anim(r, [{ transform: 'scale(1)' }, { transform: 'scale(1.06)' }, { transform: 'scale(1)' }], { duration: 380 });
+      setTimeout(() => { LockTrack.update(true); this.paint(LockTrack.state()); }, 650);
+    }
   },
-  paint(st, first) {
-    const el = $('#pocket'); if (!el || el.hidden) return;
-    const frac = st.resting ? (st.dur ? st.left / st.dur : 0) : (st.total ? st.done / st.total : 0);
-    $('#pkRing').style.setProperty('--p', (frac * 100).toFixed(2)); $('#pkRing').classList.toggle('rest', st.resting);
+  stepper(f, label, val, unit) {
+    return `<div class="pk-step"><span class="label">${label}</span><div class="pk-stepbox"><button type="button" data-pk="step" data-f="${f}" data-d="-1" aria-label="Less ${label}">−</button><b>${esc(String(val))}<small>${esc(unit)}</small></b><button type="button" data-pk="step" data-f="${f}" data-d="1" aria-label="More ${label}">+</button></div></div>`;
+  },
+  paint(st) {
+    const el = $('#pocket'); if (!el || el.hidden || !st) return;
+    const s = st.s, x = st.x, t = st.t;
+    // rest just ended (or skipped) → the set stopwatch starts from zero
+    if (this.wasResting && !st.resting) this.workFrom = Date.now();
+    this.wasResting = st.resting;
+    const work = Math.max(0, (Date.now() - this.workFrom) / 1000);
+    const frac = st.resting ? (st.dur ? st.left / st.dur : 0) : (work % 60) / 60;
+    const ring = $('#pkRing'); ring.style.setProperty('--p', (frac * 100).toFixed(2)); ring.classList.toggle('rest', st.resting); ring.classList.toggle('work', !st.resting);
     $('#pkOrb').style.transform = `rotate(${frac * 360}deg)`;
-    $('#pkBig').textContent = st.resting ? LockTrack.fmt(st.left) : st.rDone ? 'GO!' : `${st.setN}/${st.setOf}`;
-    $('#pkSub').textContent = st.resting ? (st.paused ? 'REST PAUSED' : 'REST') : st.rDone ? 'REST OVER' : 'SET';
+    $('#pkKind').textContent = st.resting ? (st.paused ? 'REST PAUSED' : 'REST') : t ? (st.rDone ? 'GO! · ' : '') + 'SET TIME' : 'EXERCISE DONE';
+    $('#pkBig').textContent = st.resting ? LockTrack.fmt(st.left) : t ? LockTrack.fmt(work).replace(/^0:/, '0:') : '✓';
+    $('#pkSub').textContent = t ? `SET ${st.setN} OF ${st.setOf}` : `${st.doneX}/${st.setOf} SETS`;
     $('#pkSets').textContent = `${st.done}/${st.total} sets`;
-    $('#pkDots').innerHTML = Array.from({ length: Math.min(st.setOf, 12) }, (_, i) => `<i class="${i < st.doneX ? 'on' : ''}"></i>`).join('');
-    const nm = $('#pkName'); if (nm.dataset.v !== st.x.name) { nm.dataset.v = st.x.name; nm.textContent = st.x.name; delete nm.dataset.kSplit; if (!Motion.off && Kinetic.letters(nm)) nm.classList.add('k-on'); }
-    $('#pkTarget').textContent = st.resting ? 'Next · ' + (st.target || 'set ' + st.setN) : st.target;
+    const dots = Array.from({ length: Math.min(st.setOf, 12) }, (_, i) => `<i class="${i < st.doneX ? 'on' : ''}"></i>`).join(''), dz = $('#pkDots'); if (dz.dataset.v !== dots) { dz.dataset.v = dots; dz.innerHTML = dots; }
+    const nm = $('#pkName'); if (nm.dataset.v !== x.name) { nm.dataset.v = x.name; nm.textContent = x.name; delete nm.dataset.kSplit; if (!Motion.off && Kinetic.letters(nm)) nm.classList.add('k-on'); }
+    $('#pkTarget').textContent = t ? (st.resting ? 'Next · ' : 'Target · ') + (t.pLabel && x.type !== 'check' ? t.pLabel : st.target || '') : '';
+    const ck = $('#pkClock'), want = s.clockOn === false ? 'off' : 'on'; if (ck.dataset.v !== want) { ck.dataset.v = want; ck.innerHTML = want === 'off' ? `<button class="pk-clock" type="button" data-pk="clock">${icon('play')} Start workout clock</button>` : ''; UI.icons(ck); }
     el.classList.toggle('go', !!st.rDone);
+    // inputs + actions only re-drawn when something changed (keeps taps smooth)
+    const sig = [s.cur, t && t.id, t && JSON.stringify([t.w, t.reps, t.sec]), st.resting, !!st.paused, !!t].join('|');
+    if (sig === this.sig) return; this.sig = sig;
+    let ins = '';
+    if (t) {
+      if (x.type === 'pct' || x.weighted) ins += this.stepper('w', 'Weight', t.w ? Units.fmtW(t.w) : '—', unitW());
+      if (x.type === 'pct' || x.type === 'reps') ins += this.stepper('reps', x.unitLabel ? x.unitLabel + 's' : 'Reps', t.reps ?? t.pReps ?? 0, '');
+      if (x.type === 'timed') ins += this.stepper('sec', 'Seconds', t.sec ?? t.pSec ?? 0, 's');
+    }
+    $('#pkInputs').innerHTML = ins;
+    const more = s.ex.some(z => !z.skipped && z.sets.some(q => !q.done && !q.warm));
+    $('#pkActs').innerHTML = t
+      ? `<button class="pk-btn primary" type="button" data-pk="done">${icon('check')} ${x.type === 'check' && t.pLabel ? 'Exercise done' : 'Set done'}</button>${st.resting ? `<button class="pk-btn" type="button" data-pk="rest">${icon('skip-forward')} Skip rest</button>` : ''}`
+      : more ? `<button class="pk-btn primary" type="button" data-pk="next">Next exercise ${icon('chevron-right')}</button>` : `<button class="pk-btn primary" type="button" data-pk="finish">${icon('flag')} Finish workout</button>`;
+    UI.icons(el);
   }
 };
+// the set stopwatch also restarts when a set is logged from the normal screen
+(() => { const tg = SetLog.toggle.bind(SetLog); SetLog.toggle = function (s, ei, si, btn) { const t = s.ex[ei] && s.ex[ei].sets[si]; if (t && !t.done && t.workSec == null) t.workSec = Math.round((Date.now() - Pocket.workFrom) / 1000); const r = tg(s, ei, si, btn); Pocket.workFrom = Date.now(); return r; }; })();
 
 /* start the lock-screen card on the first tap during a workout; stop it when the workout ends */
 document.addEventListener('pointerup', () => { if (!LockTrack.playing && Workout.active() && LockTrack.enabled()) LockTrack.start(); }, { passive: true });
