@@ -1077,6 +1077,36 @@ body.amb .pod{animation:barGrow .8s var(--ease-out) both}body.amb .pod.silver{an
 #syncState svg{transition:transform .3s}
 @media (prefers-reduced-motion:reduce){.k-on .kl,#kwipe .kwl,.kwave span{animation:none!important;opacity:1!important;transform:none!important}}
 
+/* ---- pocket mode ---- */
+.lock-row{gap:8px;margin:2px 0 4px}
+#pocket{position:fixed;inset:0;z-index:8000;background:radial-gradient(120% 80% at 50% 30%,#A3305A 0%,#861F41 40%,#3A0718 100%);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top,0px) + 18px) 18px calc(env(safe-area-inset-bottom,0px) + 18px);overflow:hidden;touch-action:none;user-select:none;-webkit-user-select:none}
+#pocket .pk-bg i{position:absolute;left:-50%;width:200%;height:18%;background:rgba(255,255,255,.05);transform:rotate(-18deg);animation:pkStripe 6s linear infinite}
+#pocket .pk-bg i:nth-child(1){top:10%}#pocket .pk-bg i:nth-child(2){top:45%;animation-delay:-2s;background:rgba(232,119,34,.08)}#pocket .pk-bg i:nth-child(3){top:80%;animation-delay:-4s}
+@keyframes pkStripe{from{transform:rotate(-18deg) translateX(-12%)}to{transform:rotate(-18deg) translateX(12%)}}
+#pocket .pk-top{position:relative;width:100%;display:flex;justify-content:space-between;align-items:center;font-size:12px;opacity:.85}
+#pocket .pk-top .label{color:#fff}
+#pocket .pk-ring{--p:0;position:relative;width:min(72vw,320px);aspect-ratio:1;border-radius:50%;background:conic-gradient(#fff calc(var(--p)*1%),rgba(255,255,255,.14) 0);display:grid;place-items:center;transition:background .4s;box-shadow:0 0 60px rgba(0,0,0,.25)}
+#pocket .pk-ring.rest{background:conic-gradient(#E87722 calc(var(--p)*1%),rgba(255,255,255,.14) 0);animation:pkPulse 1s ease-in-out infinite}
+@keyframes pkPulse{50%{box-shadow:0 0 80px rgba(232,119,34,.55)}}
+#pocket .pk-in{width:84%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 40% 30%,#9C2D55,#5C102D);display:grid;place-content:center;text-align:center}
+#pocket .pk-big{font:900 clamp(64px,22vw,110px)/.9 var(--f-display,Impact,sans-serif);font-variant-numeric:tabular-nums}
+#pocket .pk-sub{font:700 14px/1 var(--f-mono,monospace);letter-spacing:.2em;opacity:.85;margin-top:8px}
+#pocket .pk-orb{position:absolute;inset:0;pointer-events:none;transition:transform .5s linear}
+#pocket .pk-orb::after{content:"";position:absolute;left:50%;top:-2px;width:22px;height:22px;margin-left:-11px;border-radius:50%;background:#FFB36B;box-shadow:0 0 22px 6px rgba(255,179,107,.8);animation:pkOrb 1.2s ease-in-out infinite}
+@keyframes pkOrb{50%{transform:scale(1.25)}}
+#pocket .pk-dots{display:flex;gap:10px}
+#pocket .pk-dots i{width:14px;height:14px;border-radius:50%;background:rgba(255,255,255,.25);transition:background .3s,transform .3s}
+#pocket .pk-dots i.on{background:#E87722;transform:scale(1.15)}
+#pocket .pk-name{font:900 clamp(30px,9vw,48px)/1 var(--f-display,Impact,sans-serif);text-transform:uppercase;text-align:center;margin:0}
+#pocket .pk-target{font-size:18px;opacity:.9;text-align:center;min-height:1.3em}
+#pocket .pk-acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%;max-width:460px}
+#pocket .pk-hold{position:relative;overflow:hidden;min-height:64px;border-radius:16px;border:1px solid rgba(255,255,255,.35);background:rgba(255,255,255,.08);color:#fff;font:700 16px/1.1 inherit;cursor:pointer}
+#pocket .pk-hold.primary{background:#E87722;border-color:#E87722;color:#1A1D20}
+#pocket .pk-hold b{position:relative}
+#pocket .pk-fill{position:absolute;inset:0;background:rgba(255,255,255,.35);transform:scaleX(0);transform-origin:left}
+#pocket .pk-exit{width:100%;max-width:460px;min-height:52px;font-size:14px;letter-spacing:.08em;text-transform:uppercase}
+#pocket .pk-hold.holding{transform:scale(.98)}
+
 </style>
 </head>
 <body>
@@ -1203,7 +1233,7 @@ const ICONS = {
   dumbbell: 'M6 7v10M3 9v6M18 7v10M21 9v6M6 12h12',
   activity: 'M22 12h-4l-3 9L9 3l-3 9H2',
   menu: 'M4 6h16M4 12h16M4 18h16',
-  check: 'M20 6L9 17l-5-5', cloud: 'M17.5 19H9a7 7 0 1 1 6.7-9h1.8a4.5 4.5 0 1 1 0 9z', 'cloud-off': 'M2 2l20 20M5.8 5.8A7 7 0 0 0 9 19h8.5a4.5 4.5 0 0 0 1.3-.2M21.5 15.5A4.5 4.5 0 0 0 17.5 10h-1.8A7 7 0 0 0 10 5.1', 'refresh-cw': 'M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5', 'log-out': 'M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9', 'key-round': 'M2.6 18.2A2 2 0 0 0 2 19.6V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.2a2 2 0 0 0 1.4-.6l.8-.8a6.5 6.5 0 1 0-4-4zM16.5 7.5h.01', repeat: 'M17 2l4 4-4 4M3 11V10a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v1a4 4 0 0 1-4 4H3', link: 'M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7', apple: 'M12 7c-1.5-1-5-1.5-6.5 1.5S5 16 7.5 19.5c1.3 1.8 2.8 2 4.5 1 1.7 1 3.2.8 4.5-1C19 16 19.5 11.5 18 8.5S13.5 6 12 7zM12 7c0-2 1-3.5 3-4', 'cup-soda': 'M6 8l1.5 13h9L18 8zM5 8h14M12 8l1-5h3', flame: 'M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3.3.4 1.5 1.2 2.6 2.5 2.8z', scale: 'M12 3v18M7 21h10M3 7h18M6 7l-3 7a3 3 0 0 0 6 0zM18 7l-3 7a3 3 0 0 0 6 0z', layers: 'M12 2l10 5-10 5L2 7zM2 12l10 5 10-5M2 17l10 5 10-5', target: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12zM12 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4z', sparkles: 'M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 3v4M21 5h-4', delete: 'M10 5h11v14H10l-7-7zM18 9l-6 6M12 9l6 6',
+  check: 'M20 6L9 17l-5-5', smartphone: 'M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM12 18h.01', lock: 'M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4', bell: 'M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0', cloud: 'M17.5 19H9a7 7 0 1 1 6.7-9h1.8a4.5 4.5 0 1 1 0 9z', 'cloud-off': 'M2 2l20 20M5.8 5.8A7 7 0 0 0 9 19h8.5a4.5 4.5 0 0 0 1.3-.2M21.5 15.5A4.5 4.5 0 0 0 17.5 10h-1.8A7 7 0 0 0 10 5.1', 'refresh-cw': 'M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5', 'log-out': 'M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9', 'key-round': 'M2.6 18.2A2 2 0 0 0 2 19.6V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.2a2 2 0 0 0 1.4-.6l.8-.8a6.5 6.5 0 1 0-4-4zM16.5 7.5h.01', repeat: 'M17 2l4 4-4 4M3 11V10a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v1a4 4 0 0 1-4 4H3', link: 'M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7', apple: 'M12 7c-1.5-1-5-1.5-6.5 1.5S5 16 7.5 19.5c1.3 1.8 2.8 2 4.5 1 1.7 1 3.2.8 4.5-1C19 16 19.5 11.5 18 8.5S13.5 6 12 7zM12 7c0-2 1-3.5 3-4', 'cup-soda': 'M6 8l1.5 13h9L18 8zM5 8h14M12 8l1-5h3', flame: 'M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3.3.4 1.5 1.2 2.6 2.5 2.8z', scale: 'M12 3v18M7 21h10M3 7h18M6 7l-3 7a3 3 0 0 0 6 0zM18 7l-3 7a3 3 0 0 0 6 0z', layers: 'M12 2l10 5-10 5L2 7zM2 12l10 5 10-5M2 17l10 5 10-5', target: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12zM12 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4z', sparkles: 'M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 3v4M21 5h-4', delete: 'M10 5h11v14H10l-7-7zM18 9l-6 6M12 9l6 6',
   'circle-alert': 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 8v4M12 16h.01',
   'triangle-alert': 'M10.3 3.9L2 18a2 2 0 0 0 1.7 3h16.6A2 2 0 0 0 22 18L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01',
   'chevron-left': 'M15 18l-6-6 6-6', 'chevron-right': 'M9 18l6-6-6-6',
@@ -2758,6 +2788,7 @@ const Screens = {
         <div class="row wrap" data-rev style="margin-top:10px">${x.alts && x.alts.length ? `<button class="btn sm" type="button" data-act="swap-alt" data-e="${ei}">${icon('repeat')} Swap for ${esc(x.alts[0].name)}</button>` : ''}${x.pair != null && s.ex[x.pair] ? `<span class="badge blue">${icon('link')} Superset with ${esc(s.ex[x.pair].name)}</span><button class="btn sm ghost" type="button" data-act="unpair" data-e="${ei}">${icon('x')} Unpair</button>` : (x.type === 'reps' || x.type === 'pct' || x.type === 'timed' || x.type === 'check') && !x.skipped ? `<button class="btn sm" type="button" data-act="pair" data-e="${ei}">${icon('link')} Superset</button>` : ''}</div>
         <details style="margin-top:10px"><summary class="label" style="cursor:pointer">Technique notes</summary><p class="muted" style="margin-top:6px;font-size:14px">${esc(Program.exDef(x.exId).notes || '—')}</p></details>
       </article></div>
+      <div class="row wrap lock-row"><button class="btn sm" type="button" data-act="pocket">${icon('smartphone')} Pocket mode</button><button class="btn sm ghost" type="button" data-act="lock-toggle" aria-pressed="${LockTrack.enabled()}">${icon('lock')} Lock screen: ${LockTrack.enabled() ? 'On' : 'Off'}</button></div>
       <div class="sets" aria-label="Sets">${sets}</div>
       <div class="row wrap">${x.type === 'pct' ? `<button class="btn sm" type="button" data-act="add-set" data-e="${ei}" data-warm="1">${icon('plus')} Warm-up set</button>` : ''}<button class="btn sm" type="button" data-act="add-set" data-e="${ei}" data-warm="0">${icon('plus')} ${x.type === 'test' ? 'Attempt' : 'Set'}</button>
         <button class="btn sm ghost" type="button" data-act="skip-ex" data-e="${ei}">${icon(x.skipped ? 'undo-2' : 'skip-forward')} ${x.skipped ? 'Unskip exercise' : 'Skip exercise'}</button></div>
@@ -3583,6 +3614,7 @@ async function boot() {
   $('#skipIntro').onclick = () => Intro.finish();
   $('#enterStadium').onclick = () => Intro.enter();
   App.show(false);
+  try { const q = new URLSearchParams(location.search); if (q.get('go') === 'admin') { history.replaceState(null, '', location.pathname); if (Cloud.isAdmin()) setTimeout(() => Nav.go('admin'), Motion.off ? 0 : 600); } } catch (e) { }
   const act = Workout.active();
   if (act) setTimeout(async () => {
     const c = await Sheet.choose({ title: 'Resume your workout?', body: `<p><b>${esc(act.title)}</b> (${wkLabel(act.week)} · Day ${act.day}) was not finished. ${Stats.sessionStats(act).sets} sets are saved.</p>`, options: [{ id: 'resume', label: 'Resume mission', cls: 'red' }, { id: 'later', label: 'Keep it for later' }, { id: 'discard', label: 'Discard it', cls: 'danger' }] });
@@ -4650,6 +4682,7 @@ Screens.admin = function () {
   const group = (st, title, empty) => { const g = (L || []).filter(p => p.status === st); return `<section class="panel stack" data-stg><div class="spread"><h2 class="h3">${title}</h2><span class="label">${g.length}</span></div>${g.length ? g.map(row).join('') : `<p class="muted" style="font-size:14px">${empty}</p>`}</section>`; };
   return `<div class="screen">${backBar('Team access', `<button class="btn icon sm" type="button" data-act="adm-refresh" aria-label="Refresh">${icon('refresh-cw')}</button>`)}
     <section class="panel flat" data-stg><p style="font-size:14px"><b>How people join:</b> send them the app link. They tap <b>Create account</b>, pick a username and password, and appear under “Waiting for approval”. Nobody can see or save anything until you approve them, and everyone only ever sees their own training.</p></section>
+    <section class="panel stack" data-stg><div class="spread"><h2 class="h3">Phone alerts</h2>${icon('bell')}</div><p class="muted" style="font-size:14px">Get a notification on your phone the moment someone asks to join. Set it up once with the free ntfy app (setup guide, step 8), then test it here.</p><button class="btn sm" type="button" data-act="adm-test-alert">${icon('bell')} Send test alert</button></section>
     ${Cloud.admin.err ? `<section class="panel" data-stg><p class="err-msg">${esc(Cloud.admin.err)}</p></section>` : ''}
     ${L == null ? `<section class="panel" data-stg><p class="muted">${Kinetic.wave('LOADING THE TEAM…')}</p></section>` : group('pending', 'Waiting for approval', 'Nobody is waiting.') + group('active', 'Active', 'No active athletes yet.') + group('revoked', 'Access off', 'Nobody has been switched off.')}
   </div>`;
@@ -4657,6 +4690,7 @@ Screens.admin = function () {
 TAB_OF.admin = 'more';
 Object.assign(Actions, {
   'adm-refresh': () => Cloud.adminLoad(true),
+  'adm-test-alert': () => Cloud.adminDo('admin_test_alert', {}, 'Test alert sent — check your phone.'),
   'cloud-logout': async () => { const ok = await Sheet.confirm({ title: 'Log out?', body: `<p>Your training is saved to your account${Cloud.status === 'synced' ? '' : ' as soon as you are online'}. Log back in on any phone to continue.</p>`, ok: 'Log out' }); if (ok) Cloud.logout(); },
   'cloud-sync': async () => { Cloud.set('saving'); await Cloud.pull(); await Cloud.push(); UI.render(); },
   adm: async el => {
@@ -4776,6 +4810,174 @@ const Kinetic = {
     Cloud.set = function (st) { const b = st === 'saving'; if (b !== busy) { busy = b; Kinetic.busy(b); } return set(st); };
   }
 })();
+
+/* ============ LOCK-SCREEN TRACKER + POCKET MODE ============
+   Phones don't let a website draw on the real lock screen, but they do show a "Now Playing"
+   card for any page that is playing audio. During a workout the app plays an inaudible loop
+   and fills that card with a live, animated picture of the workout (exercise, set, rest ring),
+   a native progress bar for the rest timer, and buttons:  ⏭ complete the set · ⏮ skip rest ·
+   ⏯ pause/resume rest. When rest ends it plays a short whistle, even with the screen locked.
+   Pocket mode is the in-app version: a full-screen animated tracker that keeps the screen on
+   and ignores accidental taps (press and hold to act). */
+const LockTrack = {
+  audio: null, beep: null, playing: false, iv: null, frame: 0, lastArt: 0, wasResting: false,
+  enabled() { return State.settings.lockTracker !== 'off'; },
+  /* tiny WAV files generated on the device */
+  wav(seconds, fn, rate = 8000) {
+    const n = Math.floor(seconds * rate), buf = new ArrayBuffer(44 + n * 2), v = new DataView(buf);
+    const w = (o, s) => [...s].forEach((c, i) => v.setUint8(o + i, c.charCodeAt(0)));
+    w(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); w(8, 'WAVEfmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+    v.setUint32(24, rate, true); v.setUint32(28, rate * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, n * 2, true);
+    for (let i = 0; i < n; i++) v.setInt16(44 + i * 2, Math.max(-32767, Math.min(32767, fn(i / rate))), true);
+    let bin = ''; const u = new Uint8Array(buf); for (let i = 0; i < u.length; i += 8192) bin += String.fromCharCode.apply(null, u.subarray(i, i + 8192));
+    return 'data:audio/wav;base64,' + btoa(bin);
+  },
+  setup() {
+    if (this.audio) return;
+    this.audio = new Audio(this.wav(2, () => (Math.random() - .5) * 6)); this.audio.loop = true; this.audio.setAttribute('playsinline', ''); this.audio.preload = 'auto';
+    // referee-style double whistle for "rest over"
+    this.beep = new Audio(this.wav(.9, t => { const on = (t < .28) || (t > .4 && t < .78); const env = on ? Math.min(1, (t % .4) * 30) : 0; return env * 9000 * Math.sin(2 * Math.PI * (2200 + 180 * Math.sin(2 * Math.PI * 40 * t)) * t); }));
+    const ms = navigator.mediaSession; if (!ms) return;
+    const h = (a, f) => { try { ms.setActionHandler(a, f); } catch (e) { } };
+    h('play', () => { this.toggleRest(); }); h('pause', () => { this.toggleRest(); });
+    h('nexttrack', () => this.completeSet()); h('previoustrack', () => { Rest.stop(); this.update(true); });
+    h('seekforward', () => { Rest.add(15); this.update(true); }); h('seekbackward', () => { Rest.add(-15); this.update(true); });
+    try { ms.setActionHandler('stop', () => this.stop()); } catch (e) { }
+  },
+  async start() {
+    if (this.playing || !this.enabled() || !Workout.active()) return;
+    this.setup();
+    try { await this.audio.play(); this.playing = true; } catch (e) { return; }   // needs a tap; we try again on the next one
+    clearInterval(this.iv); this.iv = setInterval(() => this.update(), 1000); this.update(true);
+  },
+  stop() {
+    clearInterval(this.iv); this.iv = null; this.playing = false;
+    try { this.audio && this.audio.pause(); } catch (e) { }
+    if (navigator.mediaSession) { try { navigator.mediaSession.metadata = null; navigator.mediaSession.playbackState = 'none'; } catch (e) { } }
+  },
+  toggleRest() { const t = Rest.st; if (!t) return; if (t.running) Rest.pause(); else Rest.start(); this.update(true); },
+  completeSet() {
+    const s = Workout.active(); if (!s) return;
+    const x = s.ex[s.cur]; if (!x) return; const si = x.sets.findIndex(t => !t.done);
+    if (si < 0) { const nx = s.ex.findIndex(z => !z.skipped && z.sets.some(t => !t.done && !t.warm)); if (nx > -1) { s.cur = nx; Workout.persist(s); UI.renderLogger(); } this.update(true); return; }
+    SetLog.toggle(s, s.cur, si); setTimeout(() => this.update(true), 300);
+  },
+  /* what the tracker shows right now */
+  state() {
+    const s = Workout.active(); if (!s) return null;
+    const x = s.ex[s.cur] || s.ex[0], si = x.sets.findIndex(t => !t.done), t = si > -1 ? x.sets[si] : null;
+    const work = x.sets.filter(z => !z.warm), doneX = work.filter(z => z.done).length;
+    const total = s.ex.reduce((n, z) => n + (z.skipped ? 0 : z.sets.filter(q => !q.warm).length), 0), done = s.ex.reduce((n, z) => n + z.sets.filter(q => q.done && !q.warm).length, 0);
+    const r = Rest.st, resting = !!(r && (r.running || r.remaining > 0) && !r.done), left = Rest.left();
+    let target = '';
+    if (t) { if (x.type === 'pct' && t.w) target = `${Units.fmtW(t.w)} ${unitW()} × ${t.pReps || t.reps || ''}`; else if (x.type === 'reps') target = `${t.w ? Units.fmtW(t.w) + ' ' + unitW() + ' × ' : ''}${t.pLabel || t.pReps || ''} ${x.unitLabel || 'reps'}`; else if (x.type === 'timed') target = `${t.pSec}s`; else if (x.type === 'sprint') target = x.distLabel || ''; else if (x.type === 'check') target = t.pLabel ? t.pLabel.split(' — ')[0] : 'Tap ⏭ when done'; }
+    return { s, x, t, setN: t ? (t.warm ? 'W' : t.n) : doneX, setOf: work.length, doneX, total, done, resting, left, dur: r ? r.duration : 0, paused: r && !r.running, target, rDone: r && r.done };
+  },
+  fmt(sec) { sec = Math.max(0, Math.ceil(sec)); return `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`; },
+  /* animated lock-screen picture */
+  art(st) {
+    const c = this.cv || (this.cv = Object.assign(document.createElement('canvas'), { width: 512, height: 512 })), g = c.getContext('2d'), f = this.frame;
+    const bg = g.createRadialGradient(256, 200, 40, 256, 256, 380); bg.addColorStop(0, '#A3305A'); bg.addColorStop(.55, '#861F41'); bg.addColorStop(1, '#3A0718');
+    g.fillStyle = bg; g.fillRect(0, 0, 512, 512);
+    // moving stripes for life
+    g.save(); g.globalAlpha = .08; g.fillStyle = '#fff'; for (let i = -4; i < 10; i++) { const x0 = ((i * 80 + f * 6) % 960) - 240; g.beginPath(); g.moveTo(x0, 0); g.lineTo(x0 + 40, 0); g.lineTo(x0 - 160, 512); g.lineTo(x0 - 200, 512); g.fill(); } g.restore();
+    g.fillStyle = 'rgba(255,255,255,.7)'; g.font = '600 22px sans-serif'; g.textAlign = 'center'; g.fillText('HOKIE POWER', 256, 46);
+    // ring
+    const cx = 256, cy = 250, R = 150, frac = st.resting ? (st.dur ? st.left / st.dur : 0) : (st.total ? st.done / st.total : 0);
+    g.lineWidth = 22; g.strokeStyle = 'rgba(255,255,255,.14)'; g.beginPath(); g.arc(cx, cy, R, 0, Math.PI * 2); g.stroke();
+    g.strokeStyle = st.resting ? '#E87722' : '#FFFFFF'; g.lineCap = 'round'; g.beginPath(); g.arc(cx, cy, R, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * Math.max(.002, frac)); g.stroke();
+    // orbiting spark
+    const a = -Math.PI / 2 + Math.PI * 2 * frac; g.fillStyle = '#FFB36B'; g.shadowColor = '#FFB36B'; g.shadowBlur = 24 + 10 * Math.sin(f / 2); g.beginPath(); g.arc(cx + R * Math.cos(a), cy + R * Math.sin(a), 13, 0, Math.PI * 2); g.fill(); g.shadowBlur = 0;
+    g.fillStyle = '#fff';
+    if (st.resting) {
+      g.font = '800 104px sans-serif'; g.fillText(this.fmt(st.left), cx, cy + 30);
+      g.font = '700 26px sans-serif'; g.fillStyle = st.paused ? '#FFB36B' : 'rgba(255,255,255,.8)'; g.fillText(st.paused ? 'REST PAUSED' : 'REST', cx, cy + 72);
+    } else if (st.rDone) {
+      g.font = '800 64px sans-serif'; g.fillText('GO!', cx, cy + 10); g.font = '700 24px sans-serif'; g.fillText(`SET ${st.setN} OF ${st.setOf}`, cx, cy + 52);
+    } else {
+      g.font = '700 26px sans-serif'; g.fillStyle = 'rgba(255,255,255,.8)'; g.fillText('SET', cx, cy - 46);
+      g.fillStyle = '#fff'; g.font = '800 110px sans-serif'; g.fillText(`${st.setN}/${st.setOf}`, cx, cy + 40);
+    }
+    // set dots
+    const n = Math.min(st.setOf, 10), w = 26; for (let i = 0; i < n; i++) { g.fillStyle = i < st.doneX ? '#E87722' : 'rgba(255,255,255,.25)'; g.beginPath(); g.arc(256 - (n - 1) * w / 2 + i * w, 432, 8, 0, Math.PI * 2); g.fill(); }
+    g.fillStyle = '#fff'; g.font = '800 34px sans-serif'; let name = st.x.name.toUpperCase(); while (g.measureText(name).width > 470 && name.length > 4) name = name.slice(0, -2) + '…'; g.fillText(name, 256, 482);
+    return c.toDataURL('image/jpeg', .82);
+  },
+  update(force) {
+    const st = this.state(); if (!st) { this.stop(); return; }
+    this.frame++;
+    if (this.wasResting && st.rDone) { try { this.beep.currentTime = 0; this.beep.play(); } catch (e) { } }
+    this.wasResting = st.resting;
+    if (Pocket.open) Pocket.paint(st);
+    const ms = navigator.mediaSession; if (!ms || !this.playing) return;
+    const now = Date.now();
+    if (force || st.resting || now - this.lastArt > 4000) {
+      this.lastArt = now;
+      const title = st.resting ? `Rest ${this.fmt(st.left)} · then ${st.x.name}` : st.rDone ? `Rest over — ${st.x.name}` : `${st.x.name} · Set ${st.setN} of ${st.setOf}`;
+      try { ms.metadata = new MediaMetadata({ title, artist: st.target || 'Hokie Power', album: `Hokie Power · ${st.done}/${st.total} sets`, artwork: [{ src: this.art(st), sizes: '512x512', type: 'image/jpeg' }] }); } catch (e) { }
+    }
+    try {
+      ms.playbackState = st.resting && st.paused ? 'paused' : 'playing';
+      if (ms.setPositionState) {
+        if (st.resting && st.dur) ms.setPositionState({ duration: st.dur, position: Math.min(st.dur, Math.max(0, st.dur - st.left)), playbackRate: 1 });
+        else { const el = Workout.elapsed(st.s) / 1000, d = Math.max(el + 60, Workout.estMinutes(Program.byId(st.s.tid) || { exercises: [] }) * 60); ms.setPositionState({ duration: d, position: Math.min(d, el), playbackRate: 1 }); }
+      }
+    } catch (e) { }
+  }
+};
+
+/* ---------- Pocket mode: full-screen tracker, hold to act ---------- */
+const Pocket = {
+  open: false,
+  show() {
+    if (!Workout.active()) return;
+    let el = $('#pocket'); if (!el) { el = document.createElement('div'); el.id = 'pocket'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Pocket mode'); document.body.appendChild(el); }
+    el.innerHTML = `<div class="pk-bg" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="pk-top"><span class="label">POCKET MODE · SCREEN STAYS ON</span><span class="pk-sets" id="pkSets"></span></div>
+      <div class="pk-ring" id="pkRing"><div class="pk-in"><div class="pk-big" id="pkBig"></div><div class="pk-sub" id="pkSub"></div></div><i class="pk-orb" id="pkOrb"></i></div>
+      <div class="pk-dots" id="pkDots"></div>
+      <h2 class="pk-name" id="pkName"></h2><div class="pk-target" id="pkTarget"></div>
+      <div class="pk-acts"><button class="pk-hold primary" type="button" data-hold="done"><span class="pk-fill"></span><b>Hold · set done</b></button>
+        <button class="pk-hold" type="button" data-hold="rest"><span class="pk-fill"></span><b>Hold · skip rest</b></button></div>
+      <button class="pk-hold pk-exit" type="button" data-hold="exit"><span class="pk-fill"></span><b>Hold to unlock</b></button>`;
+    el.hidden = false; this.open = true; WakeLock.on(); LockTrack.start();
+    $$('[data-hold]', el).forEach(b => this.hold(b));
+    const st = LockTrack.state(); st && this.paint(st, true);
+    Motion.anim(el, [{ opacity: 0, transform: 'scale(1.08)' }, { opacity: 1, transform: 'none' }], { duration: 420 });
+    clearInterval(this.iv); this.iv = setInterval(() => { const s2 = LockTrack.state(); if (!s2) return this.hide(); this.paint(s2); }, 500);
+  },
+  hide() { clearInterval(this.iv); this.open = false; const el = $('#pocket'); if (el) { el.hidden = true; el.innerHTML = ''; } UI.renderLogger(); },
+  hold(b) {
+    let t = null, raf = null; const fill = $('.pk-fill', b), need = b.dataset.hold === 'exit' ? 900 : 650;
+    const reset = () => { clearTimeout(t); cancelAnimationFrame(raf); fill.style.transition = 'transform .2s'; fill.style.transform = 'scaleX(0)'; b.classList.remove('holding'); };
+    b.addEventListener('pointerdown', e => {
+      e.preventDefault(); b.classList.add('holding'); fill.style.transition = `transform ${need}ms linear`; requestAnimationFrame(() => fill.style.transform = 'scaleX(1)');
+      t = setTimeout(() => { reset(); Haptics.tap && Haptics.tap(); const a = b.dataset.hold; if (a === 'exit') this.hide(); else if (a === 'done') LockTrack.completeSet(); else { Rest.stop(); LockTrack.update(true); } }, need);
+    });
+    ['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => b.addEventListener(ev, reset));
+    b.addEventListener('contextmenu', e => e.preventDefault());
+  },
+  paint(st, first) {
+    const el = $('#pocket'); if (!el || el.hidden) return;
+    const frac = st.resting ? (st.dur ? st.left / st.dur : 0) : (st.total ? st.done / st.total : 0);
+    $('#pkRing').style.setProperty('--p', (frac * 100).toFixed(2)); $('#pkRing').classList.toggle('rest', st.resting);
+    $('#pkOrb').style.transform = `rotate(${frac * 360}deg)`;
+    $('#pkBig').textContent = st.resting ? LockTrack.fmt(st.left) : st.rDone ? 'GO!' : `${st.setN}/${st.setOf}`;
+    $('#pkSub').textContent = st.resting ? (st.paused ? 'REST PAUSED' : 'REST') : st.rDone ? 'REST OVER' : 'SET';
+    $('#pkSets').textContent = `${st.done}/${st.total} sets`;
+    $('#pkDots').innerHTML = Array.from({ length: Math.min(st.setOf, 12) }, (_, i) => `<i class="${i < st.doneX ? 'on' : ''}"></i>`).join('');
+    const nm = $('#pkName'); if (nm.dataset.v !== st.x.name) { nm.dataset.v = st.x.name; nm.textContent = st.x.name; delete nm.dataset.kSplit; if (!Motion.off && Kinetic.letters(nm)) nm.classList.add('k-on'); }
+    $('#pkTarget').textContent = st.target;
+  }
+};
+
+/* start the lock-screen card on the first tap during a workout; stop it when the workout ends */
+document.addEventListener('pointerup', () => { if (!LockTrack.playing && Workout.active() && LockTrack.enabled()) LockTrack.start(); }, { passive: true });
+setInterval(() => { if (LockTrack.playing && !Workout.active()) LockTrack.stop(); if (Pocket.open && !Workout.active()) Pocket.hide(); }, 2000);
+Object.assign(Actions, {
+  pocket: () => Pocket.show(),
+  'lock-toggle': () => { State.settings.lockTracker = LockTrack.enabled() ? 'off' : 'on'; Store.saveSettings(); if (!LockTrack.enabled()) LockTrack.stop(); else LockTrack.start(); UI.renderLogger(); UI.toast(LockTrack.enabled() ? 'Lock-screen tracker on' : 'Lock-screen tracker off'); }
+});
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 
