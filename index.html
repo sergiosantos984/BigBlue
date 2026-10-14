@@ -1050,6 +1050,33 @@ body.amb .pod{animation:barGrow .8s var(--ease-out) both}body.amb .pod.silver{an
 
 .logout-btn{flex:none;white-space:nowrap}
 
+/* ---- kinetic type & tap fx ---- */
+.kw{display:inline-block;white-space:nowrap}
+.k-on{perspective:600px}
+.k-on .kl{display:inline-block;opacity:0;transform-origin:50% 100%;animation:klIn .62s cubic-bezier(.2,.9,.25,1.25) forwards;animation-delay:calc(var(--i) * 26ms + 60ms)}
+@keyframes klIn{0%{opacity:0;transform:translateY(.55em) rotateX(-95deg) scale(.7);filter:blur(4px);color:#E87722}60%{opacity:1;filter:blur(0);color:#E87722}100%{opacity:1;transform:none;color:inherit}}
+#kwipe{position:fixed;inset:0;z-index:9000;pointer-events:none;background:#5C102D;overflow:hidden;display:grid;place-items:center}
+#kwipe .kw-band{position:absolute;left:-20%;right:-20%;height:38%;transform:skewY(-12deg)}
+#kwipe .b1{top:8%;background:linear-gradient(90deg,#861F41,#A3305A)}
+#kwipe .b2{bottom:6%;height:14%;background:#E87722;box-shadow:0 0 60px rgba(232,119,34,.6)}
+#kwipe .kw-word{position:relative;font:900 clamp(56px,17vw,150px)/.85 var(--f-display,Impact,sans-serif);letter-spacing:-.01em;color:#fff;text-align:center;padding:0 16px;text-shadow:0 10px 40px rgba(0,0,0,.35)}
+#kwipe .kwl{display:inline-block;animation:kwIn .42s cubic-bezier(.2,.9,.25,1.3) both;animation-delay:calc(var(--i) * 22ms)}
+@keyframes kwIn{0%{opacity:0;transform:translateX(60px) skewX(-20deg) scale(1.4)}100%{opacity:1;transform:none}}
+#kwipe .kw-num{position:absolute;right:6%;top:6%;font:900 clamp(80px,30vw,260px)/1 var(--f-display,Impact,sans-serif);color:transparent;-webkit-text-stroke:2px rgba(255,255,255,.28)}
+.kburst{position:fixed;width:0;height:0;pointer-events:none;z-index:9500}
+.kburst .kring{position:absolute;left:-6px;top:-6px;width:12px;height:12px;border-radius:50%;border:2.5px solid #E87722;animation:kRing .5s ease-out forwards}
+@keyframes kRing{to{transform:scale(6);opacity:0;border-width:.5px}}
+.kburst b{position:absolute;left:-3px;top:-3px;width:6px;height:6px;border-radius:2px;background:var(--c);animation:kSpark .55s cubic-bezier(.15,.8,.3,1) forwards}
+@keyframes kSpark{0%{transform:rotate(var(--a)) translateX(0) scale(1)}100%{transform:rotate(var(--a)) translateX(var(--d)) scale(.2);opacity:0}}
+.kwave{display:inline-flex;gap:.04em;font-weight:800;letter-spacing:.06em}
+.kwave span{display:inline-block;animation:kWave 1s ease-in-out infinite;animation-delay:calc(var(--i) * 55ms)}
+@keyframes kWave{0%,55%,100%{transform:none;color:inherit}25%{transform:translateY(-7px) scale(1.15);color:#E87722}}
+#kbar{position:fixed;left:0;top:0;height:3px;width:100%;z-index:9600;pointer-events:none;opacity:0;transition:opacity .25s;background:linear-gradient(90deg,transparent,#E87722 30%,#FFB36B 50%,#861F41 70%,transparent);background-size:50% 100%;background-repeat:no-repeat}
+#kbar.on{opacity:1;animation:kBar 1s linear infinite}
+@keyframes kBar{from{background-position:-50% 0}to{background-position:150% 0}}
+#syncState svg{transition:transform .3s}
+@media (prefers-reduced-motion:reduce){.k-on .kl,#kwipe .kwl,.kwave span{animation:none!important;opacity:1!important;transform:none!important}}
+
 </style>
 </head>
 <body>
@@ -4425,16 +4452,16 @@ const Cloud = {
           if (!USER_RE.test(u)) return fail('Usernames are 3–24 characters: letters, numbers, dot, dash or underscore.');
           if (p.length < 8) return fail('Password must be at least 8 characters.');
           if (mode === 'signup' && p !== $('#authPass2').value) return fail("The two passwords don't match.");
-          go.disabled = true; msg.textContent = mode === 'login' ? 'Checking…' : 'Creating your account…';
+          go.disabled = true; msg.innerHTML = Kinetic.wave(mode === 'login' ? 'CHECKING…' : 'BUILDING YOUR LOCKER…'); Kinetic.busy(true);
           try {
             const r = mode === 'login'
               ? await this.sb.auth.signInWithPassword({ email: this.email(u), password: p })
               : await this.sb.auth.signUp({ email: this.email(u), password: p, options: { data: { username: u } } });
             if (r.error) throw r.error;
-            if (!r.data.session) { go.disabled = false; return fail('Account created, but Supabase is asking for email confirmation. Turn "Confirm email" off (setup guide, step 2), then log in.'); }
-            this.user = r.data.session.user; msg.textContent = 'Welcome.'; Haptics.beep([523, 784], .1);
+            if (!r.data.session) { Kinetic.busy(false); go.disabled = false; return fail('Account created, but Supabase is asking for email confirmation. Turn "Confirm email" off (setup guide, step 2), then log in.'); }
+            Kinetic.busy(false); this.user = r.data.session.user; msg.innerHTML = Kinetic.wave('WELCOME.'); Haptics.beep([523, 784], .1);
             await this.close(); res(true);
-          } catch (err) { go.disabled = false; fail(this.msg(err), String((err && (err.message || err.msg)) || '')); }
+          } catch (err) { Kinetic.busy(false); go.disabled = false; fail(this.msg(err), String((err && (err.message || err.msg)) || '')); }
         };
         setTimeout(() => { const f = $('#authUser'); f && f.focus({ preventScroll: true }); }, 80);
       };
@@ -4624,7 +4651,7 @@ Screens.admin = function () {
   return `<div class="screen">${backBar('Team access', `<button class="btn icon sm" type="button" data-act="adm-refresh" aria-label="Refresh">${icon('refresh-cw')}</button>`)}
     <section class="panel flat" data-stg><p style="font-size:14px"><b>How people join:</b> send them the app link. They tap <b>Create account</b>, pick a username and password, and appear under “Waiting for approval”. Nobody can see or save anything until you approve them, and everyone only ever sees their own training.</p></section>
     ${Cloud.admin.err ? `<section class="panel" data-stg><p class="err-msg">${esc(Cloud.admin.err)}</p></section>` : ''}
-    ${L == null ? '<section class="panel" data-stg><p class="muted">Loading the team…</p></section>' : group('pending', 'Waiting for approval', 'Nobody is waiting.') + group('active', 'Active', 'No active athletes yet.') + group('revoked', 'Access off', 'Nobody has been switched off.')}
+    ${L == null ? `<section class="panel" data-stg><p class="muted">${Kinetic.wave('LOADING THE TEAM…')}</p></section>` : group('pending', 'Waiting for approval', 'Nobody is waiting.') + group('active', 'Active', 'No active athletes yet.') + group('revoked', 'Access off', 'Nobody has been switched off.')}
   </div>`;
 };
 TAB_OF.admin = 'more';
@@ -4644,6 +4671,111 @@ Object.assign(Actions, {
     }
   }
 });
+
+/* ============ KINETIC TYPE & TAP FX ============
+   • Page change: a maroon/orange wipe sweeps across with the page name in huge letters.
+   • New screen: titles assemble letter by letter, scoreboard numbers roll like a slot machine.
+   • Tap: an orange ring and sparks burst from the finger.
+   • Loading: letters ride a wave ("LOADING", "SAVING…") and a thin bar runs along the top.
+   Everything is skipped when Motion is set to minimal / reduced. */
+const Kinetic = {
+  last: '', busyN: 0,
+  NAMES: { home: 'GAME DAY', training: 'TRAINING', workout: 'WORKOUT', progress: 'PROGRESS', nutrition: 'FUEL', more: 'LOCKER', history: 'HISTORY', session: 'REPORT', settings: 'SETTINGS', profile: 'PROFILE', backup: 'BACKUP', summary: 'SUMMARY', about: 'ABOUT', admin: 'TEAM' },
+  /* split a plain-text element into letter spans (words stay unbroken) */
+  letters(el, base = 0, cls = 'kl') {
+    if (!el || el.dataset.kSplit || el.children.length) return 0;
+    const t = el.textContent; if (!t.trim() || t.length > 60) return 0;
+    el.dataset.kSplit = '1'; el.setAttribute('aria-label', t.trim());
+    let i = base;
+    el.innerHTML = t.split(/(\s+)/).map(w => /^\s+$/.test(w) ? w : `<span class="kw" aria-hidden="true">${[...w].map(c => `<span class="${cls}" style="--i:${i++}">${esc(c)}</span>`).join('')}</span>`).join('');
+    return i - base;
+  },
+  /* slot-machine digits: every digit spins, then lands left to right */
+  roll(el, dur = 700) {
+    if (!el || el.dataset.kRoll) return; el.dataset.kRoll = '1';
+    const nodes = []; const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT); let n;
+    while ((n = w.nextNode())) if (/\d/.test(n.nodeValue)) nodes.push([n, n.nodeValue]);
+    if (!nodes.length) return;
+    const t0 = performance.now(), total = nodes.reduce((a, [, v]) => a + (v.match(/\d/g) || []).length, 0);
+    const step = t => {
+      const k = Math.min(1, (t - t0) / dur); let seen = 0;
+      nodes.forEach(([node, orig]) => {
+        if (!node.isConnected) return;
+        node.nodeValue = orig.replace(/\d/g, d => { const settle = (seen++ + 1) / (total + 1); return k >= settle ? d : String((Math.random() * 10) | 0); });
+      });
+      if (k < 1) requestAnimationFrame(step); else nodes.forEach(([node, orig]) => { if (node.isConnected) node.nodeValue = orig; });
+    };
+    requestAnimationFrame(step);
+  },
+  /* a fresh screen arrived */
+  enter(root) {
+    if (Motion.off || !root) return;
+    const titles = $$('.topbar > h1, .ex-name, .gtitle:not(:has(*)), .hero .label, .sheet-head h2', root);
+    titles.forEach(h => { if (this.letters(h)) h.classList.add('k-on'); });
+    $$('.target, .metric .v, .sb-val, .season-pct, .calc-out, .hero .h1, .award-total, .kpi', root).forEach((el, i) => setTimeout(() => this.roll(el, 650 + i * 40), 80 + i * 30));
+  },
+  /* full-screen wipe with the destination's name */
+  wipe(name) {
+    if (Motion.off) return;
+    const word = this.NAMES[name] || String(name || '').toUpperCase(); if (!word) return;
+    const old = $('#kwipe'); if (old) old.remove();
+    const el = document.createElement('div'); el.id = 'kwipe'; el.setAttribute('aria-hidden', 'true');
+    el.innerHTML = `<div class="kw-band b1"></div><div class="kw-band b2"></div><div class="kw-word"></div><div class="kw-num">${String(TABS.indexOf(TAB_OF[name]) + 1).padStart(2, '0')}</div>`;
+    $('.kw-word', el).textContent = word; this.letters($('.kw-word', el), 0, 'kwl');
+    document.body.appendChild(el);
+    const E = 'cubic-bezier(.7,0,.2,1)';
+    el.animate([{ clipPath: 'polygon(0 0,0 0,-20% 100%,-20% 100%)' }, { clipPath: 'polygon(0 0,120% 0,100% 100%,-20% 100%)', offset: .38 }, { clipPath: 'polygon(0 0,120% 0,100% 100%,-20% 100%)', offset: .6 }, { clipPath: 'polygon(120% 0,120% 0,100% 100%,100% 100%)' }], { duration: 640, easing: E, fill: 'forwards' })
+      .finished.then(() => el.remove(), () => el.remove());
+  },
+  /* tap burst at the finger */
+  burst(x, y, strong) {
+    if (Motion.off) return;
+    const el = document.createElement('div'); el.className = 'kburst'; el.style.left = x + 'px'; el.style.top = y + 'px';
+    const n = strong ? 10 : 6;
+    el.innerHTML = '<i class="kring"></i>' + Array.from({ length: n }, (_, i) => `<b style="--a:${(360 / n) * i + Math.random() * 20}deg;--d:${(strong ? 46 : 30) + Math.random() * 16}px;--c:${i % 2 ? '#E87722' : '#861F41'}"></b>`).join('');
+    document.body.appendChild(el); setTimeout(() => el.remove(), 700);
+  },
+  /* animated loading words */
+  wave(text) { return `<span class="kwave" role="status" aria-label="${esc(text)}">${[...text].map((c, i) => c === ' ' ? ' ' : `<span style="--i:${i}">${esc(c)}</span>`).join('')}</span>`; },
+  busy(on) {
+    this.busyN = Math.max(0, this.busyN + (on ? 1 : -1));
+    let bar = $('#kbar'); if (!bar) { bar = document.createElement('div'); bar.id = 'kbar'; bar.setAttribute('aria-hidden', 'true'); document.body.appendChild(bar); }
+    bar.classList.toggle('on', this.busyN > 0);
+  }
+};
+
+/* hooks: page wipe on tab change, kinetic entrance whenever a new screen lands */
+(() => {
+  const go = Nav.go.bind(Nav);
+  Nav.go = function (name, param = null, opts = {}) {
+    const from = TAB_OF[UI.route.name];
+    if (TAB_OF[name] !== from && name !== UI.route.name) Kinetic.wipe(TAB_OF[name] === name ? name : name);
+    return go(name, param, opts);
+  };
+  const watch = () => {
+    const view = $('#view'); if (!view) return;
+    new MutationObserver(() => {
+      const key = UI.route.name + ':' + (UI.route.param || '');
+      const scr = view.firstElementChild;
+      if (key !== Kinetic.last) { Kinetic.last = key; Kinetic.enter(scr); }
+      else if (UI.route.name === 'workout' && scr) {      // new exercise in the logger: name + target re-assemble
+        const nm = $('.ex-name', scr); if (nm && nm.textContent !== Kinetic.lastEx) { Kinetic.lastEx = nm.textContent; Kinetic.enter(scr); }
+      }
+    }).observe(view, { childList: true });
+    // sheets get the same letter treatment
+    const sr = $('#sheet-root'); if (sr) new MutationObserver(() => { const h = $('.sheet-head h2', sr); if (h && !Motion.off && Kinetic.letters(h)) h.classList.add('k-on'); }).observe(sr, { childList: true });
+  };
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', watch); else watch();
+  document.addEventListener('pointerdown', e => {
+    const t = e.target.closest('.btn, .list-item, .wk-item, .chip, .ex-tab, #nav button, .seg button, .key, .chk, [data-act]');
+    if (t && !t.disabled) Kinetic.burst(e.clientX, e.clientY, t.matches('.btn.big, .chk, .btn.primary, .btn.red'));
+  }, { passive: true });
+  // loading indicators for cloud work
+  if (typeof Cloud !== 'undefined') {
+    const set = Cloud.set.bind(Cloud); let busy = false;
+    Cloud.set = function (st) { const b = st === 'saving'; if (b !== busy) { busy = b; Kinetic.busy(b); } return set(st); };
+  }
+})();
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 
