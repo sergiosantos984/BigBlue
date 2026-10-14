@@ -7,8 +7,8 @@
      Leave them empty to run without accounts (athlete code, data on this phone only). -->
 <script>
 window.HOKIE_CLOUD = {
-  url: 'https://izsyhuselvunweldhjqs.supabase.co',                       // Project URL, e.g. https://abcdefghijkl.supabase.co
-  anonKey: 'sb_publishable_9y136xbR72DEQVz8g581uA_Ioo7pa0s',                   // Publishable key (starts with sb_publishable_) or the legacy anon key (starts with eyJ)
+  url: '',                       // Project URL, e.g. https://abcdefghijkl.supabase.co
+  anonKey: '',                   // Publishable key (starts with sb_publishable_) or the legacy anon key (starts with eyJ)
   loginDomain: 'hokiepower.app'  // leave as is unless the guide's troubleshooting says otherwise
 };
 </script>
@@ -18,6 +18,10 @@ window.HOKIE_CLOUD = {
 <meta name="color-scheme" content="dark">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Hokie Power">
+<link rel="apple-touch-icon" href="icon-180.png">
+<link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
 <title>Cliff Hokie Power</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1050,6 +1054,8 @@ body.amb .pod{animation:barGrow .8s var(--ease-out) both}body.amb .pod.silver{an
 .adm-row.pending{background:rgba(134,31,65,.05);margin:0 -12px;padding:12px;border-radius:12px}
 .adm-acts{gap:6px}
 .acct .lib-ico{flex:none}
+
+#gate.auth .gmsg .graw{display:block;margin-top:6px;font-size:12px;color:rgba(255,255,255,.55);word-break:break-word}
 
 </style>
 </head>
@@ -4317,7 +4323,8 @@ const Cloud = {
   sb: null, user: null, profile: null, ns: '',
   status: 'idle', lastSync: null, lastPull: 0, timer: null, retry: null, pushing: false, again: false, admin: { list: null, at: 0, err: '' },
 
-  email(u) { return `${u}@${CLOUD_CFG.loginDomain || 'hokiepower.app'}`; },
+  /* loginDomain 'example.com' → u@example.com · or a real inbox 'me@gmail.com' → me+u@gmail.com (plus-addressing; nothing is ever sent) */
+  email(u) { const d = String(CLOUD_CFG.loginDomain || 'hokiepower.app').trim(); if (d.includes('@')) { const [l, h] = d.split('@'); return `${l}+${u}@${h}`; } return `${u}@${d}`; },
   load() {
     if (window.supabase && window.supabase.createClient) return Promise.resolve();
     return new Promise((res, rej) => { const s = document.createElement('script'); s.src = SUPABASE_JS; s.onload = () => res(); s.onerror = () => rej(new Error('offline')); document.head.appendChild(s); });
@@ -4326,7 +4333,8 @@ const Cloud = {
     const m = String((e && (e.message || e.error_description || e.msg)) || e || '');
     if (/invalid login credentials/i.test(m)) return 'Username or password is wrong.';
     if (/already registered|already exists|duplicate key/i.test(m)) return 'That username is taken. Pick another one.';
-    if (/email.*(invalid|not authorized)|invalid.*email/i.test(m)) return 'Supabase rejected the login name. In index.html, set loginDomain to a domain you own (see the setup guide).';
+    if (/not authori[sz]ed|cannot be used as it is not/i.test(m)) return 'Supabase tried to send a confirmation email. Turn "Confirm email" off in Supabase (setup guide, step 2), click Save, then try again.';
+    if (/email.*invalid|invalid.*email|email_address_invalid/i.test(m)) return 'Supabase rejected the made-up login address. Change loginDomain in index.html (setup guide, troubleshooting), then try again.';
     if (/signups? not allowed|signup.*disabled/i.test(m)) return 'New accounts are switched off in Supabase (Authentication → Sign In / Providers → Allow new users to sign up).';
     if (/password/i.test(m) && /(short|least|weak)/i.test(m)) return 'Password is too short — use at least 8 characters.';
     if (/rate limit|too many/i.test(m)) return 'Too many tries. Wait a minute and try again.';
@@ -4418,7 +4426,7 @@ const Cloud = {
         $('#authForm', g).onsubmit = async e => {
           e.preventDefault();
           const u = $('#authUser').value.trim().toLowerCase(), p = $('#authPass').value, msg = $('#authMsg'), go = $('#authGo');
-          const fail = t => { msg.textContent = t; g.classList.add('err'); Haptics.buzz(); setTimeout(() => g.classList.remove('err'), 500); };
+          const fail = (t, raw) => { msg.innerHTML = esc(t) + (raw && raw !== t ? `<small class="graw">Supabase said: ${esc(raw)}</small>` : ''); g.classList.add('err'); Haptics.buzz(); setTimeout(() => g.classList.remove('err'), 500); };
           if (!USER_RE.test(u)) return fail('Usernames are 3–24 characters: letters, numbers, dot, dash or underscore.');
           if (p.length < 8) return fail('Password must be at least 8 characters.');
           if (mode === 'signup' && p !== $('#authPass2').value) return fail("The two passwords don't match.");
@@ -4431,7 +4439,7 @@ const Cloud = {
             if (!r.data.session) { go.disabled = false; return fail('Account created, but Supabase is asking for email confirmation. Turn "Confirm email" off (setup guide, step 2), then log in.'); }
             this.user = r.data.session.user; msg.textContent = 'Welcome.'; Haptics.beep([523, 784], .1);
             await this.close(); res(true);
-          } catch (err) { go.disabled = false; fail(this.msg(err)); }
+          } catch (err) { go.disabled = false; fail(this.msg(err), String((err && (err.message || err.msg)) || '')); }
         };
         setTimeout(() => { const f = $('#authUser'); f && f.focus({ preventScroll: true }); }, 80);
       };
