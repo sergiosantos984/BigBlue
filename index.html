@@ -1580,7 +1580,7 @@ const Haptics = {
 };
 
 /* ============ 3. TRAINING CURRICULUM ============
-   No verified source program was supplied, so this is a clearly labelled
+   No verified source program was supplied, so this is a clearly labeled
    SAMPLE curriculum. Replace it with the real program by importing a JSON
    file with a "program" key (More → Backup & restore). Structure:
    workout {id, week, day, cycle, title, category, instructions, completion, exercises[]}
@@ -1678,7 +1678,7 @@ const LSX = {
   get(k, d = null) { try { const v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } },
   set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); return true; } catch (e) { this.fail(e); return false; } },
   del(k) { try { localStorage.removeItem(k); } catch (e) { } },
-  fail(e) { if (e && /quota/i.test(e.name + e.message)) UI.toast('Storage is full. Export a backup from More → Backup.', 'bad'); }
+  fail(e) { if (e && /quota/i.test(e.name + e.message)) UI.toast('Storage is full. Export a backup from More → Backup & restore.', 'bad'); }
 };
 const STORES = ['sessions', 'results', 'bodyweight', 'achievements'];
 const DB = {
@@ -1770,7 +1770,7 @@ const Units = {
   },
   metricUnit(metric) { const k = METRICS[metric].kind; return k === 'weight' ? State.settings.unit : k === 'height' ? Units.hUnit() : 's'; },
   makeMetric(metric, v) { const k = METRICS[metric].kind; return k === 'weight' ? Units.wt(v, State.settings.unit) : k === 'height' ? Units.ht(v, Units.hUnit()) : { sec: +v }; },
-  /* metric value expressed in a given display unit, for change maths */
+  /* metric value expressed in a given display unit, for change math */
   metricIn(metric, o) { const k = METRICS[metric].kind; return k === 'weight' ? Units.showW(o) : k === 'height' ? Units.showH(o) : o.sec; },
   inc() { return State.settings.unit === 'kg' ? State.settings.incKg : State.settings.incLb; }
 };
@@ -2022,7 +2022,7 @@ const SetLog = {
 /* ============ 11. PERSONAL RECORD TRACKING ============
    Results have a classification: 'tested' (a real max attempt), 'recorded' (a logged best).
    A result is a PR only when it is TESTED and strictly beats every earlier result and the
-   baseline (if the baseline was a tested or recorded max). Estimated maxima are never PRs. */
+   baseline (if the baseline was a tested or recorded max). Estimated maxes are never PRs. */
 const PR = {
   better: (metric, a, b) => METRICS[metric].better === 'higher' ? a > b : a < b,
   baseline(metric) {
@@ -2432,7 +2432,7 @@ const Intro = {
     };
     $('#skyFar').innerHTML = ridge(11, 120, 70, '#24151B', 0);
     $('#skyNear').innerHTML = ridge(23, 170, 45, '#160C10', 160);
-    // The stadium: two long grandstands faced in Hokie Stone (grey limestone), a press-box tower,
+    // The stadium: two long grandstands faced in Hokie Stone (gray limestone), a press-box tower,
     // light towers at the corners and a ring of maroon-and-orange light along the upper deck.
     const W = 600, roof = x => 96 - 22 * Math.sin(Math.PI * clamp((x - 40) / 520, 0, 1));
     let halo = '', mullions = '', park = '', stones = '';
@@ -2961,7 +2961,7 @@ const Screens = {
     return `<div class="metric" data-stg><span class="label">${m.name}</span>
       <div class="v">${bestV != null ? fmtNum(bestV, dec) : '—'}<small> ${bestV != null ? u : ''}</small></div>
       <div class="muted" style="font-size:12px">${best ? `Best · ${best.cls === 'tested' ? 'tested' : 'recorded'} · ${fmtDate(best.date)}` : 'No result recorded'}</div>
-      <div style="font-size:12.5px">Baseline: ${b ? `${fmtNum(bv, dec)} ${u} <span class="muted">(${Calc.clsLabel(b.cls).toLowerCase()})</span>` : '<span class="muted">not set</span>'}</div>
+      <div style="font-size:12.5px">Baseline: ${b ? `${fmtNum(bv, dec)} ${u} <span class="muted">(${Calc.clsLabel(b.cls).toLowerCase().replace('1rm', '1RM')})</span>` : '<span class="muted">not set</span>'}</div>
       ${latest && latest !== best ? `<div style="font-size:12.5px">Latest: ${Units.showMetric(metric, latest.o)} · ${fmtDate(latest.date)}</div>` : ''}
       ${change != null ? `<div class="row wrap"><span class="badge ${improved ? 'ok' : ''}">${change > 0 ? '+' : ''}${fmtNum(change, dec)} ${u}${bv ? ` · ${change > 0 ? '+' : ''}${fmtNum(change / bv * 100, 1)}%` : ''}</span>${State.results.some(r => r.metric === metric && r._pr) ? '<span class="badge red">PR</span>' : ''}</div>` : ''}
       <div class="muted" style="font-size:11px">${m.better === 'lower' ? 'Lower is better' : 'Higher is better'}</div></div>`;
@@ -2969,7 +2969,7 @@ const Screens = {
   pOverview(st) {
     const earned = new Set(State.achievements.map(a => a.id));
     return `${Season.html(st, { key: 'season-p' })}${Awards.html()}<div class="label" data-stg>Personal record tracker</div><div class="metrics">${Object.keys(METRICS).map(k => this.prCard(k, st)).join('')}</div>
-      <p class="muted" style="font-size:12.5px" data-stg>A PR is a <b>tested</b> result that beats every earlier result and your baseline (when the baseline was a tested or previous max). Estimated maxima never count as PRs.</p>
+      <p class="muted" style="font-size:12.5px" data-stg>A PR is a <b>tested</b> result that beats every earlier result and your baseline (when the baseline was a tested or previous max). Estimated maxes never count as PRs.</p>
       <section class="panel" data-stg><div class="panel-head"><h2 class="h3">Achievements</h2><span class="label">${State.achievements.length} earned</span></div>
         <div class="stack" style="gap:0">${State.achievements.filter(a => a.type !== 'milestone').sort((a, b) => b.date.localeCompare(a.date)).map(a => `<div class="list-item">${icon('trophy')}<div class="grow"><b>${esc(a.name)}</b><div class="muted" style="font-size:12.5px">${esc(a.desc)} · ${fmtDate(a.date)}</div></div><span class="badge red">PR</span></div>`).join('')}
         ${ACH.map(a => { const e = State.achievements.find(x => x.id === a.id); return `<div class="list-item" style="${e ? '' : 'opacity:.5'}">${icon(e ? 'award' : 'lock')}<div class="grow"><b>${a.name}</b><div class="muted" style="font-size:12.5px">${a.desc}${e ? ' · earned ' + fmtDate(e.date) : ''}</div></div>${e ? '<span class="badge ok">Earned</span>' : ''}</div>`; }).join('')}</div></section>`;
@@ -2987,7 +2987,7 @@ const Screens = {
     const b = d.baseline;
     return `<div class="chips" data-stg>${Object.keys(LIFTS).map(k => `<button class="chip" type="button" data-act="ui" data-k="progLift" data-v="${k}" aria-pressed="${lift === k}">${LIFTS[k].name}</button>`).join('')}</div>
       <section class="panel" data-stg><div class="panel-head"><h2 class="h3">${LIFTS[lift].name} progression</h2><span class="label">${u}</span></div>
-      ${series.length ? Chart.line({ series, hline: b ? { y: Units.showW(b.o), label: 'Baseline · ' + Calc.clsLabel(b.cls).toLowerCase() } : null, yUnit: u, title: LIFTS[lift].name + ' progression' }) : `<div class="empty"><span class="display">No data yet</span><span>Tested results and completed working sets will plot here.</span></div>`}
+      ${series.length ? Chart.line({ series, hline: b ? { y: Units.showW(b.o), label: 'Baseline · ' + Calc.clsLabel(b.cls).toLowerCase().replace('1rm', '1RM') } : null, yUnit: u, title: LIFTS[lift].name + ' progression' }) : `<div class="empty"><span class="display">No data yet</span><span>Tested results and completed working sets will plot here.</span></div>`}
       <div class="row wrap" style="margin-top:8px"><span class="badge">${icon('circle')} Recorded / tested</span><span class="badge blue wrap">${icon('circle-dashed')} Estimated 1RM (Epley: load × (1 + reps ÷ 30))</span><span class="badge warn">— Baseline</span></div></section>
       <section class="panel" data-stg><h2 class="h3" style="margin-bottom:8px">Results</h2>${this.resultsTable(metric) || '<p class="muted">No tested or recorded results yet. Week 11 tests write here automatically, or use Log result.</p>'}</section>`;
   },
@@ -3046,7 +3046,7 @@ const Screens = {
     const rows = this.testRows(st);
     return `<section class="panel" data-stg><div class="panel-head"><h2 class="h3">Week 11 testing report</h2><span class="label">baseline → final</span></div>
       <div class="tbl-wrap"><table class="tbl"><thead><tr><th>Test</th><th>Baseline</th><th>Final</th><th>Change</th><th>Dir.</th></tr></thead><tbody>
-      ${rows.map(r => `<tr><td><b>${r.m.name}</b><br><span class="label">${r.b ? Calc.clsLabel(r.b.cls).toLowerCase() : 'no baseline'}${r.fin ? ' → ' + r.fin.cls : ''}</span></td><td>${r.bv != null ? fmtNum(r.bv, r.dec) + ' ' + r.u : '—'}</td><td>${r.fv != null ? `<b>${fmtNum(r.fv, r.dec)} ${r.u}</b>` : '<span class="badge warn">Not tested</span>'}</td><td>${r.ch != null ? `${r.ch > 0 ? '+' : ''}${fmtNum(r.ch, r.dec)}${r.pct != null ? `<br><span class="label">${r.pct > 0 ? '+' : ''}${fmtNum(r.pct, 1)}%</span>` : ''}` : '—'}</td><td>${r.ch == null ? '—' : r.ch === 0 ? 'Same' : r.good ? '<span class="badge ok">Better</span>' : '<span class="badge">Lower</span>'}</td></tr>`).join('')}
+      ${rows.map(r => `<tr><td><b>${r.m.name}</b><br><span class="label">${r.b ? Calc.clsLabel(r.b.cls).toLowerCase().replace('1rm', '1RM') : 'no baseline'}${r.fin ? ' → ' + r.fin.cls : ''}</span></td><td>${r.bv != null ? fmtNum(r.bv, r.dec) + ' ' + r.u : '—'}</td><td>${r.fv != null ? `<b>${fmtNum(r.fv, r.dec)} ${r.u}</b>` : '<span class="badge warn">Not tested</span>'}</td><td>${r.ch != null ? `${r.ch > 0 ? '+' : ''}${fmtNum(r.ch, r.dec)}${r.pct != null ? `<br><span class="label">${r.pct > 0 ? '+' : ''}${fmtNum(r.pct, 1)}%</span>` : ''}` : '—'}</td><td>${r.ch == null ? '—' : r.ch === 0 ? 'Same' : r.good ? '<span class="badge ok">Better</span>' : '<span class="badge">Lower</span>'}</td></tr>`).join('')}
       </tbody></table></div><p class="muted" style="font-size:12.5px;margin-top:10px">Final = the most recent result recorded during Week ${State.program.weeks}. Missing tests show “Not tested”; nothing is estimated or filled in.</p></section>
       <button class="btn primary block" type="button" data-act="go" data-r="summary" data-stg>Program summary & finale</button>`;
   },
@@ -3059,7 +3059,7 @@ const Screens = {
       <div class="row wrap">${Cloud.badge()}</div><div class="row wrap"><button class="btn sm" type="button" data-act="cloud-sync">${icon('refresh-cw')} Sync now</button><button class="btn sm ghost" type="button" data-act="cloud-logout">${icon('log-out')} Log out</button></div></section>` : '';
     const adm = Cloud.isAdmin() ? `<section class="panel" data-stg>${it('admin', 'shield', 'Team access', 'See who joined, revoke access, reset passwords')}</section>` : '';
     return `<div class="screen"><div class="topbar" data-stg>${brand()}${logoutBtn()}</div>${acct}${adm}
-      <section class="panel" data-stg>${it('history', 'history', 'Workout history', 'Search, filter and edit every session')}${it('summary', 'trophy', 'Program summary', 'Completion, testing report and the Game Day finale')}${it('profile', 'user', 'Athlete profile & baselines', 'Body weight, maxima, start date, goals')}${it('settings', 'settings', 'Settings', 'Units, plates, rest timer, sound, animation')}${it('backup', 'hard-drive-download', 'Backup & restore', 'Export or import your data as JSON')}${it('about', 'info', 'About this app', 'Curriculum source, data and disclaimer')}</section>
+      <section class="panel" data-stg>${it('history', 'history', 'Workout history', 'Search, filter and edit every session')}${it('summary', 'trophy', 'Program summary', 'Completion, testing report and the Game Day finale')}${it('profile', 'user', 'Athlete profile & baselines', 'Body weight, maxes, start date, goals')}${it('settings', 'settings', 'Settings', 'Units, plates, rest timer, sound, animation')}${it('backup', 'hard-drive-download', 'Backup & restore', 'Export or import your data as JSON')}${it('about', 'info', 'About this app', 'Curriculum source, data and disclaimer')}</section>
       <button class="btn block" type="button" data-act="replay-intro" data-stg>${icon('clapperboard')} Replay the arrival</button>${Cloud.on && Cloud.profile ? `<button class="btn block danger" type="button" data-act="cloud-logout" data-stg>${icon('log-out')} Log out of ${esc(Cloud.profile.username)}</button>` : ''}</div>`;
   },
   history() {
@@ -3178,7 +3178,7 @@ const Screens = {
       <section class="panel stack" data-stg><h2 class="h3">Cliff: Hokie Power</h2><p>A fan-inspired personal training tracker. It is not an official product of, or affiliated with, Virginia Tech or its athletics department. No logos are used.</p>
         <p><b>Curriculum.</b> ${State.program.source === 'vt2005' ? `Transcribed from the Virginia Tech Summer 2005 strength & conditioning book: the <b>${esc(TRACKS[State.program.track])}</b> track, 11 weeks (May 23 – August 5, 2005 in the original), Cycle I and II, Monday–Friday lifting and conditioning sheets, the 38 Hokie ab exercises, the foot-quickness menus, the Metabolic Speed Pac, the lifting goals and the 16 × 110 conditioning test. Where the book gives a range (for example "3–4 sets") the app uses the top of it. Exercises the book does not describe are marked that way.` : 'Using an imported program: ' + esc(State.program.name) + '.'}</p>
         <p><b>Safety.</b> This is a tracker, not individual coaching or medical advice. Loads are never increased automatically. Stop with sharp pain; skipping or modifying is always allowed.</p>
-        <p><b>Data.</b> Everything stays in this browser. Export regularly.</p></section></div>`;
+        <p><b>Data.</b> ${Cloud.on && Cloud.profile ? 'Saved on this phone and backed up to your account, so it follows you to any phone you log in on.' : 'Everything stays in this browser on this device. Export a backup regularly.'}</p></section></div>`;
   }
 };
 function metric(label, val, key, dec, unit, sub, ic) {
@@ -3417,7 +3417,7 @@ const Finale = {
       <section class="panel" data-fs><div class="row"><div class="calc-out"><span data-fcount="${pct}">0</span><small>%</small></div><div class="grow"><div class="label">Program completion</div><p style="font-size:14px">${st.doneUnique} of ${st.total} workouts completed.${notDone ? ` ${notDone} not completed.` : ''}${untested ? ` ${untested} test${untested > 1 ? 's' : ''} not recorded.` : ''}</p></div></div></section>
       <section class="panel" data-fs><div class="label" style="margin-bottom:4px">Baseline → final</div>${rows.map(r => { const mx = Math.max(r.bv || 0, r.fv || 0) || 1; return `<div class="cmp-row"><b>${r.m.name}</b><span class="num">${r.fv != null ? `${r.bv != null ? fmtNum(r.bv, r.dec) + ' → ' : ''}<b>${fmtNum(r.fv, r.dec)} ${r.u}</b>${r.ch != null ? ` <span class="badge ${r.good ? 'ok' : ''}">${r.ch > 0 ? '+' : ''}${fmtNum(r.ch, r.dec)}</span>` : ''}` : '<span class="badge warn">Not tested</span>'}</span>
         ${r.fv != null ? `<div class="cmp-bars">${r.bv != null ? `<i data-w="${(r.bv / mx * 100).toFixed(1)}"></i>` : ''}<i class="f" data-w="${(r.fv / mx * 100).toFixed(1)}"></i></div>` : ''}</div>`; }).join('')}
-        <p class="muted" style="font-size:12px;margin-top:8px">Grey = baseline, blue = Week ${State.program.weeks} result. Sprint times: lower is better.</p></section>
+        <p class="muted" style="font-size:12px;margin-top:8px">Gray = baseline, maroon = Week ${State.program.weeks} result. Sprint times: lower is better.</p></section>
       ${prs.length ? `<section class="panel" data-fs><div class="label">Verified personal records</div>${prs.map(r => `<div class="kv"><span>${METRICS[r.metric].name} · ${fmtDate(r.date)}</span><span><b>${Units.showMetric(r.metric, r.o)}</b></span></div>`).join('')}</section>` : ''}
       <p class="display" style="font-size:26px;line-height:1.05" data-fs>${esc(State.settings.name)}, the journey is documented. The results are yours. The next chapter starts now.</p>
       <div class="stack" data-fs><button class="btn big primary block" type="button" data-act="finale-report">Final performance report</button><button class="btn block" type="button" data-act="finale-close">Continue tracking</button></div></div>`;
@@ -3848,7 +3848,7 @@ const Theme = {
     let m = document.querySelector('meta[name="theme-color"]'); if (m) m.setAttribute('content', this.light ? '#F8F5EF' : '#16171A');
     FX.setDensity(Motion.m.particles);
   },
-  /* map chart colours designed for the night theme onto the light theme */
+  /* map chart colors designed for the night theme onto the light theme */
   c(col) {
     if (!this.light || !col) return col;
     if (/^#fff(fff)?$/i.test(col)) return '#861F41';      // primary data: maroon
@@ -4157,7 +4157,7 @@ function buildVTProgram(track = 'los', pos = 'OL') {
       const title = d.heading === 'Conditioning' ? 'Conditioning' : d.heading === 'Speed & Agility' ? 'Speed & Agility' : d.heading.includes('Test') ? '16 × 110 Conditioning Test' : lifts.length || keys.length ? [...new Set(lifts.concat(keys).map(n => n.replace(' / Front Squat Combo', ' Combo')))].slice(0, 2).join(' & ') : ((VT_LIB[ex[0].ex] || {}).name || d.heading);
       const category = hasTest ? 'test' : lifts.length || ex.some(x => x.key) ? 'strength' : d.heading === 'Speed & Agility' ? 'speed' : 'conditioning';
       workouts.push({ id, week: wk.week, day: d.day, cycle: wk.cycle, title, focus: d.heading, category, warmup: d.warmup, exercises: ex,
-        instructions: (d.notes.length ? d.notes.join(' ') + ' ' : '') + (d.warmup.length ? 'Start with the pre-workout list, then foot speed, lifting and the post-strength work-out. Stretch at the end.' : 'Stretch at the end.'),
+        instructions: (d.notes.length ? d.notes.join(' ') + ' ' : '') + (d.warmup.length ? 'Start with the pre-workout list, then foot speed, lifting and the post-strength workout. Stretch at the end.' : 'Stretch at the end.'),
         completion: 'Finish the session in the logger (every prescribed set attempted or marked skipped).' });
     });
   });
@@ -4392,9 +4392,9 @@ const NUTRITION = {
   glycemic: ['Some carbs release sugar into the blood more quickly than others. That speed is the glycemic index.', 'When blood sugar rises rapidly, the body produces insulin, which rapidly lowers blood sugar and promotes fat storage.', 'When blood sugar drops, energy drops, and so does your ability to train or compete at high intensity.', 'So carbs are ranked Gold, Silver and Bronze by glycemic index.'],
   bottomLine: ['On active days, about half of the food on your plate should be Gold and Silver carbs.', 'On inactive days, reduce your total carbs, especially Bronze carbs.', 'Gold carbs are best before activity for long-lasting energy.', 'Silver and Bronze carbs are best within one hour after training or playing.'],
   gain: ['Use the same guidelines, but eat more of the Gold and Silver choices.', 'Take a quality protein or weight-gain supplement in addition to your meals.'],
-  lose: ['Stay with Gold choices. Eat limited Silver and Bronze choices of all foods. The fat will come off.', 'More water: it is a natural diuretic.', 'Do not skip meals. Still eat breakfast, lunch and supper. Snack, but limit Silver and avoid Bronze foods.'],
+  lose: ['Stay with Gold choices. Eat limited Silver and Bronze choices of all foods. The fat will come off.', 'More water: it is a natural diuretic.', 'Do not skip meals. Still eat breakfast, lunch and dinner. Snack, but limit Silver and avoid Bronze foods.'],
   fatTips: [['Eat breakfast.', 'It helps speed up your metabolism and gives you the energy to train hard.'], ['Eat 3 to 4 meals a day, but eat low-fat foods.', ''], ['Do not starve yourself.', 'You will only lose muscle, not fat.'], ['Do not dehydrate yourself.', 'You will be losing muscle; it is 70% water.'], ['Limit and cut back on alcohol.', 'The body breaks alcohol down as fat.']],
-  gamePlan: [['Variety', 'Your body needs 6 types of nutrients from food: water, carbohydrates, protein, fat, vitamins and minerals. A balanced diet supplies all of them.'], ['Moderation', 'You do not need to give up "junk" food; balance refined sugars and fats with nutrient-wise choices at your next meal. Avoid replacing balanced meals with sweets, soda, candy and cakes.'], ['Wholesomeness', 'Choose natural or lightly processed foods as often as possible (baked potatoes rather than chips or fries). Foods close to their original form are the most nutrient-dense.'], ['Choose nutrient-dense foods', 'Low-fat milk, lean meats, whole grain breads, dark colourful vegetables (broccoli, spinach, green peppers, tomatoes).'], ['Avoid fast food', 'A burger, fries and shake is about 1,100 calories, 55% from fat. If you must, choose grilled chicken sandwiches (no mayo), chili with beans, bean burritos, chicken soft tacos, garden salads or baked potatoes.'], ['Limit other high-fat foods', 'Hamburger, bacon, sausage, whole milk, butter, mayonnaise, oils, fries and chips: many calories, few nutrients, and they can make you sluggish close to practice.'], ['Break the fast!', 'Breakfast is the most important meal of the day for an athlete, whether you want to lose fat, gain weight or hold your weight.'], ['Eat 4–6 meals each day', 'Skipping meals is not a healthy way to change body weight. Regular meals prepare you for training and help recovery.']],
+  gamePlan: [['Variety', 'Your body needs 6 types of nutrients from food: water, carbohydrates, protein, fat, vitamins and minerals. A balanced diet supplies all of them.'], ['Moderation', 'You do not need to give up "junk" food; balance refined sugars and fats with nutrient-wise choices at your next meal. Avoid replacing balanced meals with sweets, soda, candy and cakes.'], ['Wholesomeness', 'Choose natural or lightly processed foods as often as possible (baked potatoes rather than chips or fries). Foods close to their original form are the most nutrient-dense.'], ['Choose nutrient-dense foods', 'Low-fat milk, lean meats, whole grain breads, dark, colorful vegetables (broccoli, spinach, green peppers, tomatoes).'], ['Avoid fast food', 'A burger, fries and shake is about 1,100 calories, 55% from fat. If you must, choose grilled chicken sandwiches (no mayo), chili with beans, bean burritos, chicken soft tacos, garden salads or baked potatoes.'], ['Limit other high-fat foods', 'Hamburger, bacon, sausage, whole milk, butter, mayonnaise, oils, fries and chips: many calories, few nutrients, and they can make you sluggish close to practice.'], ['Break the fast!', 'Breakfast is the most important meal of the day for an athlete, whether you want to lose fat, gain weight or hold your weight.'], ['Eat 4–6 meals each day', 'Skipping meals is not a healthy way to change body weight. Regular meals prepare you for training and help recovery.']],
   water: { pre: 'Prehydrate: drink 12–20 oz of water several hours before practice or lifting.', during: 'Hydrate: drink water throughout practice. Do not wait until you are thirsty; by then it is too late.', post: 'Rehydrate: drink 24 oz of water or sports drink for every pound of sweat lost.', fact: 'Water is the most important supplement we have. A 5% level of dehydration can equal a 20% loss of muscle function.' },
   creatine: ['Helps give muscle cells a larger source of energy for high-intensity work (sprinting, lifting).', 'Helps muscles recover faster after high-intensity work.'],
   huge: [
@@ -4445,8 +4445,8 @@ Screens.nutrition = function (tab) {
   if (tab === 'today') body = `${Nutrition.card()}
     <section class="panel stack" data-stg><h2 class="h3">How you eat depends on your activity</h2>
       <div class="grid2"><div class="nbox ${t.high ? 'on' : ''}"><b>High energy days</b><p>More food, more Silver choice foods, especially Silver carbs: bread, spaghetti, pastas, baked potatoes, cereal, oatmeal.</p></div>
-      <div class="nbox ${!t.high ? 'on' : ''}"><b>Lower activity days</b><p>Less Silver and Bronze choice foods, especially Silver and Bronze carbs.</p></div></div>
-      <p class="muted" style="font-size:12.5px">Today is marked from Cliff's schedule: training days are high energy; Active Rest and days off are lower activity.</p></section>
+      <div class="nbox ${!t.high ? 'on' : ''}"><b>Lower activity days</b><p>Fewer Silver and Bronze choice foods, especially Silver and Bronze carbs.</p></div></div>
+      <p class="muted" style="font-size:12.5px">Based on your schedule, training days count as high energy; Active Rest days and days off count as lower activity.</p></section>
     <section class="panel stack" data-stg><h2 class="h3">The Virginia Tech model</h2><div class="medal-podium"><div class="pod gold"><b>1st</b><span>Gold</span></div><div class="pod silver"><b>2nd</b><span>Silver</span></div><div class="pod bronze"><b>3rd</b><span>Bronze</span></div></div>
       <p>Every food is a Gold, Silver or Bronze choice. Build most meals from Gold, use Silver for fuel around training, and keep Bronze occasional.</p><button class="btn" type="button" data-act="go" data-r="nutrition" data-p="foods">See the food medals</button></section>`;
   if (tab === 'foods') body = `<div class="input-unit" data-stg><input class="input" id="foodQ" type="search" placeholder="Is it Gold, Silver or Bronze? Search a food" value="${esc(UI.ui.foodQ || '')}" data-ui="foodQ" aria-label="Search foods"><span>${icon('search')}</span></div>
@@ -4456,23 +4456,23 @@ Screens.nutrition = function (tab) {
       <div class="gi-chart" aria-hidden="true"><svg viewBox="0 0 320 120" class="chart"><path d="M10 100 C60 98 70 20 110 22 C150 24 150 95 190 100 L310 100" fill="none" stroke="#E87722" stroke-width="3"/><path d="M10 100 C80 99 120 55 180 55 C240 55 260 80 310 85" fill="none" stroke="#861F41" stroke-width="3"/><text x="96" y="16" style="fill:#E87722">Bronze: spike, then crash</text><text x="170" y="48" style="fill:#861F41">Gold: steady energy</text><line x1="10" y1="100" x2="310" y2="100" class="axis"/><text x="10" y="114">time after eating →</text></svg><p class="muted" style="font-size:12px">Illustration of the idea, not measured data.</p></div></section>
     <section class="panel stack" data-stg><h2 class="h3">Bottom line</h2>${N.bottomLine.map((x, i) => `<div class="nstep"><span>${i + 1}</span><p>${esc(x)}</p></div>`).join('')}</section>
     <section class="panel stack" data-stg><h2 class="h3">Around a workout</h2><div class="timeline"><div><b>Before</b><span>Gold carbs for long-lasting energy</span></div><div class="mid"><b>Train</b><span>Water throughout</span></div><div><b>Within 1 hour after</b><span>Silver (and Bronze) carbs to restore muscle fuel</span></div></div></section>`;
-  if (tab === 'goals') body = `${g ? `<div class="milestone" data-stg>${icon('target')}<span>Cliff's target body weight is ${g === 'gain' ? '<b>above</b> his current weight, so the <b>gaining</b> guidelines apply' : g === 'lose' ? '<b>below</b> his current weight, so the <b>body fat</b> guidelines apply' : '<b>about his current weight</b>: use the general game plan'}.</span></div>` : `<div class="milestone" data-stg>${icon('target')}<span>Set a target body weight in the profile and log body weight to see which guidelines apply.</span></div>`}
+  if (tab === 'goals') body = `${g ? `<div class="milestone" data-stg>${icon('target')}<span>Your target body weight is ${g === 'gain' ? '<b>above</b> your current weight, so the <b>gaining</b> guidelines apply' : g === 'lose' ? '<b>below</b> your current weight, so the <b>body fat</b> guidelines apply' : '<b>about your current weight</b>: use the general game plan'}.</span></div>` : `<div class="milestone" data-stg>${icon('target')}<span>Set a target body weight in the profile and log body weight to see which guidelines apply.</span></div>`}
     <section class="panel stack ${g === 'gain' ? 'goal-on' : ''}" data-stg><h2 class="h3">Gaining body weight</h2><ul class="nlist">${N.gain.map(x => `<li>${esc(x)}</li>`).join('')}</ul><button class="btn" type="button" data-act="go" data-r="nutrition" data-p="huge">See the Brutally Huge Diet</button></section>
     <section class="panel stack ${g === 'lose' ? 'goal-on' : ''}" data-stg><h2 class="h3">Losing body fat</h2><ul class="nlist">${N.lose.map(x => `<li>${esc(x)}</li>`).join('')}</ul>
       <h3 class="label" style="margin-top:6px">Body fat reduction tips</h3>${N.fatTips.map(([a, b]) => `<div class="kv"><span><b>${esc(a)}</b>${b ? `<br><span class="muted" style="font-size:13px">${esc(b)}</span>` : ''}</span></div>`).join('')}</section>`;
   if (tab === 'water') body = `<section class="panel stack" data-stg><h2 class="h3">Water</h2><p><b>${esc(N.water.fact)}</b></p>
-      <div class="water-big"><div class="glasses big">${Array.from({ length: 8 }, (_, i) => `<button type="button" class="glass ${i < wc ? 'on' : ''}" data-act="water-set" data-v="${i + 1}" aria-label="${i + 1} glasses"></button>`).join('')}</div>
+      <div class="water-big"><div class="glasses big">${Array.from({ length: 8 }, (_, i) => `<button type="button" class="glass ${i < wc ? 'on' : ''}" data-act="water-set" data-v="${i + 1}" aria-label="${i + 1} glass${i ? 'es' : ''}"></button>`).join('')}</div>
       <div class="row"><b class="num" style="font-size:22px">${wc} / 6–8 glasses today</b><button class="btn sm" type="button" data-act="water" data-v="-1" aria-label="Remove a glass">−</button><button class="btn sm primary" type="button" data-act="water" data-v="1">${icon('plus')} Glass</button></div>
-      <p class="muted" style="font-size:12.5px">Saved on this device only, as a daily reminder.</p></div></section>
-    <section class="panel stack" data-stg><h2 class="h3">Pre · During · Re-hydrate</h2>${[N.water.pre, N.water.during, N.water.post].map((x, i) => `<div class="nstep"><span>${i + 1}</span><p>${esc(x)}</p></div>`).join('')}
+      <p class="muted" style="font-size:12.5px">Starts again at zero every day.</p></div></section>
+    <section class="panel stack" data-stg><h2 class="h3">Before · During · After</h2>${[N.water.pre, N.water.during, N.water.post].map((x, i) => `<div class="nstep"><span>${i + 1}</span><p>${esc(x)}</p></div>`).join('')}
       <div class="field"><label for="sweatLb">Sweat lost (body weight before minus after, lb)</label><div class="row"><div class="input-unit grow"><input class="input num" id="sweatLb" inputmode="decimal" placeholder="e.g. 2"><span>lb</span></div><b class="num" id="sweatOut" style="min-width:110px;text-align:right">—</b></div><span class="muted" style="font-size:12.5px">24 oz of water or sports drink per pound lost.</span></div></section>`;
-  if (tab === 'plan') body = `<section class="panel stack" data-stg><h2 class="h3">A game plan for good nutrition</h2>${N.gamePlan.map(([a, b], i) => `<div class="nstep"><span>${i + 1}</span><p><b>${esc(a)}.</b> ${esc(b)}</p></div>`).join('')}</section>
+  if (tab === 'plan') body = `<section class="panel stack" data-stg><h2 class="h3">A game plan for good nutrition</h2>${N.gamePlan.map(([a, b], i) => `<div class="nstep"><span>${i + 1}</span><p><b>${esc(a)}${/[.!?]$/.test(a) ? '' : '.'}</b> ${esc(b)}</p></div>`).join('')}</section>
     <section class="panel stack" data-stg><h2 class="h3">Supplements</h2><div class="kv"><span><b>Water</b><br><span class="muted" style="font-size:13px">The most important supplement. See Hydration.</span></span></div>
       <div class="kv"><span><b>Creatine monohydrate</b><br><span class="muted" style="font-size:13px">The book says research shows it ${N.creatine.map(x => x.charAt(0).toLowerCase() + x.slice(1, -1)).join('; and ')}. In 2005 the team provided it voluntarily to players in the top two depth-chart spots.</span></span></div>
       <div class="kv"><span><b>Multivitamin / multimineral</b><br><span class="muted" style="font-size:13px">The book recommends one tablet daily for maximum benefit.</span></span></div>
       <p class="muted" style="font-size:12.5px">This is the 2005 book's advice, not medical advice. Check supplements with a doctor or sports dietitian first, especially for an athlete under 18.</p></section>`;
   if (tab === 'huge') body = `<section class="panel huge-head" data-stg><span class="label">For gaining body weight</span><h2 class="h1" style="font-size:40px;margin:6px 0">Brutally Huge Diet</h2><p>Six meals a day plus the shake. Drink 6–8 glasses of water daily and take a multivitamin/multimineral tablet.</p></section>
-    ${N.huge.map(([m, items], i) => `<section class="panel meal" data-stg><div class="meal-n">${i < 6 ? i + 1 : icon('cup-soda')}</div><div class="grow"><h3 class="h3">${esc(m)}</h3><ul class="nlist">${items.map(x => `<li>${esc(x)}</li>`).join('')}</ul>${i === 6 ? '<p class="muted" style="font-size:12.5px">The book uses 2 raw eggs. Raw eggs carry a food-poisoning risk; use pasteurised eggs or swap in a scoop of protein powder.</p>' : ''}</div></section>`).join('')}
+    ${N.huge.map(([m, items], i) => `<section class="panel meal" data-stg><div class="meal-n">${i < 6 ? i + 1 : icon('cup-soda')}</div><div class="grow"><h3 class="h3">${esc(m)}</h3><ul class="nlist">${items.map(x => `<li>${esc(x)}</li>`).join('')}</ul>${i === 6 ? '<p class="muted" style="font-size:12.5px">The book uses 2 raw eggs. Raw eggs carry a food-poisoning risk; use pasteurized eggs or swap in a scoop of protein powder.</p>' : ''}</div></section>`).join('')}
     <section class="panel bottomline" data-stg><span class="label">Bottom line</span><p class="motto">Lift heavy. Eat a lot. <em>Get big!!</em></p></section>`;
   return `<div class="screen"><div class="topbar" data-stg><h1 class="h2">Nutrition</h1><span class="badge blue">${t.high ? 'High energy day' : 'Lower activity day'}</span></div>
     <div class="chips" role="tablist" data-stg>${tabs.map(([k, l]) => `<button class="chip" type="button" role="tab" data-act="go" data-r="nutrition" data-p="${k}" aria-pressed="${tab === k}">${l}</button>`).join('')}</div>
@@ -4633,7 +4633,7 @@ const Cloud = {
   emailFields(val = '', opt = false) {
     return `<div class="field"><label for="authEmail">Email</label><input class="input" id="authEmail" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" required value="${esc(val)}"></div>
       <label class="gopt"><input type="checkbox" id="authOpt" ${opt ? 'checked' : ''}><span>Send me Hokie Power news, offers and promotions from partners. Optional — change it any time in More.</span></label>
-      <p class="gnote">Your email is used for your account and, only if you tick the box, for news and offers. It is never shown to other athletes.</p>`;
+      <p class="gnote">Your email is used for your account and, only if you check the box, for news and offers. It is never shown to other athletes.</p>`;
   },
   /* existing athletes add an email once */
   emailScreen() {
@@ -5084,7 +5084,7 @@ const LockTrack = {
     const rg = g.createLinearGradient(cx - R, cy - R, cx + R, cy + R); rg.addColorStop(0, st.resting ? light : '#FFFFFF'); rg.addColorStop(1, st.resting ? orange : '#FFD9B3');
     g.strokeStyle = rg; g.lineCap = 'round'; g.shadowColor = st.resting ? orange : 'rgba(255,255,255,.6)'; g.shadowBlur = 18; g.beginPath(); g.arc(cx, cy, R, -Math.PI / 2, -Math.PI / 2 + Math.PI * 2 * Math.max(.003, frac)); g.stroke(); g.shadowBlur = 0;
     const a = -Math.PI / 2 + Math.PI * 2 * frac; g.fillStyle = '#fff'; g.shadowColor = light; g.shadowBlur = 26 + 12 * Math.sin(f); g.beginPath(); g.arc(cx + R * Math.cos(a), cy + R * Math.sin(a), 15, 0, Math.PI * 2); g.fill(); g.shadowBlur = 0;
-    // centre
+    // center
     g.textAlign = 'center'; g.fillStyle = ink;
     if (st.resting) {
       g.font = '900 118px Impact, "Arial Black", sans-serif'; g.fillText(this.fmt(st.left), cx, cy + 40);
@@ -5183,7 +5183,7 @@ const Pocket = {
     }
   },
   stepper(f, label, val, unit) {
-    return `<div class="pk-step"><span class="label">${label}</span><div class="pk-stepbox"><button type="button" data-pk="step" data-f="${f}" data-d="-1" aria-label="Less ${label}">−</button><b>${esc(String(val))}<small>${esc(unit)}</small></b><button type="button" data-pk="step" data-f="${f}" data-d="1" aria-label="More ${label}">+</button></div></div>`;
+    return `<div class="pk-step"><span class="label">${label}</span><div class="pk-stepbox"><button type="button" data-pk="step" data-f="${f}" data-d="-1" aria-label="Decrease ${label.toLowerCase()}">−</button><b>${esc(String(val))}<small>${esc(unit)}</small></b><button type="button" data-pk="step" data-f="${f}" data-d="1" aria-label="Increase ${label.toLowerCase()}">+</button></div></div>`;
   },
   paint(st) {
     const el = $('#pocket'); if (!el || el.hidden || !st) return;
