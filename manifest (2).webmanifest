@@ -1,0 +1,16 @@
+{
+  "name": "Hokie Power",
+  "short_name": "Hokie Power",
+  "description": "Cliff's VT Summer 2005 strength & conditioning program",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#EAE6E1",
+  "theme_color": "#861F41",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
