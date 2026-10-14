@@ -1216,6 +1216,11 @@ body.theme-light #app .tilt{will-change:transform}
 #pocket .pk-in{gap:8px}
 #view .qtext,#view .qtext .w{line-height:1.12!important}
 #view .excard .target,#view .excard .target[style]{margin-top:14px!important}
+#gate .gopt,.gauth .gopt{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;line-height:1.35;cursor:pointer}
+#gate .gopt{color:rgba(255,255,255,.85)}
+.gopt input{width:22px;height:22px;flex:none;margin-top:1px;accent-color:#E87722}
+#gate .gauth label.gopt,.gauth label.gopt{font:400 14px/1.4 var(--f-body,system-ui,sans-serif)!important;letter-spacing:0!important;text-transform:none!important}
+#gate .gauth label.gopt{color:rgba(255,255,255,.88)!important}
 
 </style>
 </head>
@@ -1343,7 +1348,7 @@ const ICONS = {
   dumbbell: 'M6 7v10M3 9v6M18 7v10M21 9v6M6 12h12',
   activity: 'M22 12h-4l-3 9L9 3l-3 9H2',
   menu: 'M4 6h16M4 12h16M4 18h16',
-  check: 'M20 6L9 17l-5-5', smartphone: 'M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM12 18h.01', lock: 'M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4', bell: 'M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0', cloud: 'M17.5 19H9a7 7 0 1 1 6.7-9h1.8a4.5 4.5 0 1 1 0 9z', 'cloud-off': 'M2 2l20 20M5.8 5.8A7 7 0 0 0 9 19h8.5a4.5 4.5 0 0 0 1.3-.2M21.5 15.5A4.5 4.5 0 0 0 17.5 10h-1.8A7 7 0 0 0 10 5.1', 'refresh-cw': 'M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5', 'log-out': 'M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9', 'key-round': 'M2.6 18.2A2 2 0 0 0 2 19.6V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.2a2 2 0 0 0 1.4-.6l.8-.8a6.5 6.5 0 1 0-4-4zM16.5 7.5h.01', repeat: 'M17 2l4 4-4 4M3 11V10a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v1a4 4 0 0 1-4 4H3', link: 'M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7', apple: 'M12 7c-1.5-1-5-1.5-6.5 1.5S5 16 7.5 19.5c1.3 1.8 2.8 2 4.5 1 1.7 1 3.2.8 4.5-1C19 16 19.5 11.5 18 8.5S13.5 6 12 7zM12 7c0-2 1-3.5 3-4', 'cup-soda': 'M6 8l1.5 13h9L18 8zM5 8h14M12 8l1-5h3', flame: 'M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3.3.4 1.5 1.2 2.6 2.5 2.8z', scale: 'M12 3v18M7 21h10M3 7h18M6 7l-3 7a3 3 0 0 0 6 0zM18 7l-3 7a3 3 0 0 0 6 0z', layers: 'M12 2l10 5-10 5L2 7zM2 12l10 5 10-5M2 17l10 5 10-5', target: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12zM12 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4z', sparkles: 'M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 3v4M21 5h-4', delete: 'M10 5h11v14H10l-7-7zM18 9l-6 6M12 9l6 6',
+  check: 'M20 6L9 17l-5-5', mail: 'M3 5h18v14H3zM3 6l9 7 9-7', copy: 'M9 9h11v11H9zM5 15H4V4h11v1', smartphone: 'M7 2h10a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2zM12 18h.01', lock: 'M5 11h14v10H5zM8 11V7a4 4 0 0 1 8 0v4', bell: 'M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0', cloud: 'M17.5 19H9a7 7 0 1 1 6.7-9h1.8a4.5 4.5 0 1 1 0 9z', 'cloud-off': 'M2 2l20 20M5.8 5.8A7 7 0 0 0 9 19h8.5a4.5 4.5 0 0 0 1.3-.2M21.5 15.5A4.5 4.5 0 0 0 17.5 10h-1.8A7 7 0 0 0 10 5.1', 'refresh-cw': 'M3 12a9 9 0 0 1 15-6.7L21 8M21 3v5h-5M21 12a9 9 0 0 1-15 6.7L3 16M3 21v-5h5', 'log-out': 'M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9', 'key-round': 'M2.6 18.2A2 2 0 0 0 2 19.6V21a1 1 0 0 0 1 1h3a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h1a1 1 0 0 0 1-1v-1a1 1 0 0 1 1-1h.2a2 2 0 0 0 1.4-.6l.8-.8a6.5 6.5 0 1 0-4-4zM16.5 7.5h.01', repeat: 'M17 2l4 4-4 4M3 11V10a4 4 0 0 1 4-4h14M7 22l-4-4 4-4M21 13v1a4 4 0 0 1-4 4H3', link: 'M10 13a5 5 0 0 0 7.5.5l3-3a5 5 0 0 0-7-7l-1.7 1.7M14 11a5 5 0 0 0-7.5-.5l-3 3a5 5 0 0 0 7 7l1.7-1.7', apple: 'M12 7c-1.5-1-5-1.5-6.5 1.5S5 16 7.5 19.5c1.3 1.8 2.8 2 4.5 1 1.7 1 3.2.8 4.5-1C19 16 19.5 11.5 18 8.5S13.5 6 12 7zM12 7c0-2 1-3.5 3-4', 'cup-soda': 'M6 8l1.5 13h9L18 8zM5 8h14M12 8l1-5h3', flame: 'M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.4-.5-2-1-3-1-2.1-.2-4 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.2.4-2.3 1-3.3.4 1.5 1.2 2.6 2.5 2.8z', scale: 'M12 3v18M7 21h10M3 7h18M6 7l-3 7a3 3 0 0 0 6 0zM18 7l-3 7a3 3 0 0 0 6 0z', layers: 'M12 2l10 5-10 5L2 7zM2 12l10 5 10-5M2 17l10 5 10-5', target: 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 6a6 6 0 1 0 0 12 6 6 0 0 0 0-12zM12 10a2 2 0 1 0 0 4 2 2 0 0 0 0-4z', sparkles: 'M12 3l1.8 5.2L19 10l-5.2 1.8L12 17l-1.8-5.2L5 10l5.2-1.8zM19 3v4M21 5h-4', delete: 'M10 5h11v14H10l-7-7zM18 9l-6 6M12 9l6 6',
   'circle-alert': 'M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20zM12 8v4M12 16h.01',
   'triangle-alert': 'M10.3 3.9L2 18a2 2 0 0 0 1.7 3h16.6A2 2 0 0 0 22 18L13.7 3.9a2 2 0 0 0-3.4 0zM12 9v4M12 17h.01',
   'chevron-left': 'M15 18l-6-6 6-6', 'chevron-right': 'M9 18l6-6-6-6',
@@ -3050,6 +3055,7 @@ const Screens = {
   more() {
     const it = (r, ic, t, d) => `<button class="list-item" type="button" data-act="go" data-r="${r}">${icon(ic)}<div class="grow"><b>${t}</b><div class="muted" style="font-size:12.5px">${d}</div></div>${icon('chevron-right')}</button>`;
     const acct = Cloud.on && Cloud.profile ? `<section class="panel stack acct" data-stg><div class="row"><span class="lib-ico">${icon('user')}</span><div class="grow"><span class="label">Signed in as</span><b style="display:block;font-size:18px">${esc(Cloud.profile.username)}</b></div>${Cloud.isAdmin() ? '<span class="badge blue">Admin</span>' : ''}</div>
+      ${'email' in Cloud.profile ? `<button class="list-item" type="button" data-act="my-email">${icon('mail')}<div class="grow"><b>${esc(Cloud.profile.email || 'Add your email')}</b><div class="muted" style="font-size:12.5px">News & offers: ${Cloud.profile.marketing_opt_in ? 'yes' : 'no'} · tap to change</div></div>${icon('chevron-right')}</button>` : ''}
       <div class="row wrap">${Cloud.badge()}</div><div class="row wrap"><button class="btn sm" type="button" data-act="cloud-sync">${icon('refresh-cw')} Sync now</button><button class="btn sm ghost" type="button" data-act="cloud-logout">${icon('log-out')} Log out</button></div></section>` : '';
     const adm = Cloud.isAdmin() ? `<section class="panel" data-stg>${it('admin', 'shield', 'Team access', 'See who joined, revoke access, reset passwords')}</section>` : '';
     return `<div class="screen"><div class="topbar" data-stg>${brand()}${logoutBtn()}</div>${acct}${adm}
@@ -4492,6 +4498,7 @@ const CLOUD_CFG = (typeof window !== 'undefined' && window.HOKIE_CLOUD) || {};
 const SUPABASE_JS = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js';
 const USER_RE = /^[a-z0-9][a-z0-9._-]{2,23}$/;
 
+const EMAIL_RE = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
 const Cloud = {
   on: !!(CLOUD_CFG.url && CLOUD_CFG.anonKey) && /^https?:$/.test(location.protocol),
   sb: null, user: null, profile: null, ns: '',
@@ -4543,6 +4550,7 @@ const Cloud = {
       const again = await this.screen(r);   // pending / revoked / nodb
       if (again === 'logout') { await this.logout(true); return false; }
     }
+    if (this.profile && 'email' in this.profile && !this.profile.email) await this.emailScreen();
     this.useNamespace(this.user.id);
     await this.claimLegacy();
     if (!LSX.get(LS.settings, null)) {   // a new athlete: the intro and locker greet them by name
@@ -4555,7 +4563,7 @@ const Cloud = {
   },
   async fetchProfile() {
     try {
-      const { data, error } = await this.sb.from('profiles').select('id,username,role,status').eq('id', this.user.id).maybeSingle();
+      const { data, error } = await this.sb.from('profiles').select('*').eq('id', this.user.id).maybeSingle();
       if (error) return /fetch|network/i.test(error.message) ? 'offline' : /does not exist|schema cache/i.test(error.message) ? 'nodb' : 'nodb';
       if (!data) return 'nodb';
       this.profile = data; LSX.set('bbp.cloud.last', data);
@@ -4591,7 +4599,7 @@ const Cloud = {
             <div class="seg auth-seg" role="tablist"><button type="button" role="tab" data-auth-mode="login" aria-selected="${m === 'login'}" aria-pressed="${m === 'login'}">Log in</button><button type="button" role="tab" data-auth-mode="signup" aria-selected="${m === 'signup'}" aria-pressed="${m === 'signup'}">Create account</button></div>
             <div class="field"><label for="authUser">Username</label><input class="input" id="authUser" name="username" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false" inputmode="text" required></div>
             <div class="field"><label for="authPass">Password</label><input class="input" id="authPass" name="password" type="password" autocomplete="${m === 'login' ? 'current-password' : 'new-password'}" required minlength="8"></div>
-            ${m === 'signup' ? '<div class="field"><label for="authPass2">Repeat password</label><input class="input" id="authPass2" type="password" autocomplete="new-password" required></div><p class="gnote">3–24 characters: letters, numbers, dot, dash or underscore. Password: at least 8 characters.</p>' : ''}
+            ${m === 'signup' ? '<div class="field"><label for="authPass2">Repeat password</label><input class="input" id="authPass2" type="password" autocomplete="new-password" required></div>' + Cloud.emailFields() + '<p class="gnote">3–24 characters: letters, numbers, dot, dash or underscore. Password: at least 8 characters.</p>' : ''}
             <p class="gmsg" id="authMsg" role="status" aria-live="polite"></p>
             <button type="submit" class="btn big red block" id="authGo">${m === 'login' ? 'Enter the facility' : 'Create my account'}</button>
           </form>
@@ -4604,11 +4612,13 @@ const Cloud = {
           if (!USER_RE.test(u)) return fail('Usernames are 3–24 characters: letters, numbers, dot, dash or underscore.');
           if (p.length < 8) return fail('Password must be at least 8 characters.');
           if (mode === 'signup' && p !== $('#authPass2').value) return fail("The two passwords don't match.");
+          const em = mode === 'signup' ? $('#authEmail').value.trim().toLowerCase() : '', opt = mode === 'signup' && $('#authOpt').checked;
+          if (mode === 'signup' && !EMAIL_RE.test(em)) return fail('Please enter a valid email address.');
           go.disabled = true; msg.innerHTML = Kinetic.wave(mode === 'login' ? 'CHECKING…' : 'BUILDING YOUR LOCKER…'); Kinetic.busy(true);
           try {
             const r = mode === 'login'
               ? await this.sb.auth.signInWithPassword({ email: this.email(u), password: p })
-              : await this.sb.auth.signUp({ email: this.email(u), password: p, options: { data: { username: u } } });
+              : await this.sb.auth.signUp({ email: this.email(u), password: p, options: { data: { username: u, contact_email: em, marketing_opt_in: opt } } });
             if (r.error) throw r.error;
             if (!r.data.session) { Kinetic.busy(false); go.disabled = false; return fail('Account created, but Supabase is asking for email confirmation. Turn "Confirm email" off (setup guide, step 2), then log in.'); }
             Kinetic.busy(false); this.user = r.data.session.user; msg.innerHTML = Kinetic.wave('WELCOME.'); Haptics.beep([523, 784], .1);
@@ -4618,6 +4628,25 @@ const Cloud = {
         setTimeout(() => { const f = $('#authUser'); f && f.focus({ preventScroll: true }); }, 80);
       };
       draw(mode);
+    });
+  },
+  emailFields(val = '', opt = false) {
+    return `<div class="field"><label for="authEmail">Email</label><input class="input" id="authEmail" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" required value="${esc(val)}"></div>
+      <label class="gopt"><input type="checkbox" id="authOpt" ${opt ? 'checked' : ''}><span>Send me Hokie Power news, offers and promotions from partners. Optional — change it any time in More.</span></label>
+      <p class="gnote">Your email is used for your account and, only if you tick the box, for news and offers. It is never shown to other athletes.</p>`;
+  },
+  /* existing athletes add an email once */
+  emailScreen() {
+    return new Promise(res => {
+      const g = this.shell(`<div class="ghero" data-gs><span class="label">One quick thing</span><h1 class="gtitle">Add your email<span>.</span></h1><p class="gsub">We now keep an email for every athlete. It takes ten seconds.</p></div>
+        <form class="gcode gauth" data-gs id="emForm" novalidate>${this.emailFields()}<p class="gmsg" id="emMsg" role="status" aria-live="polite"></p><button type="submit" class="btn big red block" id="emGo">Save and continue</button></form>`);
+      $('#emForm', g).onsubmit = async e => {
+        e.preventDefault(); const em = $('#authEmail').value.trim().toLowerCase(), opt = $('#authOpt').checked, msg = $('#emMsg');
+        if (!EMAIL_RE.test(em)) { msg.textContent = 'Please enter a valid email address.'; return; }
+        $('#emGo').disabled = true; msg.innerHTML = Kinetic.wave('SAVING…');
+        try { const { error } = await this.sb.rpc('set_my_email', { new_email: em, opt_in: opt }); if (error) throw error; Object.assign(this.profile, { email: em, marketing_opt_in: opt }); LSX.set('bbp.cloud.last', this.profile); await this.close(); res(); }
+        catch (err) { $('#emGo').disabled = false; msg.textContent = this.msg(err); }
+      };
     });
   },
   /* waiting / revoked / not set up / offline */
@@ -4797,11 +4826,12 @@ Screens.admin = function () {
     const acts = self ? '<span class="label">This is you</span>' : p.status === 'pending' ? b('active', `${icon('check')} Approve`, 'primary') + b('revoked', 'Decline', 'ghost')
       : p.status === 'active' ? b('revoked', `${icon('x')} Revoke access`) + b(p.role === 'admin' ? 'athlete' : 'admin', p.role === 'admin' ? 'Remove admin' : 'Make admin', 'ghost') + b('pw', `${icon('key-round')} Reset password`, 'ghost')
       : b('active', `${icon('undo-2')} Restore access`, 'primary') + b('delete', `${icon('trash-2')} Delete account`, 'danger');
-    return `<div class="adm-row ${p.status}"><div class="grow"><b>${esc(p.username)}</b> ${p.role === 'admin' ? '<span class="badge blue">Admin</span>' : ''}<div class="muted" style="font-size:12.5px">Joined ${fmtDate(String(p.created_at).slice(0, 10))} · last seen ${ago(p.last_seen)} · ${p.workouts} workout${p.workouts === 1 ? '' : 's'} done</div></div><div class="row wrap adm-acts">${acts}</div></div>`;
+    return `<div class="adm-row ${p.status}"><div class="grow"><b>${esc(p.username)}</b> ${p.role === 'admin' ? '<span class="badge blue">Admin</span>' : ''}${p.email !== undefined ? `<div style="font-size:13.5px;word-break:break-all">${p.email ? `<a href="mailto:${esc(p.email)}">${esc(p.email)}</a>` : '<span class="muted">no email yet</span>'} ${p.marketing_opt_in ? '<span class="badge ok">Offers: yes</span>' : '<span class="badge">Offers: no</span>'}</div>` : ''}<div class="muted" style="font-size:12.5px">Joined ${fmtDate(String(p.created_at).slice(0, 10))} · last seen ${ago(p.last_seen)} · ${p.workouts} workout${p.workouts === 1 ? '' : 's'} done</div></div><div class="row wrap adm-acts">${acts}</div></div>`;
   };
   const group = (st, title, empty) => { const g = (L || []).filter(p => p.status === st); return `<section class="panel stack" data-stg><div class="spread"><h2 class="h3">${title}</h2><span class="label">${g.length}</span></div>${g.length ? g.map(row).join('') : `<p class="muted" style="font-size:14px">${empty}</p>`}</section>`; };
   return `<div class="screen">${backBar('Team access', `<button class="btn icon sm" type="button" data-act="adm-refresh" aria-label="Refresh">${icon('refresh-cw')}</button>`)}
     <section class="panel flat" data-stg><p style="font-size:14px"><b>How people join:</b> send them the app link. They tap <b>Create account</b>, pick a username and password, and they're straight in. Everyone only ever sees their own training. You can switch anyone's access off (and back on), reset passwords or delete accounts here.</p></section>
+    ${L && L.length && L[0].email !== undefined ? `<section class="panel stack" data-stg><div class="spread"><h2 class="h3">Email list</h2><span class="label">${L.filter(p => p.email).length} emails · ${L.filter(p => p.email && p.marketing_opt_in).length} said yes to offers</span></div><p class="muted" style="font-size:14px">Only email people about promotions or partners if they said <b>yes to offers</b>. Download as a spreadsheet file (CSV) for Gmail, Mailchimp, Excel or Google Sheets.</p><div class="row wrap"><button class="btn sm primary" type="button" data-act="adm-export" data-v="optin">${icon('download')} Offers list (yes only)</button><button class="btn sm" type="button" data-act="adm-export" data-v="all">${icon('download')} Everyone</button><button class="btn sm ghost" type="button" data-act="adm-copy">${icon('copy')} Copy "yes" emails</button></div></section>` : ''}
     <section class="panel stack" data-stg><div class="spread"><h2 class="h3">Phone alerts</h2>${icon('bell')}</div><p class="muted" style="font-size:14px">Get a notification on your phone the moment someone joins. Set it up once with the free ntfy app (setup guide, step 8), then test it here.</p><button class="btn sm" type="button" data-act="adm-test-alert">${icon('bell')} Send test alert</button></section>
     ${Cloud.admin.err ? `<section class="panel" data-stg><p class="err-msg">${esc(Cloud.admin.err)}</p></section>` : ''}
     ${L == null ? `<section class="panel" data-stg><p class="muted">${Kinetic.wave('LOADING THE TEAM…')}</p></section>` : (L.some(p => p.status === 'pending') ? group('pending', 'Waiting for approval', '') : '') + group('active', 'Active', 'No active athletes yet.') + group('revoked', 'Access off', 'Nobody has been switched off.')}
@@ -4810,6 +4840,20 @@ Screens.admin = function () {
 TAB_OF.admin = 'more';
 Object.assign(Actions, {
   'adm-refresh': () => Cloud.adminLoad(true),
+  'adm-export': el => {
+    const L = (Cloud.admin.list || []).filter(p => p.email && (el.dataset.v === 'all' || p.marketing_opt_in));
+    if (!L.length) { UI.toast('No emails to export yet.'); return; }
+    const q = v => `"${String(v ?? '').replace(/"/g, '""')}"`;
+    const csv = ['username,email,offers_consent,consent_date,joined,last_seen,status,workouts_done'].concat(L.map(p => [p.username, p.email, p.marketing_opt_in ? 'yes' : 'no', p.consent_at ? String(p.consent_at).slice(0, 10) : '', String(p.created_at).slice(0, 10), p.last_seen ? String(p.last_seen).slice(0, 10) : '', p.status, p.workouts].map(q).join(','))).join('\n');
+    try { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['\ufeff' + csv], { type: 'text/csv' })); a.download = `hokie-power-${el.dataset.v === 'all' ? 'all-emails' : 'offers-list'}-${todayISO()}.csv`; document.body.appendChild(a); a.click(); a.remove(); UI.toast(`Downloaded ${L.length} email${L.length > 1 ? 's' : ''}.`); }
+    catch (e) { UI.toast('Download blocked — use “Copy” instead.', 'bad'); }
+  },
+  'adm-copy': async () => { const L = (Cloud.admin.list || []).filter(p => p.email && p.marketing_opt_in).map(p => p.email); if (!L.length) { UI.toast('Nobody has said yes to offers yet.'); return; } try { await navigator.clipboard.writeText(L.join(', ')); UI.toast(`Copied ${L.length} email${L.length > 1 ? 's' : ''}.`); } catch (e) { UI.toast('Could not copy on this phone.', 'bad'); } },
+  'my-email': () => {
+    const p = Cloud.profile || {};
+    Sheet.open({ title: 'Email & offers', html: `<div class="gauth stack">${Cloud.emailFields(p.email || '', !!p.marketing_opt_in)}</div><p class="err-msg" id="meErr"></p><button class="btn big primary block" type="button" id="meGo">Save</button>`,
+      onMount: sh => { $('#meGo', sh).onclick = async () => { const em = $('#authEmail', sh).value.trim().toLowerCase(), opt = $('#authOpt', sh).checked; if (!EMAIL_RE.test(em)) { $('#meErr', sh).textContent = 'Please enter a valid email address.'; return; } try { const { error } = await Cloud.sb.rpc('set_my_email', { new_email: em, opt_in: opt }); if (error) throw error; Object.assign(Cloud.profile, { email: em, marketing_opt_in: opt }); LSX.set('bbp.cloud.last', Cloud.profile); await Sheet.close(); UI.toast('Saved.'); UI.render(); } catch (e) { $('#meErr', sh).textContent = Cloud.msg(e); } }; } });
+  },
   'adm-test-alert': () => Cloud.adminDo('admin_test_alert', {}, 'Test alert sent — check your phone.'),
   'cloud-logout': async () => { const ok = await Sheet.confirm({ title: 'Log out?', body: `<p>Your training is saved to your account${Cloud.status === 'synced' ? '' : ' as soon as you are online'}. Log back in on any phone to continue.</p>`, ok: 'Log out' }); if (ok) Cloud.logout(); },
   'cloud-sync': async () => { Cloud.set('saving'); await Cloud.pull(); await Cloud.push(); UI.render(); },
