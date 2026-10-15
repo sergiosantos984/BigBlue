@@ -1235,6 +1235,38 @@ body.theme-light #app .tilt{will-change:transform}
 #pocket .pk-mini[disabled]{opacity:.4}
 #pocket .pk-mini svg{width:18px;height:18px}
 
+/* ===================== UX polish layer: one type scale, clear actions, consistent controls ===================== */
+/* type scale: page title 36 · section label 11 mono · card title 17 · body 15 · meta 13 */
+#view .topbar>h1.h2,#view .topbar>h1.h2.grow{font-size:clamp(30px,9vw,40px)!important;line-height:1!important;letter-spacing:-.005em!important}
+#view .topbar{min-height:52px;align-items:center}
+/* destructive actions look destructive everywhere */
+#app .btn.danger,#sheet-root .btn.danger{background:#fff!important;color:#B3261E!important;border:1px solid rgba(179,38,30,.35)!important;box-shadow:none!important}
+#app .btn.danger:active{background:#FDECEA!important}
+/* comfortable touch targets */
+#app .btn.sm{min-height:40px}
+#app .chip{min-height:36px}
+/* visible keyboard focus */
+:where(#app,#sheet-root,#nav,#gate,#pocket) :is(button,a,input,select,textarea,summary,[tabindex]):focus-visible{outline:3px solid #E87722!important;outline-offset:2px!important;border-radius:10px}
+/* expandable sections read as tappable rows with a chevron */
+#app details>summary{list-style:none;display:flex;align-items:center;gap:8px;min-height:40px;cursor:pointer}
+#app details>summary::-webkit-details-marker{display:none}
+#app details>summary::after{content:"";margin-left:auto;width:8px;height:8px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(45deg) translateY(-2px);opacity:.55;transition:transform .2s}
+#app details[open]>summary::after{transform:rotate(-135deg) translateY(-2px)}
+/* workout: the "Notes, settings & finish" fold looks like a normal card, not a disabled block */
+body.theme-light #app .more-opts{background:#fff!important;border:1px solid rgba(134,31,65,.12)!important;opacity:1}
+#app .more-opts>summary{font:600 15px/1.2 var(--f-body)!important;letter-spacing:0!important;text-transform:none!important;color:#1A1D20!important}
+#app .more-ach{margin-top:4px}
+#app .more-ach>summary{padding:6px 2px}
+/* Home: mission card sits right under the hero, tighter rhythm */
+#view .dash .col{gap:14px}
+body.theme-light #app details.panel.flat.more-opts{background:#fff!important;border:1px solid rgba(134,31,65,.14)!important;box-shadow:0 8px 20px -14px rgba(92,16,45,.3)!important}
+/* Home hero: "WEEK 1" on one line so the day's mission is visible without scrolling */
+#view .hero .h1{font-size:clamp(56px,17vw,88px)!important}
+#view .hero{padding-top:18px!important}
+@media (min-width:1024px){#view .hero .h1{font-size:96px!important}}
+#view .hero .h1{white-space:nowrap;font-size:clamp(52px,15vw,84px)!important}
+#app .mission-more>summary{font:600 14px/1.2 var(--f-body)!important;letter-spacing:0!important;text-transform:none!important;color:#5C102D}
+
 </style>
 </head>
 <body>
@@ -2705,7 +2737,6 @@ const Screens = {
     return `<div class="screen">
       <div class="topbar" data-stg>${brand()}<div class="row">${sampleTag()}${logoutBtn()}</div></div>
       ${mem}${resume}
-      ${Quotes.ticker(Quotes.today())}
       <div class="dash"><div class="col">
         <section class="hero panel tilt" data-stg data-tilt aria-label="Athlete status">
           <div class="jersey" aria-hidden="true">${pad2(wk)}</div>
@@ -2720,11 +2751,11 @@ const Screens = {
             <div><span class="label">Phase</span><span class="sb-val" style="font-size:14px;white-space:normal;line-height:1.05;hyphens:auto">${esc(cyc.phase)}</span></div>
           </div>
         </section>
+        ${this.missionCard(st, act)}
         ${Season.html(st)}
       </div><div class="col">
-        ${this.missionCard(st, act)}
-        ${Quotes.hero()}
         ${Nutrition.card()}
+        ${Quotes.hero()}
         <div class="metrics" data-stg>
           ${metric('Current streak', st.streak, 'streak', 0, '', 'workouts in a row', 'flame')}
           ${metric('Workouts done', st.doneUnique, 'done', 0, `<small>/${st.total}</small>`, 'scheduled sessions', 'target')}
@@ -2749,9 +2780,9 @@ const Screens = {
     const lines = w.exercises.slice(0, 4).map(e => { const def = Program.exDef(e.ex); let tgt = ''; if (e.type === 'pct' && e.scheme.length) { const top = e.scheme[e.scheme.length - 1][1], t = Calc.target(Calc.refFor(def.lift), top); tgt = t ? `top ${top}% → ${fmtTarget(t)}` : `<span class="muted">Set baseline</span>`; } return `<div class="ex-line"><b>${esc(e.title || def.name)}</b><span class="muted num" style="text-align:right">${Workout.prescText(e)}${tgt ? '<br>' + tgt : ''}</span></div>`; }).join('');
     return `<section class="panel mission" data-stg aria-label="Today's mission"><div class="mhead"><div class="spread"><span class="label" style="color:#FFFFFF">Daily mission · ${wkLabel(w.week)} · Day ${w.day}</span>${stBadge(status)}</div>
       <h2 class="h1" style="font-size:38px;margin-top:6px">${esc(w.title)}</h2><div class="muted" style="font-size:13px">${sd ? 'Scheduled ' + fmtDate(sd) + ' · ' : ''}${w.exercises.length} exercises · ${Workout.setCount(w)} sets · ≈${Workout.estMinutes(w)} min (estimate)</div></div>
-      <div class="mbody"><div>${lines}${w.exercises.length > 4 ? `<div class="muted" style="font-size:13px;padding-top:6px">+ ${w.exercises.length - 4} more</div>` : ''}</div>
-      <div class="muted" style="font-size:12.5px">${icon('wrench')} ${esc(equip)}</div>
-      <button class="btn big red block" type="button" data-act="start" data-id="${w.id}">Start today's mission</button>
+      <div class="mbody"><button class="btn big red block" type="button" data-act="start" data-id="${w.id}">Start today's mission</button>
+      <details class="mission-more"><summary class="label">What's in it · ${w.exercises.length} exercises</summary><div>${lines}${w.exercises.length > 4 ? `<div class="muted" style="font-size:13px;padding-top:6px">+ ${w.exercises.length - 4} more</div>` : ''}</div>
+      <div class="muted" style="font-size:12.5px;margin-top:6px">${icon('wrench')} ${esc(equip)}</div></details>
       <button class="btn block ghost" type="button" data-act="preview" data-id="${w.id}">View full workout</button></div></section>`;
   },
 
@@ -2760,12 +2791,12 @@ const Screens = {
     tab = tab || 'journey';
     const tabs = [['journey', 'Journey'], ['plan', 'Plan'], ['library', 'Library'], ['calc', 'Calculator']];
     const body = tab === 'plan' ? this.plan() : tab === 'library' ? this.library() : tab === 'calc' ? this.calc() : this.journey();
-    return `<div class="screen"><div class="topbar" data-stg><h1 class="h2">Training</h1>${sampleTag()}</div>${Quotes.ticker(Quotes.today() + 5)}
+    return `<div class="screen"><div class="topbar" data-stg><h1 class="h2">Training</h1>${sampleTag()}</div>
       <div class="seg" role="tablist" data-stg>${tabs.map(([k, l]) => `<button type="button" role="tab" data-act="go" data-r="training" data-p="${k}" aria-pressed="${tab === k}" aria-selected="${tab === k}">${l}</button>`).join('')}</div>${body}</div>`;
   },
   journey() {
     const st = Stats.get(); const sel = UI.ui.selWeek || st.programWeek;
-    return `${Season.html(st, { compact: true, key: 'season-j' })}${prepCard()}<div class="two"><div class="journey" data-stg>${this.journeyMap(st, sel)}</div><div id="weekDetail" class="week-detail stack">${this.weekDetail(sel, st)}</div></div>`;
+    return `${prepCard()}<div class="two"><div class="journey" data-stg>${this.journeyMap(st, sel)}</div><div id="weekDetail" class="week-detail stack">${this.weekDetail(sel, st)}</div></div>`;
   },
   journeyMap(st, sel) {
     const W = 360, top = 70, gap = 112, n = State.program.weeks, H = top + (n - 1) * gap + 110;
@@ -2989,7 +3020,9 @@ const Screens = {
       <p class="muted" style="font-size:12.5px" data-stg>A PR is a <b>tested</b> result that beats every earlier result and your baseline (when the baseline was a tested or previous max). Estimated maxes never count as PRs.</p>
       <section class="panel" data-stg><div class="panel-head"><h2 class="h3">Achievements</h2><span class="label">${State.achievements.length} earned</span></div>
         <div class="stack" style="gap:0">${State.achievements.filter(a => a.type !== 'milestone').sort((a, b) => b.date.localeCompare(a.date)).map(a => `<div class="list-item">${icon('trophy')}<div class="grow"><b>${esc(a.name)}</b><div class="muted" style="font-size:12.5px">${esc(a.desc)} · ${fmtDate(a.date)}</div></div><span class="badge red">PR</span></div>`).join('')}
-        ${ACH.map(a => { const e = State.achievements.find(x => x.id === a.id); return `<div class="list-item" style="${e ? '' : 'opacity:.5'}">${icon(e ? 'award' : 'lock')}<div class="grow"><b>${a.name}</b><div class="muted" style="font-size:12.5px">${a.desc}${e ? ' · earned ' + fmtDate(e.date) : ''}</div></div>${e ? '<span class="badge ok">Earned</span>' : ''}</div>`; }).join('')}</div></section>`;
+        ${(() => { const row = a => { const e = State.achievements.find(x => x.id === a.id); return `<div class="list-item" style="${e ? '' : 'opacity:.55'}">${icon(e ? 'award' : 'lock')}<div class="grow"><b>${a.name}</b><div class="muted" style="font-size:12.5px">${a.desc}${e ? ' · earned ' + fmtDate(e.date) : ''}</div></div>${e ? '<span class="badge ok">Earned</span>' : ''}</div>`; };
+          const got = ACH.filter(a => State.achievements.some(x => x.id === a.id)), next = ACH.filter(a => !State.achievements.some(x => x.id === a.id));
+          return got.map(row).join('') + next.slice(0, 3).map(row).join('') + (next.length > 3 ? `<details class="more-ach"><summary class="label">Show ${next.length - 3} more to unlock</summary>${next.slice(3).map(row).join('')}</details>` : ''); })()}</div></section>`;
   },
   resultsTable(metric) {
     const rs = State.results.filter(r => r.metric === metric).sort((a, b) => b.date.localeCompare(a.date));
@@ -3168,8 +3201,8 @@ const Screens = {
         ${seg('reducedMotion', [['system', 'Follow device'], ['on', 'Always reduce']], 'Reduced motion')}
         <p class="muted" style="font-size:12.5px">Active now: <b>${Motion.modeName()}</b>${Motion.sysReduced.matches ? ' (your device asks for reduced motion)' : ''}.</p></section>
       <section class="panel stack" data-stg><h2 class="h3">Analytics</h2>${sw('includeWarmups', 'Include warm-ups in volume', 'Off by default')}</section>
-      <section class="panel stack" data-stg><h2 class="h3">Data</h2><div class="kv"><span>Storage</span><span>${{ idb: 'IndexedDB + local storage', ls: 'Local storage (fallback)', memory: 'Not saving — storage blocked' }[State.storageMode]}</span></div>
-        <div class="kv"><span>Schema version</span><span>${SCHEMA_VERSION}</span></div><div class="kv"><span>Curriculum</span><span>${esc(State.program.name)}</span></div>
+      <section class="panel stack" data-stg><h2 class="h3">Data</h2><div class="kv"><span>Curriculum</span><span>${esc(State.program.name)}</span></div><details><summary class="label" style="cursor:pointer">Technical details</summary><div class="kv"><span>Storage</span><span>${{ idb: 'IndexedDB + local storage', ls: 'Local storage (fallback)', memory: 'Not saving — storage blocked' }[State.storageMode]}</span></div>
+        <div class="kv"><span>Schema version</span><span>${SCHEMA_VERSION}</span></div></details>
         <button class="btn" type="button" data-act="go" data-r="backup">${icon('hard-drive-download')} Backup & restore</button>
         <button class="btn danger" type="button" data-act="reset">${icon('trash-2')} Reset application</button></section></div>`;
   },
