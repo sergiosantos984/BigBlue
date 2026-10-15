@@ -1267,6 +1267,161 @@ body.theme-light #app details.panel.flat.more-opts{background:#fff!important;bor
 #view .hero .h1{white-space:nowrap;font-size:clamp(52px,15vw,84px)!important}
 #app .mission-more>summary{font:600 14px/1.2 var(--f-body)!important;letter-spacing:0!important;text-transform:none!important;color:#5C102D}
 
+/* ================= SOCIAL (feed · arena · squads · profiles) — same tokens as the rest of the app ================= */
+.sr-only{position:absolute!important;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+#nav .bar{grid-template-columns:repeat(7,1fr)}
+#nav .ind{width:calc(100% / 7)}
+@media (min-width:1024px){#nav .bar{grid-template-columns:1fr;grid-template-rows:auto repeat(7,56px) 1fr}}
+#nav .sdot,.sdot{position:absolute;top:8px;right:calc(50% - 22px);min-width:17px;height:17px;padding:0 4px;border-radius:9px;background:var(--vt-orange);color:var(--vt-charcoal);font:800 10.5px/17px var(--f-mono,monospace);text-align:center;box-shadow:0 0 0 2px #fff}
+.sdot.in{position:static;display:inline-block;margin-left:4px;box-shadow:none}
+@media (min-width:1024px){#nav .sdot{top:50%;right:14px;margin-top:-8px}}
+.soc .sbell{position:relative}.soc .sbell .sdot{top:-4px;right:-4px}
+.soc .ssec{margin:10px 2px 0;display:flex;align-items:center;gap:8px}
+.soc .sfold>summary{cursor:pointer;font-weight:700;min-height:40px;display:flex;align-items:center}
+/* avatars + "who" rows */
+.sav{--s:40px;width:var(--s);height:var(--s);flex:0 0 var(--s);border-radius:50%;overflow:hidden;display:inline-grid;place-items:center;background:linear-gradient(135deg,var(--vt-maroon),#5C102D);color:#fff;font:900 calc(var(--s) * .42)/1 var(--f-display,Impact,sans-serif);box-shadow:0 0 0 2px #fff,0 6px 14px -8px rgba(92,16,45,.8)}
+.sav img{width:100%;height:100%;object-fit:cover}.sav.n{background:rgba(232,119,34,.14);color:var(--vt-orange)}.sav.n svg{width:20px;height:20px}
+.swho{display:flex;align-items:center;gap:10px;background:none;border:0;padding:0;text-align:left;min-width:0;flex:1;color:inherit;min-height:44px}
+.swho .grow{min-width:0}.swho b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:15px}
+.swho small{display:block;color:var(--muted);font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.saud{display:inline-flex;align-items:center;gap:3px}.saud svg{width:12px;height:12px}
+.linkish{background:none;border:0;padding:4px 0;color:inherit;font:inherit;cursor:pointer;min-height:32px;text-align:inherit}.linkish.left{text-align:left;display:flex;flex-direction:column}
+.ph{opacity:0;transition:opacity .35s ease;display:block}.ph.on{opacity:1}.ph-missing{opacity:.25}
+/* level strip + XP */
+.slvl{display:flex;align-items:center;gap:12px;width:100%;padding:10px 14px;border-radius:18px;border:1px solid var(--line);background:linear-gradient(100deg,rgba(134,31,65,.08),rgba(232,119,34,.08));color:inherit;text-align:left;min-height:56px}
+.slvl-n{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;background:var(--vt-maroon);color:#fff;line-height:1}.slvl-n small{font:700 9px var(--f-mono,monospace);letter-spacing:.1em;opacity:.8}.slvl-n b{font:900 22px var(--f-display,Impact,sans-serif)}
+.slvl .grow{min-width:0;display:flex;flex-direction:column;gap:6px}
+.sbar{height:8px;border-radius:6px;background:rgba(134,31,65,.1);overflow:hidden}.sbar.big{height:12px}
+.sbar>i{display:block;height:100%;width:var(--p);border-radius:inherit;background:linear-gradient(90deg,var(--vt-maroon),#A0335A)}
+.sbar.orange>i{background:linear-gradient(90deg,var(--vt-orange),#FFB36B)}
+.sbar>i.grow{animation:sbarGrow 1.1s cubic-bezier(.2,.8,.2,1) both}@keyframes sbarGrow{from{width:0}}
+.sxp{display:flex;gap:14px;align-items:center}.sxp-l{display:grid;place-items:center;min-width:74px;height:74px;border-radius:20px;background:linear-gradient(160deg,#A0335A,var(--vt-maroon));color:#fff;line-height:1;box-shadow:0 14px 28px -16px rgba(92,16,45,.9)}
+.sxp-l small{font:700 10px var(--f-mono,monospace);letter-spacing:.12em;opacity:.8}.sxp-l b{font:900 36px var(--f-display,Impact,sans-serif)}
+.slvl-big{display:flex;align-items:baseline;gap:8px;color:#fff;font:900 120px/1 var(--f-display,Impact,sans-serif)}.slvl-big span{font-size:28px;color:var(--vt-orange)}
+/* badges */
+.sbadges{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:10px}
+.sbadge{display:flex;flex-direction:column;align-items:center;gap:4px;text-align:center;padding:8px 4px;border-radius:14px;opacity:.55}.sbadge.on{opacity:1}
+.sbadge b{font-size:12.5px;line-height:1.2}.sbadge small{font-size:11px;color:var(--muted)}.sbadge .sbar{width:70%;height:5px}
+.smedal{width:52px;height:52px;border-radius:50%;display:grid;place-items:center;background:rgba(134,31,65,.08);color:var(--muted);border:2px dashed rgba(134,31,65,.25)}
+.smedal.on{background:radial-gradient(circle at 35% 30%,#FFB36B,var(--vt-orange) 55%,#C9621A);color:#fff;border:3px solid #fff;box-shadow:0 0 0 2px var(--vt-maroon),0 12px 22px -10px rgba(232,119,34,.9)}
+.smedal svg{width:24px;height:24px}
+.sbadges-pop{display:flex;gap:14px;justify-content:center}.sbadges-pop .smedal{width:96px;height:96px;animation:medalIn .9s cubic-bezier(.2,1.4,.4,1) both}.sbadges-pop .smedal svg{width:44px;height:44px}
+@keyframes medalIn{from{transform:scale(.2) rotate(-40deg);opacity:0}}
+.swin-drum{font:900 22px var(--f-display,Impact,sans-serif);letter-spacing:.18em;color:var(--vt-orange);animation:drum 1.2s ease both}
+.swin-name{animation:winIn .8s 1.1s cubic-bezier(.2,1.3,.4,1) both}
+@keyframes drum{0%{opacity:0;letter-spacing:.6em}60%{opacity:1}100%{letter-spacing:.18em}}@keyframes winIn{from{opacity:0;transform:scale(.6) translateY(20px)}}
+/* composer + feed */
+.scompose{display:flex;flex-wrap:wrap;align-items:center;gap:10px}
+.scompose-in{min-height:46px;border-radius:23px;border:1px solid var(--line);background:rgba(134,31,65,.04);color:var(--muted);text-align:left;padding:0 16px;font:inherit;min-width:0}
+.scompose-q{display:flex;gap:2px;width:100%;justify-content:space-between;flex-wrap:wrap}.scompose-q .btn{flex:1 1 auto;padding-inline:6px}
+.post{display:flex;flex-direction:column;gap:10px}.post-h{display:flex;align-items:center;gap:6px}
+.post-b{font-size:15.5px;line-height:1.5;overflow-wrap:anywhere}
+.post-f{display:flex;align-items:center;gap:4px;border-top:1px solid var(--line);padding-top:8px;flex-wrap:wrap}
+.reacts{display:flex;gap:4px;flex:1}
+.react{display:inline-flex;align-items:center;gap:4px;min-height:40px;min-width:44px;padding:0 10px;border-radius:20px;border:1px solid var(--line);background:none;color:inherit;font:700 13px var(--f-mono,monospace);transition:transform .15s,background .2s}
+.react span{font-size:17px;filter:grayscale(.6)}.react[aria-pressed="true"]{background:rgba(232,119,34,.14);border-color:rgba(232,119,34,.55)}.react[aria-pressed="true"] span{filter:none}.react:active{transform:scale(.9)}
+.post-f [aria-pressed="true"]{color:var(--vt-orange)}
+.post-ph{display:grid;gap:4px;border-radius:16px;overflow:hidden}.post-ph.n2,.post-ph.n4{grid-template-columns:1fr 1fr}.post-ph.n3{grid-template-columns:2fr 1fr}.post-ph.n3 .phbtn:first-child{grid-row:span 2}
+.phbtn{display:block;padding:0;border:0;background:rgba(134,31,65,.06);width:100%;min-height:120px;cursor:zoom-in}
+.phbtn img{width:100%;height:100%;max-height:420px;object-fit:cover}
+.post-prog{display:flex;flex-direction:column;gap:6px}.post-prog .phbtn{border-radius:16px;overflow:hidden}
+.post-card{display:flex;gap:12px;align-items:flex-start;padding:14px;border-radius:16px;background:linear-gradient(140deg,rgba(134,31,65,.07),rgba(232,119,34,.06));border:1px solid rgba(134,31,65,.12);text-align:left;width:100%;color:inherit}
+.post-card.wk{flex-direction:column;gap:6px;background:linear-gradient(150deg,var(--vt-maroon),#5C102D);color:#fff;border:0}
+.post-card.wk .pc-k,.post-card.wk .pc-d{color:rgba(255,255,255,.75)}
+.pc-k{font:700 11px var(--f-mono,monospace);letter-spacing:.08em;color:var(--muted);display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.pc-t{display:block;font:900 24px/1.05 var(--f-display,Impact,sans-serif);text-transform:uppercase;overflow-wrap:anywhere}.pc-d{font-size:13px;color:var(--muted)}
+.pc-stats{display:flex;gap:14px;flex-wrap:wrap}.pc-stats span{font-size:13px;opacity:.85}.pc-stats b{font:900 22px var(--f-display,Impact,sans-serif);margin-right:2px}
+.pc-ex{list-style:none;margin:4px 0 0;padding:0;display:flex;flex-direction:column;gap:2px;width:100%}
+.pc-ex li{display:flex;justify-content:space-between;gap:10px;padding:5px 0;border-top:1px solid rgba(255,255,255,.12);font-size:13.5px}.pc-ex li span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pc-ex b{color:#FFB36B;font-family:var(--f-mono,monospace);white-space:nowrap}
+.pc-trophy{width:48px;height:48px;flex:0 0 48px;border-radius:14px;display:grid;place-items:center;background:var(--vt-orange);color:#fff}.pc-trophy svg{width:24px;height:24px}
+.selflog{font:700 10px var(--f-mono,monospace);letter-spacing:.06em;padding:2px 6px;border-radius:6px;border:1px solid currentColor;opacity:.75;text-transform:uppercase}
+.post-quote{border-left:3px solid var(--vt-orange);padding-left:10px}.post-quote .post{box-shadow:none;border:1px solid var(--line)}.post-quote.gone{padding:10px}
+.sphoto-full{width:100%;border-radius:14px}
+/* composer sheet */
+.cmp-types{overflow-x:auto;scrollbar-width:none}.cmp-types button{flex-direction:column;gap:2px;font-size:11px;min-width:0;padding:6px 2px}.cmp-types svg{width:18px;height:18px}
+.spick{display:flex;flex-direction:column;gap:6px;max-height:300px;overflow:auto}
+.spick-i{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;border:1px solid var(--line);background:none;color:inherit;text-align:left;min-height:52px;width:100%}
+.spick-i small{display:block;color:var(--muted);font-size:12.5px}.spick-i[aria-checked="true"]{border-color:var(--vt-maroon);background:rgba(134,31,65,.07);box-shadow:inset 0 0 0 1px var(--vt-maroon)}
+.cmp-media{display:flex;gap:8px;flex-wrap:wrap}
+.cmp-th{position:relative;width:88px;height:88px;border-radius:14px;overflow:hidden;background:rgba(134,31,65,.06)}.cmp-th img{width:100%;height:100%;object-fit:cover}.cmp-th .btn{position:absolute;top:4px;right:4px;min-height:30px;width:30px;padding:0}
+.cmp-add{width:88px;height:88px;border-radius:14px;border:2px dashed rgba(134,31,65,.3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:12px;color:var(--muted);cursor:pointer;position:relative;overflow:hidden;text-align:center}
+.cmp-add img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.cmp-add span{position:relative;z-index:1;background:rgba(255,255,255,.85);border-radius:8px;padding:1px 6px}
+.cmp-add.round{border-radius:50%;width:96px;height:96px}.cmp-add.wide{flex:1;min-width:140px;height:96px}
+.sqf-av{display:flex;gap:12px;align-items:center}
+/* comments */
+.cmt{display:flex;gap:10px;align-items:flex-start}.cmt.reply{margin-left:40px}
+.cmt-b{background:rgba(134,31,65,.06);border-radius:4px 16px 16px 16px;padding:8px 12px;font-size:14.5px;overflow-wrap:anywhere}
+.cmt-m{display:flex;gap:12px;font-size:12px;color:var(--muted);padding:0 4px}.cmt-m .linkish{font-weight:700;min-height:28px}
+.cmt-form{border-top:1px solid var(--line);padding-top:10px}.cmt-form .row{gap:8px}.cmt-to{font-size:13px;color:var(--muted);margin-bottom:6px}
+/* arena */
+.ccard{display:flex;flex-direction:column;gap:6px;text-align:left;width:100%;color:inherit;border-left:4px solid var(--vt-maroon)}
+.ccard.inv{border-left-color:var(--vt-orange);background:linear-gradient(100deg,rgba(232,119,34,.1),transparent 60%)}
+.ccard-t{font:900 22px/1.1 var(--f-display,Impact,sans-serif);text-transform:uppercase;overflow-wrap:anywhere}.ccard-m{font-size:13px}
+.cst{font:700 11px var(--f-mono,monospace);letter-spacing:.06em;padding:3px 8px;border-radius:8px;background:rgba(134,31,65,.08);text-transform:uppercase;white-space:nowrap}
+.cst.active{background:var(--vt-orange);color:var(--vt-charcoal)}.cst.final{background:var(--vt-maroon);color:#fff}
+.chero{background:linear-gradient(150deg,var(--vt-maroon),#5C102D 70%)!important;color:#fff;display:flex;flex-direction:column;gap:8px;border:0!important}
+.chero .label,.chero .chero-d,.chero p{color:rgba(255,255,255,.8)!important}.chero .cst{background:rgba(255,255,255,.16);color:#fff}.chero .cst.active{background:var(--vt-orange);color:var(--vt-charcoal)}
+.chero-t{font:900 clamp(28px,8vw,40px)/1 var(--f-display,Impact,sans-serif);text-transform:uppercase;margin:0;overflow-wrap:anywhere}
+.chero-d{font-size:13px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}.chero-d svg{width:14px;height:14px}
+.cwin{display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:14px;background:var(--vt-orange);color:var(--vt-charcoal);font:900 20px var(--f-display,Impact,sans-serif);text-transform:uppercase}
+.srules .kv{align-items:flex-start;gap:12px}.srules .kv span:last-child{text-align:right;max-width:62%}
+.lb{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px}
+.lb li{display:flex;align-items:center;gap:10px;padding:6px 8px;border-radius:14px;min-height:56px}
+.lb li.me{background:linear-gradient(90deg,rgba(232,119,34,.16),rgba(232,119,34,.04));box-shadow:inset 3px 0 0 var(--vt-orange)}
+.lb li.in{animation:lbIn .5s calc(var(--i) * 60ms) cubic-bezier(.2,.8,.2,1) both}@keyframes lbIn{from{opacity:0;transform:translateX(-14px)}}
+.lb-r{width:26px;text-align:center;font:900 20px var(--f-display,Impact,sans-serif);color:var(--muted)}.lb li:first-child .lb-r{color:var(--vt-orange)}
+.lb-v{font:900 22px var(--f-display,Impact,sans-serif);white-space:nowrap;text-align:right}.lb-v small{font:600 11px var(--f-mono,monospace);margin-left:3px;color:var(--muted)}
+.lb.sm li{min-height:44px}
+.lb-bars{display:flex;flex-direction:column;gap:6px;margin-top:4px}.lbb{display:grid;grid-template-columns:minmax(0,90px) 1fr;gap:8px;align-items:center;font-size:12px}.lbb span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted)}.lbb.me .sbar>i{background:linear-gradient(90deg,var(--vt-orange),#FFB36B)}
+/* wizard */
+.wsteps{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.wsteps li{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10px;color:var(--muted);min-width:0}.wsteps small{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.wsteps span{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;border:2px solid var(--line);font:800 11px var(--f-mono,monospace)}
+.wsteps li.on span{background:var(--vt-maroon);border-color:var(--vt-maroon);color:#fff}.wsteps li.done span{background:var(--vt-orange);border-color:var(--vt-orange);color:var(--vt-charcoal)}
+/* squads + profiles */
+.sqcard{display:flex;align-items:center;gap:12px;text-align:left;width:100%;color:inherit}.sqcard .grow{min-width:0;display:flex;flex-direction:column;gap:3px}.sqcard b{font-size:17px}
+.sq-goal{display:flex;flex-direction:column;gap:3px;margin-top:2px}.sq-goal small{font-size:12px;color:var(--muted)}
+.dots{display:inline-flex;gap:4px}.dots i{width:12px;height:12px;border-radius:50%;background:rgba(134,31,65,.12)}.dots i.on{background:var(--vt-orange);box-shadow:0 0 0 2px rgba(232,119,34,.2)}
+.sqinv{display:flex;align-items:center;gap:10px;flex-wrap:wrap;border-left:4px solid var(--vt-orange)}.sqinv .grow{min-width:120px}
+.sqrow{display:flex;align-items:center;gap:10px;min-height:52px}.sqrow .grow{min-width:0}.sqrow small{display:block}
+.sqhero,.ahero{padding:0!important;overflow:hidden;display:flex;flex-direction:column;gap:10px}
+.sqhero>*:not(.sq-cover),.ahero>*:not(.sq-cover){margin:0 16px}.sqhero>*:last-child,.ahero>*:last-child{margin-bottom:16px}
+.sq-cover{height:110px;background:rgba(134,31,65,.08)}.sq-cover img{width:100%;height:100%;object-fit:cover}
+.sq-cover.none{background:linear-gradient(120deg,var(--vt-maroon),#5C102D 55%,var(--vt-orange));position:relative}
+.sq-cover.none::after{content:"";position:absolute;inset:0;background:repeating-linear-gradient(90deg,transparent 0 46px,rgba(255,255,255,.08) 46px 48px)}
+.sqhero-in{display:flex;gap:12px}.sqhero-in .grow{min-width:0;padding-bottom:2px}.sqhero-in .sav{box-shadow:0 0 0 4px #fff,0 10px 20px -10px rgba(0,0,0,.5)}
+.sqhero-in .chero-t{font-size:clamp(24px,7vw,32px);color:var(--fg)}
+.sq-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;text-align:center}.sq-stats b{display:block;font:900 30px/1 var(--f-display,Impact,sans-serif);color:var(--vt-maroon)}.sq-stats small{font-size:11.5px;color:var(--muted)}
+body:not(.theme-light) .sq-stats b{color:#fff}
+.sqm{display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--line);padding:2px 0}.sqm:last-of-type{border-bottom:0}
+.srow{display:flex;align-items:center;gap:12px;min-height:52px;border-bottom:1px solid var(--line)}.srow small{display:block}
+.sw{appearance:none;-webkit-appearance:none;width:50px;height:30px;border-radius:15px;background:rgba(134,31,65,.18);position:relative;flex:0 0 50px;cursor:pointer;transition:background .2s}
+.sw::after{content:"";position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.25);transition:transform .2s cubic-bezier(.3,1.4,.5,1)}
+.sw:checked{background:var(--vt-maroon)}.sw:checked::after{transform:translateX(20px)}
+/* journal */
+.jtl{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:12px;position:relative}
+.jent{display:flex;flex-direction:column;gap:8px}.jent.sel{box-shadow:0 0 0 3px var(--vt-orange)!important}
+.jent .phbtn{border-radius:14px;overflow:hidden}.jdate{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:13px;color:var(--muted)}.jdate b{color:var(--fg);font-size:15px}
+.jcmp{display:grid;grid-template-columns:1fr 1fr;gap:8px}.jcmp figure{margin:0;display:flex;flex-direction:column;gap:6px}.jcmp img{width:100%;aspect-ratio:3/4;object-fit:cover;border-radius:12px;background:rgba(134,31,65,.06)}.jcmp figcaption small{display:block;color:var(--muted);font-size:12px}
+/* notifications + moderation */
+.nlist{display:flex;flex-direction:column;gap:2px}.nrow{display:flex;align-items:center;gap:12px;background:none;border:0;border-radius:14px;padding:8px;text-align:left;color:inherit;width:100%;min-height:56px}
+.nrow .grow{min-width:0;font-size:14.5px}.nrow small{display:block}.nrow.unread{background:rgba(232,119,34,.08)}
+.udot{width:10px;height:10px;border-radius:50%;background:var(--vt-orange);flex:0 0 10px}
+.rep.open{border-left:4px solid var(--vt-orange)}.rep-b{margin:4px 0 0;padding:8px 10px;border-radius:10px;background:rgba(134,31,65,.05);font-size:14px;overflow-wrap:anywhere}
+/* loading + empty */
+.sk{border-radius:10px;background:linear-gradient(90deg,rgba(134,31,65,.06),rgba(134,31,65,.13),rgba(134,31,65,.06));background-size:200% 100%;animation:skel 1.3s linear infinite;height:14px;margin:8px 0}
+.sk-a{width:44px;height:44px;border-radius:50%}.sk-l{width:100%}.sk-l.s{width:60%}.sk-card{min-height:120px}
+@keyframes skel{to{background-position:-200% 0}}
+.sempty{display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;padding:28px 18px!important}.sempty>svg,.sempty>i svg{width:34px;height:34px;color:var(--vt-orange)}.sempty b{font:900 22px var(--f-display,Impact,sans-serif);text-transform:uppercase}
+.serr{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+.btn[data-busy]{opacity:.65;pointer-events:none}
+@media (prefers-reduced-motion:reduce){.sbar>i.grow,.lb li.in,.sbadges-pop .smedal,.swin-drum,.swin-name,.sk{animation:none!important}.ph{transition:none}}
+body.motion-off .sbar>i.grow,body.motion-off .lb li.in{animation:none!important}
+.soc .topbar h1{min-width:0}
+#view .soc>.topbar>h1.h2.grow{font-size:clamp(24px,7vw,34px)!important}
+.sqhero-in{margin-top:0!important;align-items:flex-start}.sqhero-in .sav{margin-top:-38px}.sqhero-in .grow{padding-top:8px}
+.scompose-q{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.scompose-q .btn{flex-direction:column;gap:2px;font-size:12px;min-height:56px;padding:6px 2px}
+
 </style>
 </head>
 <body>
@@ -3740,7 +3895,7 @@ const App = {
 };
 
 async function boot() {
-  const NAVI = { home: 'house', training: 'map', workout: 'dumbbell', progress: 'activity', nutrition: 'apple', more: 'menu' };
+  const NAVI = { home: 'house', training: 'map', workout: 'dumbbell', progress: 'activity', nutrition: 'apple', social: 'users', more: 'menu' };
   $$('#nav [data-tab]').forEach(b => b.insertAdjacentHTML('afterbegin', icon(NAVI[b.dataset.tab])));
   FX.init(); Env.init();
   if (Cloud.on) { await Splash.done; if (!(await Cloud.start())) return; }   // accounts: log in first, then load that person's data
@@ -3791,7 +3946,11 @@ async function boot() {
   $('#skipIntro').onclick = () => Intro.finish();
   $('#enterStadium').onclick = () => Intro.enter();
   App.show(false);
-  try { const q = new URLSearchParams(location.search); if (q.get('go') === 'admin') { history.replaceState(null, '', location.pathname); if (Cloud.isAdmin()) setTimeout(() => Nav.go('admin'), Motion.off ? 0 : 600); } } catch (e) { }
+  try {
+    const q = new URLSearchParams(location.search), g = q.get('go') || '';
+    if (g === 'admin') { history.replaceState(null, '', location.pathname); if (Cloud.isAdmin()) setTimeout(() => Nav.go('admin'), Motion.off ? 0 : 600); }
+    else if (/^(post|challenge|squad|athlete|notifs|social):?[\w-]*$/.test(g)) { history.replaceState(null, '', location.pathname); const [r, p] = g.split(':'); if (Cloud.on) setTimeout(() => Nav.go(r, p || null), Motion.off ? 0 : 600); }
+  } catch (e) { }
   const act = Workout.active();
   if (act) setTimeout(async () => {
     const c = await Sheet.choose({ title: 'Resume your workout?', body: `<p><b>${esc(act.title)}</b> (${wkLabel(act.week)} · Day ${act.day}) was not finished. ${Stats.sessionStats(act).sets} sets are saved.</p>`, options: [{ id: 'resume', label: 'Resume mission', cls: 'red' }, { id: 'later', label: 'Keep it for later' }, { id: 'discard', label: 'Discard it', cls: 'danger' }] });
@@ -5370,6 +5529,950 @@ const ShareCard = {
   }
 };
 Object.assign(Actions, { 'share-session': el => ShareCard.share(el.dataset.id) });
+
+/* ============ SOCIAL — core, feed, posts, composer ============
+   Train. Compete. Share. Improve.
+   Everything here talks to the same Supabase project as accounts and sync, only through the
+   functions in social.sql (which check who is asking). Scores and XP are never calculated or
+   sent from the phone: the database works them out from each athlete's own saved workouts.
+   Without accounts (code-gate mode) the tab explains what it is and how to turn it on. */
+/* inline fallbacks so Social icons draw even before (or without) the icon library */
+Object.entries({"users": "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 3a4 4 0 1 0 0 8a4 4 0 1 0 0-8M22 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75", "ellipsis": "M5 12h.01M12 12h.01M19 12h.01", "bookmark": "m19 21-7-4-7 4V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v16z", "message-circle": "M7.9 20A9 9 0 1 0 4 16.1L2 22Z", "image": "M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM9 7a2 2 0 1 0 0 4a2 2 0 1 0 0-4M21 15l-3.09-3.09a2 2 0 0 0-2.82 0L6 21", "image-plus": "M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7M16 5h6M19 2v6M9 7a2 2 0 1 0 0 4a2 2 0 1 0 0-4M21 15l-3.09-3.09a2 2 0 0 0-2.82 0L6 21", "swords": "M14.5 17.5 3 6V3h3l11.5 11.5M13 19l6-6M16 16l4 4M19 21l2-2M14.5 6.5 18 3h3v3l-3.5 3.5M5 14l4 4M7 17l-3 3M3 19l2 2", "crown": "M2 20h20M3 7l5 5 4-8 4 8 5-5-2 11H5z", "globe": "M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z", "search": "M11 3a8 8 0 1 0 0 16a8 8 0 1 0 0-16M21 21l-4.3-4.3", "bell": "M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10.3 21a1.94 1.94 0 0 0 3.4 0", "share-2": "M18 2a3 3 0 1 0 0 6a3 3 0 1 0 0-6M6 9a3 3 0 1 0 0 6a3 3 0 1 0 0-6M18 16a3 3 0 1 0 0 6a3 3 0 1 0 0-6M8.59 13.51l6.83 3.98M15.41 6.51l-6.82 3.98", "user-plus": "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 3a4 4 0 1 0 0 8a4 4 0 1 0 0-8M19 8v6M22 11h-6", "user-check": "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 3a4 4 0 1 0 0 8a4 4 0 1 0 0-8M16 11l2 2 4-4", "user-x": "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 3a4 4 0 1 0 0 8a4 4 0 1 0 0-8M17 8l5 5M22 8l-5 5", "x": "M18 6 6 18M6 6l12 12", "chevron-right": "m9 18 6-6-6-6", "calendar": "M8 2v4M16 2v4M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM3 10h18", "camera": "M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3zM12 10a3 3 0 1 0 0 6a3 3 0 1 0 0-6", "book-open": "M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z", "refresh-cw": "M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8M21 3v5h-5M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16M8 16H3v5", "log-out": "M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9", "columns-2": "M5 3h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zM12 3v18", "check-check": "M18 6 7 17l-5-5M22 10l-7.5 7.5L13 16", "eye-off": "M2 2l20 20M10.6 5.1A10 10 0 0 1 12 5c7 0 10 7 10 7a13.2 13.2 0 0 1-1.7 2.7M6.6 6.6A13.5 13.5 0 0 0 2 12s3 7 10 7a9.7 9.7 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2", "compass": "M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20M16.24 7.76l-2.12 6.36-6.36 2.12 2.12-6.36z", "scale": "M12 3v18M7 21h10M5 7h14M5 7l-3 7a3.5 3.5 0 0 0 6 0zM19 7l-3 7a3.5 3.5 0 0 0 6 0z", "calendar-check": "M8 2v4M16 2v4M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2zM3 10h18M9 16l2 2 4-4", "flame": "M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.07-2.14-.22-4.05 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.15.43-2.29 1-3a2.5 2.5 0 0 0 2.5 2.5z", "heart": "M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z", "target": "M12 2a10 10 0 1 0 0 20a10 10 0 1 0 0-20M12 6a6 6 0 1 0 0 12a6 6 0 1 0 0-12M12 10a2 2 0 1 0 0 4a2 2 0 1 0 0-4"}).forEach(([k, v]) => { if (!ICONS[k]) ICONS[k] = v; });
+const SOC_METRIC = {
+  workouts: { name: 'Workouts', unit: 'workouts', rule: 'Each finished workout counts once (max 2 a day).' },
+  minutes: { name: 'Training minutes', unit: 'min', rule: 'Time on the workout clock (max 180 per workout, 240 a day).' },
+  reps: { name: 'Reps', unit: 'reps', rule: 'Reps from finished working sets (max 100 per set, 1,000 a day). Warm-ups don\'t count.' },
+  sets: { name: 'Working sets', unit: 'sets', rule: 'Finished working sets (max 60 a day). Warm-ups don\'t count.' },
+  active_days: { name: 'Training days', unit: 'days', rule: 'Days with at least one finished workout.' },
+  specific_workout: { name: 'Finish a workout', unit: 'done', rule: 'Finish the chosen program workout once.' },
+  improvement: { name: 'Improvement', unit: '%', rule: 'Training days during the challenge vs the same number of days just before it. Needs at least one training day before the start.' }
+};
+const SOC_GROUP = { any: 'All exercises', core: 'Core & abs', strength: 'Strength', agility: 'Agility', conditioning: 'Conditioning', recovery: 'Recovery', test: 'Tests' };
+const SOC_REACT = { strong: ['💪', 'Strong'], fire: ['🔥', 'Fire'], clap: ['👏', 'Respect'] };
+const SOC_AUD = { public: ['globe', 'Everyone'], followers: ['users', 'Followers'], squad: ['shield', 'Squad'], private: ['lock', 'Only me'] };
+const SOC_KIND = { duel: 'One-on-one', group: 'Group', squad: 'Squad battle', community: 'Community' };
+
+const Social = {
+  c: {}, urls: {}, seen: new Set(), unread: 0, missing: false,
+  on() { return !!(Cloud.on && Cloud.sb && Cloud.user); },
+  msg(e) {
+    const m = String((e && (e.message || e.msg)) || e || '');
+    if (/could not find the function|schema cache|does not exist/i.test(m)) { this.missing = true; return 'Social is not switched on in the database yet.'; }
+    if (/failed to fetch|network|load failed/i.test(m)) return 'No connection. Check your internet and try again.';
+    return m.replace(/^error:\s*/i, '') || 'Something went wrong.';
+  },
+  async rpc(fn, args = {}) {
+    if (!this.on()) throw new Error('Log in to use Social.');
+    const { data, error } = await Cloud.sb.rpc(fn, args);
+    if (error) throw new Error(this.msg(error));
+    return data;
+  },
+  /* cached loader: returns {v, err, at, loading}; refreshes in the background and repaints the screen */
+  get(key, loader, ttl = 20000) {
+    const e = this.c[key] || (this.c[key] = {});
+    if (this.on() && !e.loading && (!e.at || Date.now() - e.at > ttl)) {
+      e.loading = true; const r = this.routeKey();
+      loader().then(v => { e.v = v; e.err = ''; }, err => { e.err = this.msg(err); })
+        .finally(() => { e.at = Date.now(); e.loading = false; if (this.routeKey() === r) this.repaint(); });
+    }
+    return e;
+  },
+  drop(...pre) { Object.keys(this.c).forEach(k => { if (!pre.length || pre.some(p => k.startsWith(p))) delete this.c[k]; }); },
+  routeKey() { return UI.route.name + ':' + (UI.route.param || ''); },
+  repaint() {
+    if (TAB_OF[UI.route.name] !== 'social') return;
+    const y = window.scrollY, f = document.activeElement && document.activeElement.id; UI.render(); window.scrollTo(0, y);
+    if (f) { const el = document.getElementById(f); el && el.focus({ preventScroll: true }); }
+  },
+  async flush() {   // make sure the latest workouts are in the cloud before the database reads them
+    if (!Cloud.sb) return; clearTimeout(Cloud.timer);
+    await Cloud.push(); for (let i = 0; i < 30 && Cloud.pushing; i++) await new Promise(r => setTimeout(r, 150));
+  },
+
+  /* ---------- photos: resized on the phone, private bucket, signed links ---------- */
+  async upload(file, max = 1600) {
+    if (!file || !/^image\/(jpeg|png|webp|heic|heif)$/i.test(file.type || '') && !/\.(jpe?g|png|webp|heic|heif)$/i.test(file.name || '')) throw new Error('Pick a photo (JPEG, PNG or WebP).');
+    if (file.size > 25 * 1024 * 1024) throw new Error('That photo is too big (25 MB max).');
+    let img; try { img = await createImageBitmap(file); } catch (e) {
+      img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => rej(new Error('This photo could not be read. Try a JPEG.')); i.src = URL.createObjectURL(file); });
+    }
+    const k = Math.min(1, max / Math.max(img.width, img.height)), cv = document.createElement('canvas');
+    cv.width = Math.round(img.width * k); cv.height = Math.round(img.height * k); cv.getContext('2d').drawImage(img, 0, 0, cv.width, cv.height);
+    const blob = await new Promise(r => cv.toBlob(r, 'image/jpeg', .85));   // re-encoding also strips location data from the photo
+    if (!blob) throw new Error('This photo could not be read. Try a JPEG.');
+    if (blob.size > 5 * 1024 * 1024) throw new Error('That photo is still over 5 MB after shrinking.');
+    const path = `${Cloud.user.id}/${Date.now().toString(36)}${Math.random().toString(36).slice(2, 8)}.jpg`;
+    const { error } = await Cloud.sb.storage.from('social').upload(path, blob, { contentType: 'image/jpeg', upsert: false });
+    if (error) throw new Error(/bucket not found/i.test(error.message) ? 'Photo storage is not set up yet (run social.sql).' : this.msg(error));
+    this.urls[path] = { url: URL.createObjectURL(blob), exp: Date.now() + 36e5 };
+    return path;
+  },
+  async removeFiles(paths) { if (paths && paths.length && Cloud.sb) try { await Cloud.sb.storage.from('social').remove(paths); } catch (e) { } },
+  img(path, alt = '', cls = '') { return path ? `<img class="ph ${cls}" data-path="${esc(path)}" alt="${esc(alt)}" decoding="async">` : ''; },
+  async hydrate(root) {
+    const els = $$('img[data-path]', root).filter(i => !i.src); if (!els.length || !this.on()) return;
+    const need = [...new Set(els.map(i => i.dataset.path).filter(p => !(this.urls[p] && this.urls[p].exp > Date.now())))];
+    if (need.length) {
+      try {
+        const { data } = await Cloud.sb.storage.from('social').createSignedUrls(need, 3600);
+        (data || []).forEach(d => { if (d && d.signedUrl) this.urls[d.path] = { url: d.signedUrl, exp: Date.now() + 33e5 }; });
+      } catch (e) { }
+    }
+    els.forEach(i => { const u = this.urls[i.dataset.path]; if (u) { i.onload = () => i.classList.add('on'); i.src = u.url; } else i.classList.add('ph-missing'); });
+  },
+  avatar(u, size = 40) {
+    const nm = (u && (u.name || u.username)) || '?';
+    return `<span class="sav" style="--s:${size}px" aria-hidden="true">${u && u.avatar ? this.img(u.avatar, '') : `<b>${esc(nm.charAt(0).toUpperCase())}</b>`}</span>`;
+  },
+  who(u, sub = '') { return `<button class="swho" type="button" data-act="go" data-r="athlete" data-p="${u.id}">${this.avatar(u)}<span class="grow"><b>${esc(u.name)}</b><small>@${esc(u.username)}${sub ? ' · ' + sub : ''}</small></span></button>`; },
+  ago(t) {
+    const s = (Date.now() - Date.parse(t)) / 1000;
+    if (s < 60) return 'now'; if (s < 3600) return Math.floor(s / 60) + 'm'; if (s < 86400) return Math.floor(s / 3600) + 'h'; if (s < 604800) return Math.floor(s / 86400) + 'd';
+    return fmtDate(String(t).slice(0, 10));
+  },
+  bar(p, key, cls = '') { const v = Math.max(0, Math.min(100, p || 0)); return `<div class="sbar ${cls}" role="progressbar" aria-valuenow="${Math.round(v)}" aria-valuemin="0" aria-valuemax="100"><i style="--p:${v}%" data-bk="${esc(key)}"></i></div>`; },
+  skel(n = 3) { return Array.from({ length: n }, () => '<div class="panel sk-card" aria-hidden="true"><div class="sk sk-a"></div><div class="sk sk-l"></div><div class="sk sk-l s"></div></div>').join('') + `<p class="sr-only" role="status">Loading…</p>`; },
+  empty(ic, title, body, btn = '') { return `<section class="panel sempty" data-stg>${icon(ic)}<b>${title}</b><p class="muted">${body}</p>${btn}</section>`; },
+  errBox(e, key) { return `<section class="panel serr" data-stg><p class="err-msg">${esc(e)}</p><button class="btn sm" type="button" data-act="soc-retry" data-k="${esc(key || '')}">${icon('refresh-cw')} Try again</button></section>`; },
+  /* run an action with a busy button and a toast on failure */
+  async act(btn, fn, okMsg) {
+    if (btn) { btn.disabled = true; btn.dataset.busy = '1'; }
+    try { const r = await fn(); if (okMsg) UI.toast(okMsg); return r; }
+    catch (e) { UI.toast(this.msg(e), 'bad'); Haptics.buzz(); return undefined; }
+    finally { if (btn && btn.isConnected) { btn.disabled = false; delete btn.dataset.busy; } }
+  },
+  meKey: 'me',
+  me() { return this.get('me', () => this.rpc('my_social'), 30000); },
+  xp() { return this.get('xp', () => this.rpc('my_xp').then(x => { this.celebrateXp(x); return x; }), 60000); },
+  celebrateXp(x) {
+    if (!x) return; const k = `bbp.${Cloud.ns}.soc.lvl`, last = LSX.get(k, null); LSX.set(k, x.level);
+    const fresh = (x.new || []).map(key => x.badges.find(b => b.key === key)).filter(Boolean);
+    if (last != null && x.level > last) SocialFX.when(() => SocialFX.levelUp(x, fresh));
+    else if (fresh.length && last != null) SocialFX.when(() => SocialFX.badges(fresh));
+  },
+  async pollUnread() {
+    if (!this.on() || document.visibilityState !== 'visible') return;
+    try { const m = await this.rpc('my_social'); this.c.me = { v: m, at: Date.now() }; this.setDot(m.unread + m.requests + m.invites); } catch (e) { }
+  },
+  setDot(n) { this.unread = n; const b = $('#nav [data-tab="social"]'); if (!b) return; let d = $('.sdot', b); if (n > 0) { if (!d) { d = document.createElement('span'); d.className = 'sdot'; b.appendChild(d); } d.textContent = n > 9 ? '9+' : n; d.setAttribute('aria-label', `${n} new`); } else if (d) d.remove(); }
+};
+
+/* ---------- reward moments ---------- */
+const SocialFX = {
+  /* wait for a calm moment: no sheet, no other celebration, not mid-workout */
+  when(fn, n = 0) {
+    const busy = !$('#sheet-root').hidden || !$('#celebrate').hidden || UI.route.name === 'workout' || !$('#gate').hidden;
+    if (!busy) return setTimeout(fn, 400); if (n < 120) setTimeout(() => this.when(fn, n + 1), 1000);
+  },
+  levelUp(x, fresh) {
+    Celebrate.show(`<div class="c-kicker" data-stg>LEVEL UP</div><div class="slvl-big" data-stg><span>LVL</span><b>${x.level}</b></div>
+      <h2 class="c-head" data-stg>YOU'RE LEVEL ${x.level}.</h2><p class="display" style="font-size:18px;color:#B7BEC3" data-stg>${fmtNum(x.xp, 0)} XP earned from real training.</p>
+      ${fresh.length ? `<div class="row wrap" style="justify-content:center" data-stg>${fresh.map(b => `<span class="badge red">${icon('award')} ${esc(b.name)}</span>`).join('')}</div>` : ''}
+      <div class="stack" style="width:100%" data-stg><button class="btn big red block" type="button" data-act="cel-close">Keep going</button></div>`, { beams: 2, burst: 50, colors: ['#E87722', '#FFFFFF', '#861F41'] });
+    Haptics.beep([523, 659, 784, 1046], .1);
+  },
+  badges(list) {
+    Celebrate.show(`<div class="c-kicker" data-stg>BADGE UNLOCKED</div><div class="sbadges-pop" data-stg>${list.map(b => `<div class="smedal on">${icon(SOC_BADGE_ICON[b.key] || 'award')}</div>`).join('')}</div>
+      <h2 class="c-head" data-stg>${esc(list.map(b => b.name.toUpperCase()).join(' · '))}</h2><p class="display" style="font-size:18px;color:#B7BEC3" data-stg>${esc(list[0].desc)}</p>
+      <div class="stack" style="width:100%" data-stg><button class="btn big red block" type="button" data-act="soc-post-badge" data-k="${esc(list[0].key)}">${icon('share-2')} Share to Social</button><button class="btn block" type="button" data-act="cel-close">Later</button></div>`, { beams: 1, burst: 36, colors: ['#E87722', '#FFFFFF'] });
+    Haptics.beep([784, 1046], .1);
+  },
+  winner(c) {
+    const b = c.board || {}, sq = c.kind === 'squad', top = sq ? (b.squads || []).filter(s => s.rank === 1 && s.score > 0) : (b.people || []).filter(p => p.rank === 1 && p.score > 0);
+    const names = top.map(t => sq ? t.squad.name : t.user.name), coll = c.goal === 'collective';
+    const head = coll ? (b.collective_done ? 'GOAL REACHED' : 'SO CLOSE') : names.length ? (names.length > 1 ? 'IT\'S A TIE' : 'THE WINNER IS') : 'NO WINNER';
+    Celebrate.show(`<div class="c-kicker" data-stg>${esc(c.title.toUpperCase())} · FINAL</div><div class="swin-drum" data-stg>${head}</div>
+      <h2 class="c-head red swin-name" data-stg>${esc(coll ? `${fmtNum(b.total, 0)} / ${fmtNum(c.target, 0)} ${SOC_METRIC[c.metric].unit}` : names.join(' & ') || '—')}</h2>
+      <p class="display" style="font-size:18px;color:#B7BEC3" data-stg>Everyone who showed up made it count. Results are saved in each athlete's history.</p>
+      <div class="stack" style="width:100%" data-stg><button class="btn big red block" type="button" data-act="cel-close">See the results</button></div>`, { beams: 2, burst: 70, colors: ['#E87722', '#FFFFFF', '#861F41'] });
+    Haptics.beep([392, 523, 659, 1046], .14);
+  }
+};
+const SOC_BADGE_ICON = { first_workout: 'dumbbell', consistency: 'calendar-check', four_week: 'flame', personal_record: 'trophy', first_challenge: 'swords', challenge_finisher: 'flag', team_player: 'users', first_squad_win: 'crown' };
+
+/* ---------- posts ---------- */
+const Posts = {
+  card(p, opts = {}) {
+    const a = p.author, aud = SOC_AUD[p.audience] || SOC_AUD.followers;
+    const sub = `${Social.ago(p.created_at)}${p.edited_at ? ' · edited' : ''} · <span class="saud">${icon(aud[0])}${p.audience === 'squad' && p.squad ? esc(p.squad.name) : aud[1]}</span>`;
+    const r = p.reactions || {}, total = Object.values(r).reduce((x, y) => x + y, 0);
+    return `<article class="panel post" data-stg data-post="${p.id}">
+      <header class="post-h">${Social.who(a, sub)}<button class="btn icon ghost sm" type="button" data-act="soc-post-menu" data-id="${p.id}" aria-label="Post options">${icon('ellipsis')}</button></header>
+      ${p.body ? `<div class="post-b">${esc(p.body).replace(/\n/g, '<br>')}</div>` : ''}
+      ${this.attach(p)}
+      ${opts.noBar ? '' : `<footer class="post-f">
+        <div class="reacts" role="group" aria-label="Reactions">${Object.entries(SOC_REACT).map(([k, [e, l]]) => `<button type="button" class="react" data-act="soc-react" data-id="${p.id}" data-k="${k}" aria-pressed="${p.mine === k}" aria-label="${l}${r[k] ? ', ' + r[k] : ''}"><span>${e}</span>${r[k] ? `<b>${r[k]}</b>` : ''}</button>`).join('')}</div>
+        <button type="button" class="btn sm ghost" data-act="go" data-r="post" data-p="${p.id}" aria-label="${p.comments} comments">${icon('message-circle')} ${p.comments || ''}</button>
+        <button type="button" class="btn sm ghost icon" data-act="soc-save" data-id="${p.id}" aria-pressed="${!!p.saved}" aria-label="${p.saved ? 'Saved' : 'Save'}">${icon('bookmark')}</button>
+      </footer>`}
+      ${total && !opts.noBar ? `<span class="sr-only">${total} reactions</span>` : ''}
+    </article>`;
+  },
+  attach(p) {
+    const pl = p.payload || {}, u = unitW();
+    if (p.kind === 'photo') return `<div class="post-ph n${Math.min(p.media.length, 4)}">${p.media.map(m => `<button type="button" class="phbtn" data-act="soc-photo" data-path="${esc(m)}" aria-label="Open photo">${Social.img(m, 'Photo')}</button>`).join('')}</div>`;
+    if (p.kind === 'progress') return `<div class="post-prog">${p.media[0] ? `<button type="button" class="phbtn" data-act="soc-photo" data-path="${esc(p.media[0])}" aria-label="Open photo">${Social.img(p.media[0], 'Progress photo')}</button>` : ''}<span class="label">${icon('book-open')} Progress journal · ${fmtDate(pl.entry_date)}</span></div>`;
+    if (p.kind === 'workout') return `<div class="post-card wk"><div class="pc-k">${icon('dumbbell')} WORKOUT · ${esc(typeof wkLabel === 'function' && pl.week != null ? wkLabel(+pl.week).toUpperCase() : 'WEEK ' + pl.week)} · DAY ${esc(pl.day)}<span class="selflog">Self-logged</span></div>
+      <b class="pc-t">${esc(pl.title || 'Workout')}</b><div class="pc-d">${fmtDate(pl.date)}</div>
+      <div class="pc-stats">${pl.minutes != null ? `<span><b>${pl.minutes}</b> min</span>` : ''}${pl.sets != null ? `<span><b>${pl.sets}</b> sets</span>` : ''}${pl.reps ? `<span><b>${fmtNum(pl.reps, 0)}</b> reps</span>` : ''}</div>
+      ${(pl.exercises || []).length ? `<ul class="pc-ex">${pl.exercises.slice(0, 6).map(e => `<li><span>${esc(e.name)}</span>${e.top ? `<b>${Units.fmtW(e.top.w, u)} ${u} × ${e.top.reps}</b>` : ''}</li>`).join('')}${pl.exercises.length > 6 ? `<li><span>+ ${pl.exercises.length - 6} more exercises</span></li>` : ''}</ul>` : ''}</div>`;
+    if (p.kind === 'pr') return `<div class="post-card pr"><div class="pc-trophy">${icon('trophy')}</div><div><div class="pc-k">NEW PERSONAL RECORD<span class="selflog">Self-logged test</span></div><b class="pc-t">${esc(pl.name)}</b><div class="pc-d">${esc(pl.desc || '')} · ${fmtDate(pl.date)}</div></div></div>`;
+    if (p.kind === 'achievement') return `<div class="post-card ach"><div class="smedal on">${icon(SOC_BADGE_ICON[pl.badge] || 'award')}</div><div><div class="pc-k">BADGE EARNED</div><b class="pc-t">${esc(pl.name)}</b><div class="pc-d">${esc(pl.desc || '')}</div></div></div>`;
+    if (p.kind === 'challenge') return `<button type="button" class="post-card ch" data-act="go" data-r="challenge" data-p="${esc(pl.challenge_id)}"><div class="pc-trophy">${icon(pl.won ? 'crown' : 'swords')}</div><div class="grow"><div class="pc-k">${esc((SOC_KIND[pl.kind] || 'Challenge').toUpperCase())} · ${pl.status === 'final' ? 'FINAL' : 'IN PROGRESS'}</div><b class="pc-t">${esc(pl.title)}</b><div class="pc-d">${pl.won ? 'Won it' : pl.done ? 'Finished it' : pl.rank ? 'Placed #' + pl.rank : 'Competing now'}${pl.score != null ? ` · ${fmtNum(pl.score, 1)} ${SOC_METRIC[pl.metric] ? SOC_METRIC[pl.metric].unit : ''}` : ''}</div></div>${icon('chevron-right')}</button>`;
+    if (p.kind === 'share') return p.shared ? `<div class="post-quote">${this.card(p.shared, { noBar: true })}</div>` : `<div class="post-quote gone muted">${icon('eye-off')} The original post isn't available.</div>`;
+    return '';
+  },
+  /* update every copy of a post in the caches after an action */
+  patch(np) {
+    Object.values(Social.c).forEach(e => {
+      if (Array.isArray(e.v)) e.v.forEach((p, i) => { if (p.id === np.id) e.v[i] = np; if (p.shared && p.shared.id === np.id) p.shared = Object.assign({}, np, { shared: null }); });
+      else if (e.v && e.v.post && e.v.post.id === np.id) e.v.post = np;
+    });
+  },
+  find(id) { for (const e of Object.values(Social.c)) { if (Array.isArray(e.v)) { const p = e.v.find(x => x.id === id); if (p) return p; } else if (e.v && e.v.post && e.v.post.id === id) return e.v.post; } return null; }
+};
+
+/* ---------- the composer (text · photo · workout · record · badge · journal) ---------- */
+const Composer = {
+  open(kind = 'text', pre = {}) {
+    const st = this.st = Object.assign({ kind, body: '', media: [], ref: null, audience: kind === 'progress' ? 'private' : 'followers', squad: null, fields: ['exercises', 'top_sets', 'duration', 'sets'], date: todayISO() }, pre);
+    Social.drop('squads'); Social.get('squads', () => Social.rpc('my_squads')).loading;
+    Sheet.open({ title: kind === 'progress' ? 'New journal entry' : 'Share with the team', wide: true, html: '<div id="cmp" class="stack"></div>', onMount: sh => { this.sh = sh; this.draw(); } });
+  },
+  draw() {
+    const st = this.st, box = $('#cmp', this.sh); if (!box) return;
+    const types = [['text', 'type', 'Text'], ['photo', 'image', 'Photo'], ['workout', 'dumbbell', 'Workout'], ['pr', 'trophy', 'Record'], ['achievement', 'award', 'Badge'], ['progress', 'book-open', 'Journal']];
+    const done = State.sessions.filter(s => s.status === 'completed').sort((a, b) => (b.date || '').localeCompare(a.date || '')).slice(0, 12);
+    const prs = State.achievements.filter(a => ['strength_pr', 'sprint_best', 'jump_best'].includes(a.type)).sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+    const xp = Social.c.xp && Social.c.xp.v, badges = xp ? xp.badges.filter(b => b.have >= b.goal) : [];
+    const sq = ((Social.c.squads && Social.c.squads.v && Social.c.squads.v.mine) || []).slice();
+    if (st.squad && !sq.some(x => x.id === st.squad)) sq.unshift({ id: st.squad, name: st.squadName || 'This squad' });
+    const pick = (list, sel, row) => list.length ? `<div class="spick" role="radiogroup">${list.map(x => row(x, sel)).join('')}</div>` : '';
+    let body = '';
+    if (st.kind === 'workout') body = (done.length ? pick(done, st.ref, s => `<button type="button" class="spick-i" role="radio" aria-checked="${st.ref === s.id}" data-cmp-ref="${s.id}">${icon('dumbbell')}<span class="grow"><b>${esc(s.title)}</b><small>${wkLabel(s.week)} · Day ${s.day} · ${fmtDate(s.date)}</small></span></button>`)
+      + `<div class="field"><span class="label">What to show</span><div class="chips">${[['exercises', 'Exercises'], ['top_sets', 'Top sets'], ['duration', 'Duration'], ['sets', 'Sets & reps']].map(([k, l]) => `<button type="button" class="chip" data-cmp-field="${k}" aria-pressed="${st.fields.includes(k)}">${l}</button>`).join('')}</div><small class="muted">Body weight, notes and anything you don't pick stay private.</small></div>`
+      : '<p class="muted">Finish a workout first — then you can share it here.</p>');
+    else if (st.kind === 'pr') body = prs.length ? pick(prs, st.ref, a => `<button type="button" class="spick-i" role="radio" aria-checked="${st.ref === a.id}" data-cmp-ref="${a.id}">${icon('trophy')}<span class="grow"><b>${esc(a.name)}</b><small>${esc(a.desc || '')} · ${fmtDate(a.date)}</small></span></button>`) : '<p class="muted">No personal records yet. They appear here after a test beats your last best.</p>';
+    else if (st.kind === 'achievement') body = badges.length ? pick(badges, st.ref, b => `<button type="button" class="spick-i" role="radio" aria-checked="${st.ref === b.key}" data-cmp-ref="${b.key}">${icon(SOC_BADGE_ICON[b.key] || 'award')}<span class="grow"><b>${esc(b.name)}</b><small>${esc(b.desc)}</small></span></button>`) : '<p class="muted">No badges yet — your first one comes with your first finished workout.</p>';
+    else if (st.kind === 'photo' || st.kind === 'progress') body = `<div class="cmp-media">${st.media.map((m, i) => `<div class="cmp-th">${Social.img(m, 'Photo ' + (i + 1))}<button type="button" class="btn icon sm" data-cmp-rm="${i}" aria-label="Remove photo">${icon('x')}</button></div>`).join('')}
+        ${st.media.length < (st.kind === 'photo' ? 4 : 1) ? `<label class="cmp-add" id="cmpAddL">${icon('image-plus')}<span>${st.uploading ? 'Uploading…' : 'Add photo'}</span><input type="file" id="cmpFile" accept="image/jpeg,image/png,image/webp,image/heic" ${st.kind === 'photo' ? 'multiple' : ''} class="sr-only"></label>` : ''}</div>
+        ${st.kind === 'progress' ? `<div class="field"><label for="cmpDate">Date</label><input class="input" type="date" id="cmpDate" value="${esc(st.date)}" max="${todayISO()}"></div>` : ''}`;
+    const audOpts = ['public', 'followers', ...(sq.length ? ['squad'] : []), 'private'];
+    box.innerHTML = `<div class="seg cmp-types" role="tablist" aria-label="Post type">${types.map(([k, ic, l]) => `<button type="button" role="tab" data-cmp-kind="${k}" aria-selected="${st.kind === k}" aria-pressed="${st.kind === k}">${icon(ic)}<span>${l}</span></button>`).join('')}</div>
+      ${body}
+      <div class="field"><label for="cmpBody">${st.kind === 'progress' ? 'Caption & notes' : st.kind === 'text' ? 'What\'s on your mind?' : 'Add a caption (optional)'}</label><textarea class="input" id="cmpBody" rows="${st.kind === 'text' ? 4 : 2}" maxlength="2000" placeholder="${st.kind === 'progress' ? 'How training felt, what changed, what\'s next…' : 'Training thoughts, a milestone, a shout-out…'}">${esc(st.body)}</textarea></div>
+      <div class="field"><span class="label">Who can see this</span><div class="chips" role="radiogroup">${audOpts.map(k => `<button type="button" class="chip" role="radio" data-cmp-aud="${k}" aria-checked="${st.audience === k}" aria-pressed="${st.audience === k}">${icon(SOC_AUD[k][0])} ${SOC_AUD[k][1]}</button>`).join('')}</div>
+        ${st.audience === 'squad' ? `<select class="input" id="cmpSquad" aria-label="Squad">${sq.map(s => `<option value="${s.id}" ${st.squad === s.id ? 'selected' : ''}>${esc(s.name)}</option>`).join('')}</select>` : ''}
+        <small class="muted">${st.audience === 'private' ? 'Only you. You can share it later.' : st.audience === 'public' ? 'Anyone on Hokie Power (followers only, if your account is private).' : st.audience === 'squad' ? 'Only members of this squad.' : 'Only people you approved or who follow you.'}${st.kind === 'progress' && st.audience !== 'private' ? ' <b>Progress photos are shared only because you chose this.</b>' : ''}</small></div>
+      <p class="err-msg" id="cmpErr" role="alert"></p>
+      <button type="button" class="btn big primary block" id="cmpGo">${st.kind === 'progress' && st.audience === 'private' ? 'Save to my journal' : 'Post'}</button>`;
+    UI.icons(box); Social.hydrate(box);
+    $$('[data-cmp-kind]', box).forEach(b => b.onclick = () => { this.keep(); if (st.kind !== b.dataset.cmpKind) { st.kind = b.dataset.cmpKind; st.ref = null; if (st.kind === 'progress') st.audience = 'private'; if (st.kind !== 'photo' && st.kind !== 'progress') st.media = []; if (st.kind === 'achievement' && !xp) Social.xp(); } this.draw(); });
+    $$('[data-cmp-ref]', box).forEach(b => b.onclick = () => { this.keep(); st.ref = b.dataset.cmpRef; this.draw(); });
+    $$('[data-cmp-field]', box).forEach(b => b.onclick = () => { this.keep(); const k = b.dataset.cmpField; st.fields = st.fields.includes(k) ? st.fields.filter(x => x !== k) : st.fields.concat(k); this.draw(); });
+    $$('[data-cmp-aud]', box).forEach(b => b.onclick = () => { this.keep(); st.audience = b.dataset.cmpAud; if (st.audience === 'squad' && !st.squad && sq[0]) st.squad = sq[0].id; this.draw(); });
+    $$('[data-cmp-rm]', box).forEach(b => b.onclick = () => { this.keep(); const [m] = st.media.splice(+b.dataset.cmpRm, 1); Social.removeFiles([m]); this.draw(); });
+    const fi = $('#cmpFile', box); if (fi) fi.onchange = async () => {
+      this.keep(); const files = [...fi.files].slice(0, (st.kind === 'photo' ? 4 : 1) - st.media.length); if (!files.length) return;
+      st.uploading = true; this.draw();
+      try { for (const f of files) st.media.push(await Social.upload(f)); } catch (e) { st.err = Social.msg(e); }
+      st.uploading = false; this.draw(); if (st.err) { $('#cmpErr', this.sh).textContent = st.err; st.err = ''; }
+    };
+    $('#cmpGo', box).onclick = e => this.post(e.currentTarget);
+  },
+  keep() { const st = this.st, b = $('#cmpBody', this.sh), d = $('#cmpDate', this.sh), s = $('#cmpSquad', this.sh); if (b) st.body = b.value; if (d) st.date = d.value; if (s) st.squad = s.value; },
+  async post(btn) {
+    this.keep(); const st = this.st, er = $('#cmpErr', this.sh); er.textContent = '';
+    if (st.uploading) { er.textContent = 'Wait for the photo to finish uploading.'; return; }
+    if (['workout', 'pr', 'achievement'].includes(st.kind) && !st.ref) { er.textContent = 'Pick one first.'; return; }
+    if (st.kind === 'text' && !st.body.trim()) { er.textContent = 'Write something first.'; return; }
+    if (st.kind === 'photo' && !st.media.length) { er.textContent = 'Add a photo.'; return; }
+    if (st.kind === 'progress' && st.audience !== 'private') {
+      const ok = await Sheet.confirm({ title: 'Share this journal entry?', body: `<p>This entry${st.media.length ? ' and its photo' : ''} will be visible to <b>${st.audience === 'squad' ? 'your squad' : SOC_AUD[st.audience][1].toLowerCase()}</b>. You can make it private again or delete it any time.</p>`, ok: 'Yes, share it' });
+      if (!ok) { this.open(st.kind, st); return; }
+      return this.send(null);
+    }
+    return this.send(btn);
+  },
+  async send(btn) {
+    const st = this.st; if (btn) { btn.disabled = true; btn.innerHTML = Kinetic.wave('POSTING…'); }
+    try {
+      if (st.kind === 'workout' || st.kind === 'pr') await Social.flush();
+      const p = await Social.rpc('post_create', { p_kind: st.kind, p_body: st.body, p_audience: st.audience, p_squad: st.audience === 'squad' ? st.squad : null, p_media: st.media, p_ref: st.ref, p_fields: st.kind === 'workout' ? st.fields : null, p_entry_date: st.kind === 'progress' ? st.date : null });
+      this.st = null; if (!$('#sheet-root').hidden) await Sheet.close();
+      Social.drop('feed', 'journal', 'user:' + Cloud.user.id);
+      UI.toast(st.kind === 'progress' && st.audience === 'private' ? 'Saved to your journal.' : 'Posted.'); Haptics.beep([660, 880], .08);
+      if (st.kind === 'progress') Nav.go('journal', null, { replace: UI.route.name === 'journal' }); else { UI.ui.socFeed = st.audience === 'squad' ? 'squad' : 'following'; Nav.go('social', 'feed', { replace: UI.route.name === 'social' }); }
+      return p;
+    } catch (e) {
+      if (btn && btn.isConnected) { btn.disabled = false; btn.textContent = 'Post'; const er = $('#cmpErr', this.sh); if (er) er.textContent = Social.msg(e); }
+      else UI.toast(Social.msg(e), 'bad');
+    }
+  }
+};
+
+/* ---------- the hub ---------- */
+Screens.social = function (tab) {
+  tab = tab || UI.ui.socTab || 'feed'; UI.ui.socTab = tab;
+  if (!Cloud.on) return `<div class="screen"><div class="topbar" data-stg><h1 class="h2 grow">Social</h1></div>
+    ${Social.empty('users', 'Train. Compete. Share.', 'Social needs team accounts: a feed for workouts and records, challenges, squads and leaderboards — all built on the training you already log here. It switches on when the app runs with accounts (the GitHub version with your Supabase settings).')}</div>`;
+  if (!Social.on()) return `<div class="screen"><div class="topbar" data-stg><h1 class="h2 grow">Social</h1></div>${Social.empty('cloud-off', 'You\'re offline', 'Social needs a connection. Your training keeps saving on this phone.')}</div>`;
+  const me = Social.me(), x = Social.xp();
+  if (Social.missing) return `<div class="screen"><div class="topbar" data-stg><h1 class="h2 grow">Social</h1></div>${Social.empty('database', 'Almost ready', Cloud.isAdmin() ? 'Run <b>social.sql</b> once in Supabase → SQL Editor (setup guide, step 10). Then come back here.' : 'The coach needs to switch Social on in the database. Your training is not affected.', `<button class="btn sm" type="button" data-act="soc-retry">${icon('refresh-cw')} Check again</button>`)}</div>`;
+  const m = me.v, unread = m ? m.unread + m.requests : 0;
+  if (m) Social.setDot(m.unread + m.requests + m.invites);
+  const tabs = [['feed', 'Feed'], ['arena', 'Arena'], ['squads', 'Squads'], ['me', 'You']];
+  const lvl = x.v ? `<button class="slvl" type="button" data-act="go" data-r="social" data-p="me" data-stg aria-label="Level ${x.v.level}, ${x.v.xp} XP">
+      <span class="slvl-n"><small>LVL</small><b>${x.v.level}</b></span><span class="grow"><span class="spread"><b class="label">${fmtNum(x.v.xp, 0)} XP</b><small class="muted">${fmtNum(x.v.next - x.v.xp, 0)} to level ${x.v.level + 1}</small></span>${Social.bar((x.v.xp - x.v.floor) / (x.v.next - x.v.floor) * 100, 'lvl', 'orange')}</span></button>` : '';
+  const body = tab === 'arena' ? Arena.hub() : tab === 'squads' ? SquadUI.hub() : tab === 'me' ? AthleteUI.view(Cloud.user.id, true) : Feed.view();
+  return `<div class="screen soc"><div class="topbar" data-stg><h1 class="h2 grow">Social</h1>
+      <button class="btn icon" type="button" data-act="soc-search" aria-label="Find athletes and squads">${icon('search')}</button>
+      <button class="btn icon sbell" type="button" data-act="go" data-r="notifs" aria-label="Notifications${unread ? `, ${unread} new` : ''}">${icon('bell')}${unread ? `<span class="sdot">${unread > 9 ? '9+' : unread}</span>` : ''}</button></div>
+    ${lvl}
+    <div class="seg" role="tablist" data-stg>${tabs.map(([k, l]) => `<button type="button" role="tab" data-act="go" data-r="social" data-p="${k}" aria-pressed="${tab === k}" aria-selected="${tab === k}">${l}${k === 'arena' && m && m.invites ? ` <span class="sdot in">${m.invites}</span>` : ''}</button>`).join('')}</div>
+    ${body}</div>`;
+};
+
+const Feed = {
+  key() { const f = UI.ui.socFeed || 'following'; return 'feed:' + f; },
+  view() {
+    const f = UI.ui.socFeed || 'following', e = Social.get(this.key(), () => Social.rpc('feed_posts', { p_filter: f }));
+    Social.get('squads', () => Social.rpc('my_squads'), 60000);
+    const filters = [['following', 'Following'], ['squad', 'Squads'], ['discover', 'Discover'], ['saved', 'Saved']];
+    const list = e.v ? (e.v.length ? e.v.map(p => Posts.card(p)).join('') + (e.v.length >= 20 ? `<button class="btn block ghost" type="button" data-act="soc-more" data-stg>Load older posts</button>` : '')
+      : Social.empty(f === 'saved' ? 'bookmark' : 'newspaper', f === 'saved' ? 'Nothing saved yet' : f === 'squad' ? 'No squad posts yet' : f === 'discover' ? 'Quiet out there' : 'Your feed is empty',
+        f === 'saved' ? 'Tap the bookmark on any post to keep it here.' : f === 'following' ? 'Share a workout or find teammates to follow.' : f === 'squad' ? 'Join or create a squad, then post to it.' : 'Public posts from athletes who share openly show up here.',
+        f === 'following' ? `<button class="btn sm primary" type="button" data-act="soc-search">${icon('search')} Find athletes</button>` : f === 'squad' ? `<button class="btn sm primary" type="button" data-act="go" data-r="social" data-p="squads">${icon('shield')} Squads</button>` : ''))
+      : e.err ? Social.errBox(e.err, this.key()) : Social.skel();
+    const meV = Social.c.me && Social.c.me.v;
+    return `<section class="panel scompose" data-stg>${Social.avatar(meV || { username: Cloud.profile && Cloud.profile.username })}<button class="grow scompose-in" type="button" data-act="soc-compose" data-k="text">Share your training…</button>
+        <div class="scompose-q">${[['workout', 'dumbbell', 'Workout'], ['photo', 'image', 'Photo'], ['pr', 'trophy', 'Record'], ['progress', 'book-open', 'Journal']].map(([k, ic, l]) => `<button class="btn sm ghost" type="button" data-act="soc-compose" data-k="${k}">${icon(ic)}<span>${l}</span></button>`).join('')}</div></section>
+      <div class="chips" role="tablist" data-stg aria-label="Feed filter">${filters.map(([k, l]) => `<button class="chip" type="button" role="tab" data-act="soc-filter" data-k="${k}" aria-pressed="${f === k}">${l}</button>`).join('')}</div>
+      <div class="feed stack">${list}</div>`;
+  }
+};
+
+Screens.post = function (id) {
+  const e = Social.get('post:' + id, () => Social.rpc('post_detail', { p_id: id }), 15000);
+  if (!e.v) return `<div class="screen soc">${backBar('Post')}${e.err ? Social.errBox(e.err, 'post:' + id) : Social.skel(1)}</div>`;
+  const p = e.v.post, cs = e.v.comments, kids = id => cs.filter(c => c.parent_id === id);
+  const one = (c, reply) => `<div class="cmt ${reply ? 'reply' : ''}" data-stg>${Social.avatar(c.author, 32)}<div class="grow"><div class="cmt-b"><button type="button" class="linkish" data-act="go" data-r="athlete" data-p="${c.author.id}"><b>${esc(c.author.name)}</b></button> ${esc(c.body).replace(/\n/g, '<br>')}</div>
+      <div class="cmt-m"><span>${Social.ago(c.created_at)}</span>${!reply ? `<button type="button" class="linkish" data-act="soc-reply" data-id="${c.id}" data-k="${esc(c.author.name)}">Reply</button>` : ''}${c.can_delete ? `<button type="button" class="linkish" data-act="soc-cdel" data-id="${c.id}" data-p="${p.id}">Delete</button>` : `<button type="button" class="linkish" data-act="soc-report" data-k="comment" data-id="${c.id}">Report</button>`}</div></div></div>`;
+  const tree = cs.filter(c => !c.parent_id || !cs.some(x => x.id === c.parent_id)).map(c => one(c) + kids(c.id).map(k => one(k, true)).join('')).join('');
+  return `<div class="screen soc">${backBar('Post')}${Posts.card(p)}
+    <section class="panel stack" data-stg><h2 class="h3">Comments${cs.length ? ` · ${cs.length}` : ''}</h2>${tree || '<p class="muted">No comments yet. Say something encouraging.</p>'}
+      <form class="cmt-form" id="cmtForm" data-p="${p.id}"><input type="hidden" id="cmtParent" value=""><div class="cmt-to" id="cmtTo" hidden></div>
+        <div class="row"><input class="input grow" id="cmtBody" maxlength="500" placeholder="Add a comment…" aria-label="Comment" autocomplete="off"><button class="btn primary" type="submit" id="cmtGo">Send</button></div></form></section></div>`;
+};
+
+/* ---------- actions ---------- */
+Object.assign(Actions, {
+  'soc-retry': el => { Social.missing = false; Social.drop(el.dataset.k || ''); UI.render(); },
+  'soc-filter': el => { UI.ui.socFeed = el.dataset.k; UI.render(); },
+  'soc-more': async el => {
+    const k = Feed.key(), e = Social.c[k]; if (!e || !e.v || !e.v.length) return;
+    const older = await Social.act(el, () => Social.rpc('feed_posts', { p_filter: UI.ui.socFeed || 'following', p_before: e.v[e.v.length - 1].created_at }));
+    if (older) { e.v = e.v.concat(older); if (!older.length) UI.toast('That\'s everything.'); Social.repaint(); }
+  },
+  'soc-compose': el => { if (el.dataset.k === 'achievement' || !Social.c.xp) Social.xp(); Composer.open(el.dataset.k || 'text'); },
+  'soc-post-workout': async el => { Celebrate.close(); Composer.open('workout', { ref: el.dataset.id }); },
+  'soc-post-badge': el => { Celebrate.close(); Composer.open('achievement', { ref: el.dataset.k }); },
+  'cel-close': () => Celebrate.close(),
+  'soc-react': async el => {
+    const p = Posts.find(el.dataset.id), k = el.dataset.k, kind = p && p.mine === k ? null : k; Haptics.tap();
+    if (p) {   // instant feedback, then the server's answer
+      const r = Object.assign({}, p.reactions); if (p.mine) r[p.mine] = (r[p.mine] || 1) - 1; if (kind) r[kind] = (r[kind] || 0) + 1; Object.keys(r).forEach(x => { if (!r[x]) delete r[x]; });
+      Posts.patch(Object.assign({}, p, { reactions: r, mine: kind })); Social.repaint();
+      if (kind && !Motion.off) { const b = $(`[data-post="${p.id}"] [data-k="${k}"]`); b && Motion.anim(b, [{ transform: 'scale(1)' }, { transform: 'scale(1.35)' }, { transform: 'scale(1)' }], { duration: 380, easing: Motion.m.spring }); }
+    }
+    const np = await Social.act(null, () => Social.rpc('post_react', { p_id: el.dataset.id, p_kind: kind }));
+    if (np) Posts.patch(np); else if (p) Posts.patch(p); Social.repaint();
+  },
+  'soc-save': async el => {
+    const v = await Social.act(el, () => Social.rpc('post_save', { p_id: el.dataset.id }));
+    if (v === undefined) return; const p = Posts.find(el.dataset.id); if (p) Posts.patch(Object.assign({}, p, { saved: v }));
+    Social.drop('feed:saved'); UI.toast(v ? 'Saved.' : 'Removed from saved.'); Social.repaint();
+  },
+  'soc-photo': el => { const u = Social.urls[el.dataset.path]; if (!u) return; Sheet.open({ title: 'Photo', wide: true, html: `<img src="${u.url}" alt="Photo" class="sphoto-full">` }); },
+  'soc-post-menu': async el => {
+    const p = Posts.find(el.dataset.id); if (!p) return;
+    const opts = p.own ? [{ id: 'edit', label: 'Edit post' }, { id: 'aud', label: 'Change who can see it' }, { id: 'link', label: 'Copy link' }, { id: 'del', label: 'Delete post', cls: 'danger' }]
+      : [{ id: 'share', label: 'Share to my followers' }, { id: 'link', label: 'Copy link' }, { id: 'report', label: 'Report post', cls: 'danger' }];
+    if (!p.own && Social.c.me && Social.c.me.v && Social.c.me.v.is_admin) opts.push({ id: 'del', label: 'Delete (admin)', cls: 'danger' });
+    const c = await Sheet.choose({ title: 'Post', body: '', options: opts }); if (!c) return;
+    if (c === 'edit') return PostEdit.body(p);
+    if (c === 'aud') return PostEdit.audience(p);
+    if (c === 'link') { const url = `${location.origin}${location.pathname}?go=post:${p.id}`; try { if (navigator.share) await navigator.share({ title: 'Hokie Power post', url }); else { await navigator.clipboard.writeText(url); UI.toast('Link copied. Only athletes who can see the post can open it.'); } } catch (e) { } return; }
+    if (c === 'share') { const ok = await Sheet.confirm({ title: 'Share to your followers?', body: '<p>Your followers will see this post in their feed. People who aren\'t allowed to see the original won\'t see its content.</p>', ok: 'Share' }); if (ok && await Social.act(null, () => Social.rpc('post_create', { p_kind: 'share', p_ref: p.id, p_audience: 'followers' }), 'Shared.')) Social.drop('feed'); Social.repaint(); return; }
+    if (c === 'report') return Actions['soc-report']({ dataset: { k: 'post', id: p.id } });
+    if (c === 'del') {
+      const ok = await Sheet.confirm({ title: 'Delete this post?', body: '<p>It disappears for everyone, along with its photos, reactions and comments.</p>', ok: 'Delete', danger: true }); if (!ok) return;
+      const r = await Social.act(null, () => Social.rpc('post_delete', { p_id: p.id }), 'Post deleted.'); if (!r) return;
+      await Social.removeFiles(r.media); Social.drop('feed', 'journal', 'user:', 'post:' + p.id); if (UI.route.name === 'post') Nav.back(); else Social.repaint();
+    }
+  },
+  'soc-report': el => {
+    const k = el.dataset.k, id = el.dataset.id, reasons = ['Spam or scam', 'Harassment or hate', 'Inappropriate photo', 'Unsafe training advice', 'Something else'];
+    Sheet.open({ title: 'Report', html: `<p class="muted" style="font-size:14px">Reports go to the coach (admin). The athlete isn't told who reported them.</p><div class="stack">${reasons.map(r => `<button type="button" class="btn block" data-why="${esc(r)}">${esc(r)}</button>`).join('')}</div><p class="err-msg" id="repErr"></p>`,
+      onMount: sh => $$('[data-why]', sh).forEach(b => b.onclick = async () => { const ok = await Social.act(b, () => Social.rpc('content_report', { p_kind: k, p_id: id, p_reason: b.dataset.why })); if (ok !== undefined) { await Sheet.close(); UI.toast('Thanks — the coach will take a look.'); } }) });
+  },
+  'soc-reply': el => { const f = $('#cmtParent'), t = $('#cmtTo'); if (!f) return; f.value = el.dataset.id; t.hidden = false; t.innerHTML = `Replying to <b>${esc(el.dataset.k)}</b> <button type="button" class="linkish" id="cmtToX">Cancel</button>`; $('#cmtToX').onclick = () => { f.value = ''; t.hidden = true; }; $('#cmtBody').focus(); },
+  'soc-cdel': async el => { const ok = await Sheet.confirm({ title: 'Delete comment?', body: '', ok: 'Delete', danger: true }); if (ok && await Social.act(null, () => Social.rpc('comment_delete', { p_id: el.dataset.id })) !== undefined) { Social.drop('post:' + el.dataset.p); UI.render(); } }
+});
+document.addEventListener('submit', async e => {
+  if (e.target.id !== 'cmtForm') return; e.preventDefault();
+  const pid = e.target.dataset.p, body = $('#cmtBody').value.trim(), btn = $('#cmtGo'); if (!body) return;
+  const c = await Social.act(btn, () => Social.rpc('post_comment', { p_id: pid, p_body: body, p_parent: $('#cmtParent').value || null }));
+  if (!c) return; const e2 = Social.c['post:' + pid]; if (e2 && e2.v) { e2.v.comments.push(c); e2.v.post.comments++; Posts.patch(e2.v.post); }
+  Haptics.tap(); UI.render(); setTimeout(() => { const b = $('#cmtBody'); b && b.focus({ preventScroll: true }); }, 30);
+});
+
+const PostEdit = {
+  body(p) {
+    Sheet.open({ title: 'Edit post', html: `<div class="field"><label for="peBody">Text</label><textarea class="input" id="peBody" rows="4" maxlength="2000">${esc(p.body)}</textarea></div><p class="err-msg" id="peErr"></p><button class="btn big primary block" type="button" id="peGo">Save</button>`,
+      onMount: sh => $('#peGo', sh).onclick = async e => { const np = await Social.act(e.currentTarget, () => Social.rpc('post_edit', { p_id: p.id, p_body: $('#peBody', sh).value })); if (np) { Posts.patch(np); await Sheet.close(); UI.toast('Saved.'); Social.repaint(); } } });
+  },
+  audience(p) {
+    const sq = (Social.c.squads && Social.c.squads.v && Social.c.squads.v.mine) || [];
+    Sheet.open({ title: 'Who can see this', html: `<div class="stack">${['public', 'followers', ...(sq.length ? ['squad'] : []), 'private'].map(k => `<button type="button" class="btn block ${p.audience === k ? 'primary' : ''}" data-aud="${k}">${icon(SOC_AUD[k][0])} ${SOC_AUD[k][1]}</button>`).join('')}</div>
+      ${sq.length ? `<div class="field"><label for="peSq">Squad</label><select class="input" id="peSq">${sq.map(s => `<option value="${s.id}" ${p.squad && p.squad.id === s.id ? 'selected' : ''}>${esc(s.name)}</option>`).join('')}</select></div>` : ''}`,
+      onMount: sh => $$('[data-aud]', sh).forEach(b => b.onclick = async () => {
+        const a = b.dataset.aud; if (p.kind === 'progress' && a !== 'private' && p.audience === 'private') { b.textContent = 'Tap again to confirm sharing'; if (!b.dataset.sure) { b.dataset.sure = 1; return; } }
+        const np = await Social.act(b, () => Social.rpc('post_edit', { p_id: p.id, p_audience: a, p_squad: a === 'squad' ? $('#peSq', sh).value : null }));
+        if (np) { Posts.patch(np); Social.drop('feed'); await Sheet.close(); UI.toast(`Now visible to: ${SOC_AUD[a][1].toLowerCase()}.`); Social.repaint(); }
+      }) });
+  }
+};
+
+/* ============ SOCIAL — Challenge Arena: challenges, leaderboards, results ============ */
+const SocAllW = () => [...(State.program.prep || []), ...State.program.workouts];
+const Arena = {
+  rule(c) {
+    const M = SOC_METRIC[c.metric] || {}, grp = (c.metric === 'reps' || c.metric === 'sets') && c.filter !== 'any' ? ` (${SOC_GROUP[c.filter] || c.filter})` : '';
+    const wk = c.metric === 'specific_workout' ? (Program.byId(c.filter) || {}).title || c.filter : '';
+    const how = c.metric === 'improvement' ? 'Biggest improvement wins.'
+      : c.goal === 'collective' ? `Everyone's ${M.unit} add up toward ${fmtNum(c.target, 0)} together.`
+      : c.goal === 'target' ? (c.kind === 'squad' ? `Squad score = % of members who reach ${fmtNum(c.target, 0)} ${M.unit}.` : `Reach ${fmtNum(c.target, 0)} ${M.unit}${c.kind === 'duel' || c.kind === 'group' ? '; the most wins' : ''}.`)
+      : c.kind === 'squad' ? `Squad score = average ${M.unit} per member, so bigger squads don't win just by size.` : `Most ${M.unit} wins.`;
+    return { metric: (M.name || c.metric) + grp + (wk ? ': ' + wk : ''), how, count: M.rule || '', tie: c.kind === 'squad' ? 'Ties are shared.' : c.tie_rule === 'earliest' ? 'Tie → whoever got there first wins.' : 'Ties are shared.' };
+  },
+  left(c) {
+    const d = Math.round((parseISO(c.ends_on) - parseISO(todayISO())) / 864e5), s = Math.round((parseISO(c.starts_on) - parseISO(todayISO())) / 864e5);
+    return c.status === 'upcoming' ? (s === 1 ? 'Starts tomorrow' : `Starts in ${s} days`) : c.status === 'active' ? (d === 0 ? 'Last day' : `${d + 1} days left`) : c.status === 'scoring' ? 'Ended · results lock tomorrow' : 'Final';
+  },
+  card(c) {
+    const M = SOC_METRIC[c.metric] || {}, inv = c.my_status === 'invited' || (c.squad_invite && c.squad_invite.length);
+    const pct = c.goal === 'target' && c.target && c.mine != null ? c.mine / c.target * 100 : null;
+    const res = c.result ? (c.result.won ? `${icon('crown')} Won` : c.result.done ? `${icon('check')} Finished` : c.result.rank ? `#${c.result.rank}` : 'Took part') : '';
+    return `<button type="button" class="panel ccard ${inv ? 'inv' : ''} k-${c.kind}" data-act="go" data-r="challenge" data-p="${c.id}" data-stg>
+      <div class="spread"><span class="label">${icon(c.kind === 'squad' ? 'shield' : c.kind === 'community' ? 'globe' : c.kind === 'duel' ? 'swords' : 'users')} ${SOC_KIND[c.kind]}</span><span class="cst ${c.status}">${inv ? 'Invitation' : this.left(c)}</span></div>
+      <b class="ccard-t">${esc(c.title)}</b>
+      <span class="muted ccard-m">${esc(M.name || '')}${c.target ? ` · target ${fmtNum(c.target, 0)} ${M.unit}` : ''}${c.people ? ` · ${c.people} in` : ''}</span>
+      ${pct != null && c.status !== 'final' ? Social.bar(pct, 'cc' + c.id) + `<small class="muted">You: ${fmtNum(c.mine, 1)} / ${fmtNum(c.target, 0)} ${M.unit}</small>` : c.mine != null && c.status !== 'final' ? `<small class="muted">You: <b>${fmtNum(c.mine, 1)}</b> ${M.unit}</small>` : ''}
+      ${res ? `<span class="badge ${c.result.won ? 'red' : ''}">${res}</span>` : ''}</button>`;
+  },
+  hub() {
+    const e = Social.get('chal', () => Social.rpc('my_challenges'));
+    const L = e.v || [], inv = L.filter(c => c.my_status === 'invited' || (c.squad_invite && c.squad_invite.length));
+    const mineIn = c => c.my_status === 'accepted' || (c.kind === 'squad' && !(c.squad_invite && c.squad_invite.length)) || (c.kind === 'community' && c.my_status === 'accepted');
+    const act = L.filter(c => mineIn(c) && ['active', 'scoring'].includes(c.status)), up = L.filter(c => mineIn(c) && c.status === 'upcoming');
+    const fin = L.filter(c => c.status === 'final' && (c.result || c.my_status === 'accepted')), open = L.filter(c => c.kind === 'community' && !c.my_status && c.status !== 'final');
+    const sec = (t, list, empty) => list.length ? `<h2 class="h3 ssec" data-stg>${t} <span class="label">${list.length}</span></h2>${list.map(c => this.card(c)).join('')}` : empty || '';
+    const body = e.v ? (L.length ? sec('Invitations', inv) + sec('Active', act) + sec('Coming up', up) + sec('Open to everyone', open) + `${fin.length ? `<details class="panel flat sfold" data-stg><summary>Completed · ${fin.length}</summary><div class="stack">${fin.map(c => this.card(c)).join('')}</div></details>` : ''}`
+      : Social.empty('swords', 'No challenges yet', 'Challenge a teammate to 1,000 ab reps, four workouts this week, or anything you both log here.'))
+      : e.err ? Social.errBox(e.err, 'chal') : Social.skel(2);
+    return `<button class="btn big red block" type="button" data-act="soc-new-challenge" data-stg>${icon('swords')} Create a challenge</button>${body}${this.boards()}`;
+  },
+  boards() {
+    const k = UI.ui.socBoard || 'week', e = Social.get('lb:' + k, () => Social.rpc('leaderboard_get', { p_kind: k }), 30000);
+    const info = { week: ['Training days this week', 'You and the athletes you follow · Monday–Sunday · days with a finished workout', 'days'],
+      xp: ['Season XP', 'You and the athletes you follow · XP from training days, records, consistency and challenges', 'XP'],
+      improve: ['Most improved', 'Training days in the last 4 weeks vs the 4 weeks before · only athletes with a baseline', '%'],
+      squads: ['Squad consistency', 'This week · % of members who hit their squad\'s weekly goal — fair for any squad size', '%'] }[k];
+    const rows = e.v ? (e.v.length ? `<ol class="lb">${e.v.map((r, i) => {
+      const rank = i && e.v[i - 1] && (k === 'squads' ? e.v[i - 1].pct === r.pct : e.v[i - 1].score === r.score) ? '=' : i + 1;
+      const val = k === 'squads' ? r.pct : r.score, mine = k === 'squads' ? r.mine : r.me;
+      return `<li class="${mine ? 'me' : ''}" data-lbr style="--i:${i}"><span class="lb-r">${rank === '=' ? '=' : rank}</span>${k === 'squads' ? `<button type="button" class="swho" data-act="go" data-r="squad" data-p="${r.id}">${Social.avatar({ name: r.name, avatar: r.avatar })}<span class="grow"><b>${esc(r.name)}</b><small>${r.members} member${r.members === 1 ? '' : 's'}</small></span></button>` : Social.who(r, k === 'xp' && r.level ? 'LVL ' + r.level : '')}
+        <b class="lb-v">${val == null ? '—' : (k === 'improve' && val > 0 ? '+' : '') + fmtNum(val, 0)}<small>${info[2] === 'days' && val === 1 ? 'day' : info[2]}</small></b></li>`;
+    }).join('')}</ol>` : `<p class="muted">${k === 'improve' ? 'Nobody has 8 weeks of training yet to compare.' : k === 'squads' ? 'No squads yet.' : 'Follow teammates to compare.'}</p>`) : e.err ? `<p class="err-msg">${esc(e.err)}</p>` : '<div class="sk sk-l"></div><div class="sk sk-l"></div>';
+    return `<section class="panel stack sboard" data-stg><div class="spread"><h2 class="h3">Leaderboards</h2>${icon('trophy')}</div>
+      <div class="seg" role="tablist" aria-label="Leaderboard">${[['week', 'Week'], ['xp', 'XP'], ['improve', 'Improve'], ['squads', 'Squads']].map(([v, l]) => `<button type="button" role="tab" data-act="soc-board" data-k="${v}" aria-pressed="${k === v}" aria-selected="${k === v}">${l}</button>`).join('')}</div>
+      <div><b>${info[0]}</b><p class="muted" style="font-size:13px">${info[1]}</p></div>${rows}</section>`;
+  }
+};
+
+Screens.challenge = function (id) {
+  const e = Social.get('ch:' + id, () => Social.rpc('challenge_get', { p_id: id }), 15000);
+  if (!e.v) return `<div class="screen soc">${backBar('Challenge')}${e.err ? Social.errBox(e.err, 'ch:' + id) : Social.skel(2)}</div>`;
+  const c = e.v, R = Arena.rule(c), M = SOC_METRIC[c.metric] || {}, b = c.board || {}, me = Cloud.user.id, sq = c.kind === 'squad';
+  const people = b.people || [], mine = people.find(p => p.user.id === me);
+  const inPeople = c.my_status === 'accepted' || (sq && c.my_squad);
+  // results reveal plays once per athlete per challenge
+  if (c.status === 'final' && inPeople) { const k = `bbp.${Cloud.ns}.soc.won.${c.id}`; if (!LSX.get(k, false)) { LSX.set(k, true); setTimeout(() => SocialFX.winner(c), 500); } }
+  const actions = [];
+  if (c.my_status === 'invited' && c.status !== 'final') actions.push(`<div class="grid2"><button class="btn big red" type="button" data-act="soc-ch-respond" data-id="${c.id}" data-v="1">${icon('check')} Accept</button><button class="btn big" type="button" data-act="soc-ch-respond" data-id="${c.id}" data-v="0">Decline</button></div>`);
+  (c.can_manage_squad || []).forEach(s => { const nm = ((c.squads || []).find(x => x.id === s) || {}).name || 'your squad'; actions.push(`<p class="muted" style="font-size:14px">${esc(nm)} has been challenged. As owner/admin you answer for the squad.</p><div class="grid2"><button class="btn big red" type="button" data-act="soc-ch-squad" data-id="${c.id}" data-s="${s}" data-v="1">${icon('shield')} Accept battle</button><button class="btn big" type="button" data-act="soc-ch-squad" data-id="${c.id}" data-s="${s}" data-v="0">Decline</button></div>`); });
+  if (c.kind === 'community' && c.my_status !== 'accepted' && c.status !== 'final') actions.push(`<button class="btn big red block" type="button" data-act="soc-ch-join" data-id="${c.id}">${icon('plus')} Join this challenge</button>`);
+  const board = sq ? (b.squads || []).map((s, i) => `<li class="${s.squad.id === c.my_squad ? 'me' : ''}" data-lbr style="--i:${i}"><span class="lb-r">${s.rank}</span><button type="button" class="swho" data-act="go" data-r="squad" data-p="${s.squad.id}">${Social.avatar({ name: s.squad.name, avatar: s.squad.avatar })}<span class="grow"><b>${esc(s.squad.name)}</b><small>${s.members} member${s.members === 1 ? '' : 's'} · ${fmtNum(s.total, 0)} ${M.unit} total</small></span></button><b class="lb-v"><span data-count="${s.score || 0}" data-dec="1" data-key="chs${c.id}${s.squad.id}">${fmtNum(s.score, 1)}</span><small>${c.goal === 'target' ? '%' : 'avg'}</small></b></li>`).join('')
+    : people.map((p, i) => `<li class="${p.user.id === me ? 'me' : ''}" data-lbr style="--i:${i}"><span class="lb-r">${p.rank}</span>${Social.who(p.user, p.done ? '✓ target hit' : c.metric === 'improvement' && p.score == null ? 'no baseline yet' : '')}<b class="lb-v"><span data-count="${p.score || 0}" data-dec="1" data-key="chp${c.id}${p.user.id}">${p.score == null ? '—' : fmtNum(p.score, 1)}</span><small>${M.unit}</small></b></li>`).join('');
+  const top = sq ? Math.max(1, ...(b.squads || []).map(s => s.score || 0)) : Math.max(1, c.target || 0, ...people.map(p => p.score || 0));
+  const coll = c.goal === 'collective' ? `<section class="panel stack" data-stg><div class="spread"><b>Team total</b><span class="label">${fmtNum(b.total, 0)} / ${fmtNum(c.target, 0)} ${M.unit}</span></div>${Social.bar(b.total / c.target * 100, 'col' + c.id, 'orange big')}${b.collective_done ? `<span class="badge red">${icon('check')} Goal reached</span>` : ''}</section>` : '';
+  const myBar = !sq && mine && c.goal === 'target' ? `<section class="panel stack" data-stg><div class="spread"><b>Your progress</b><span class="label">${fmtNum(mine.score, 1)} / ${fmtNum(c.target, 0)} ${M.unit}</span></div>${Social.bar(mine.score / c.target * 100, 'my' + c.id, 'orange big')}</section>` : '';
+  const pend = (c.invited || []).filter(x => x.status === 'invited'), dec = (c.invited || []).filter(x => x.status === 'declined');
+  const winners = c.status === 'final' ? (sq ? (b.squads || []).filter(s => s.rank === 1 && s.score > 0).map(s => s.squad.name) : c.goal === 'collective' ? [] : people.filter(p => p.rank === 1 && p.score > 0).map(p => p.user.name)) : [];
+  return `<div class="screen soc">${backBar('Challenge', c.own || inPeople ? `<button class="btn icon" type="button" data-act="soc-ch-menu" data-id="${c.id}" aria-label="Challenge options">${icon('ellipsis')}</button>` : '')}
+    <section class="panel chero k-${c.kind}" data-stg><div class="spread"><span class="label">${SOC_KIND[c.kind]}${c.squad && !sq ? ' · ' + esc(c.squad.name) : ''}</span><span class="cst ${c.status}">${Arena.left(c)}</span></div>
+      <h2 class="chero-t">${esc(c.title)}</h2>${c.description ? `<p>${esc(c.description)}</p>` : ''}
+      <div class="chero-d">${icon('calendar')} ${fmtDate(c.starts_on)} – ${fmtDate(c.ends_on)} · by ${esc(c.creator.name)}</div>
+      ${c.status === 'final' ? `<div class="cwin">${icon(winners.length ? 'crown' : 'flag')} ${c.goal === 'collective' ? (b.collective_done ? 'Goal reached together' : 'Goal not reached') : winners.length ? esc(winners.join(' & ')) + (winners.length > 1 ? ' tie for first' : ' won') : 'No winner'}</div>` : ''}</section>
+    ${actions.length ? `<section class="panel stack" data-stg>${actions.join('')}</section>` : ''}
+    ${coll}${myBar}
+    <section class="panel stack" data-stg><div class="spread"><h2 class="h3">${sq ? 'Squad scoreboard' : 'Leaderboard'}</h2><span class="label">${c.status === 'final' ? 'Final' : 'Live'}</span></div>
+      ${board ? `<ol class="lb">${board}</ol>` : `<p class="muted">${sq ? 'Waiting for the other squad to accept.' : 'Nobody has accepted yet.'}</p>`}
+      ${!sq ? `<div class="lb-bars" aria-hidden="true">${people.slice(0, 8).map(p => `<div class="lbb ${p.user.id === me ? 'me' : ''}"><span>${esc(p.user.name)}</span>${Social.bar((p.score || 0) / top * 100, 'lbb' + c.id + p.user.id)}</div>`).join('')}</div>` : ''}
+      ${sq && c.my_squad ? `<details class="sfold"><summary>Your squad's athletes</summary><ol class="lb sm">${people.filter(p => p.squad_id === c.my_squad).map((p, i) => `<li class="${p.user.id === me ? 'me' : ''}"><span class="lb-r">${i + 1}</span>${Social.who(p.user)}<b class="lb-v">${fmtNum(p.score, 1)}<small>${M.unit}</small></b></li>`).join('')}</ol></details>` : ''}
+      ${c.status === 'final' && inPeople ? `<button class="btn block" type="button" data-act="soc-ch-post" data-id="${c.id}">${icon('share-2')} Share my result</button>` : c.status === 'active' && inPeople ? `<button class="btn block primary" type="button" data-act="go" data-r="workout">${icon('dumbbell')} Train now — it counts</button>` : ''}</section>
+    <section class="panel stack srules" data-stg><h2 class="h3">${icon('scale')} Rules</h2>
+      <div class="kv"><span>Metric</span><span>${esc(R.metric)}</span></div><div class="kv"><span>How it's won</span><span>${esc(R.how)}</span></div>
+      <div class="kv"><span>What counts</span><span>${esc(R.count)}</span></div><div class="kv"><span>Ties</span><span>${esc(R.tie)}</span></div>
+      <div class="kv"><span>Who's in</span><span>${sq ? 'Every active member of each squad that accepted' : c.kind === 'community' ? 'Anyone who joins' : 'Athletes who accepted'}</span></div>
+      <p class="muted" style="font-size:13px">${icon('info')} Scores are worked out by the database from workouts each athlete logs in Hokie Power (self-reported, not independently verified). Only workouts dated inside the challenge count; each workout counts once. Editing or deleting a workout updates the score until results lock, one day after the end. Late logging for dates inside the challenge counts until then.</p></section>
+    ${pend.length || dec.length ? `<section class="panel" data-stg><span class="label">Invited</span><div class="row wrap" style="margin-top:6px">${pend.map(p => `<span class="badge">${esc(p.name)} · waiting</span>`).join('')}${dec.map(p => `<span class="badge">${esc(p.name)} · declined</span>`).join('')}</div></section>` : ''}</div>`;
+};
+
+/* ---------- create-a-challenge wizard (7 short steps) ---------- */
+const Wizard = {
+  steps: ['Type', 'Metric', 'Goal', 'Dates', 'Who', 'Name', 'Review'],
+  open(pre = {}) {
+    const isAdm = !!(Social.c.me && Social.c.me.v && Social.c.me.v.is_admin);
+    this.d = Object.assign({ kind: 'duel', metric: 'workouts', filter: 'any', goal: 'race', target: '', tie_rule: 'shared', starts_on: todayISO(), days: 7, invitees: [], squad_id: null, opponents: [], title: '', description: '', admin: isAdm }, pre);
+    this.i = 0; Social.get('squads', () => Social.rpc('my_squads'), 60000);
+    Sheet.open({ title: 'New challenge', wide: true, html: '<div id="wiz" class="stack"></div>', onMount: sh => { this.sh = sh; this.draw(); } });
+  },
+  end() { const d = parseISO(this.d.starts_on); d.setDate(d.getDate() + (+this.d.days || 1) - 1); return `${d.getFullYear()}-${pad2(d.getMonth() + 1)}-${pad2(d.getDate())}`; },
+  goals() { const d = this.d; if (d.metric === 'improvement') return ['race']; if (d.metric === 'specific_workout') return ['target']; return d.kind === 'community' ? ['collective', 'target'] : d.kind === 'group' ? ['race', 'target', 'collective'] : ['race', 'target']; },
+  suggest() {
+    const d = this.d, M = SOC_METRIC[d.metric];
+    if (d.metric === 'specific_workout') return 'Finish ' + ((Program.byId(d.filter) || {}).title || 'the workout');
+    if (d.metric === 'improvement') return `Most improved in ${d.days} days`;
+    return d.goal === 'race' ? `Most ${M.unit} in ${d.days} days` : `${fmtNum(+d.target || 0, 0)} ${d.filter === 'core' ? 'ab ' : ''}${M.unit}${d.goal === 'collective' ? ' together' : ''} in ${d.days} days`;
+  },
+  draw() {
+    const d = this.d, box = $('#wiz', this.sh); if (!box) return; const i = this.i;
+    const sq = (Social.c.squads && Social.c.squads.v && Social.c.squads.v.mine) || [], runs = sq.filter(s => s.role !== 'member');
+    const opt = (name, v, label, sub, ic) => `<button type="button" class="spick-i" role="radio" data-w="${name}" data-v="${esc(v)}" aria-checked="${String(d[name]) === String(v)}">${ic ? icon(ic) : ''}<span class="grow"><b>${label}</b>${sub ? `<small>${sub}</small>` : ''}</span></button>`;
+    let h = '';
+    if (i === 0) h = `<div class="spick" role="radiogroup">${opt('kind', 'duel', 'One-on-one', 'You vs one teammate', 'swords')}${opt('kind', 'group', 'Group', 'Friends or a whole squad · individual ranks or a shared goal', 'users')}${runs.length ? opt('kind', 'squad', 'Squad vs squad', 'Your squad against others · scores normalized by size', 'shield') : ''}${d.admin ? opt('kind', 'community', 'Community', 'Open to every athlete (admin only)', 'globe') : ''}</div>${!runs.length ? '<small class="muted">Squad battles unlock when you own or help run a squad.</small>' : ''}`;
+    if (i === 1) h = `<div class="spick" role="radiogroup">${Object.entries(SOC_METRIC).filter(([k]) => !(k === 'improvement' && d.kind !== 'duel' && d.kind !== 'group')).map(([k, M]) => opt('metric', k, M.name, M.rule)).join('')}</div>
+      ${d.metric === 'reps' || d.metric === 'sets' ? `<div class="field"><label for="wzF">Which exercises</label><select class="input" id="wzF">${Object.entries(SOC_GROUP).map(([k, l]) => `<option value="${k}" ${d.filter === k ? 'selected' : ''}>${l}</option>`).join('')}</select></div>` : ''}
+      ${d.metric === 'specific_workout' ? `<div class="field"><label for="wzW">Workout</label><select class="input" id="wzW">${SocAllW().map(w => `<option value="${w.id}" ${d.filter === w.id ? 'selected' : ''}>${esc(wkLabel(w.week))} · Day ${w.day} — ${esc(w.title)}</option>`).join('')}</select></div>` : ''}
+      <small class="muted">Distance isn't offered: the workout log doesn't record it.</small>`;
+    if (i === 2) { const G = { race: ['Most wins', 'Highest total at the end'], target: ['Hit a target', d.kind === 'squad' ? 'Squad score = % of members who hit it' : 'Everyone chases the same number'], collective: ['Shared goal', 'Everyone adds to one team total'] };
+      h = `<div class="spick" role="radiogroup">${this.goals().map(g => opt('goal', g, G[g][0], G[g][1])).join('')}</div>
+      ${d.goal !== 'race' && d.metric !== 'specific_workout' ? `<div class="field"><label for="wzT">Target (${SOC_METRIC[d.metric].unit})</label><input class="input" id="wzT" type="number" inputmode="numeric" min="1" value="${esc(d.target)}" placeholder="${d.metric === 'reps' ? '1000' : d.metric === 'minutes' ? '180' : '4'}"></div>` : ''}
+      ${d.kind !== 'squad' && d.metric !== 'improvement' ? `<div class="field"><span class="label">If it's a tie</span><div class="seg">${[['shared', 'Share the win'], ['earliest', 'First to get there']].map(([v, l]) => `<button type="button" data-w="tie_rule" data-v="${v}" aria-pressed="${d.tie_rule === v}">${l}</button>`).join('')}</div></div>` : ''}
+      <small class="muted">Rules are fixed once you publish.</small>`; }
+    if (i === 3) h = `<div class="field"><label for="wzS">Start</label><input class="input" type="date" id="wzS" value="${esc(d.starts_on)}" min="${todayISO()}"></div>
+      <div class="field"><span class="label">Length</span><div class="chips">${[1, 3, 5, 7, 14, 28].map(n => `<button type="button" class="chip" data-w="days" data-v="${n}" aria-pressed="${+d.days === n}">${n === 1 ? '1 day' : n + ' days'}</button>`).join('')}</div></div>
+      <p class="muted">${fmtDate(d.starts_on)} → ${fmtDate(this.end())}. Results lock the day after it ends.</p>`;
+    if (i === 4) {
+      if (d.kind === 'community') h = '<p>Open to every athlete. Anyone can join from the Arena.</p>';
+      else if (d.kind === 'squad') h = `<div class="field"><label for="wzSq">Your squad</label><select class="input" id="wzSq">${runs.map(s => `<option value="${s.id}" ${d.squad_id === s.id ? 'selected' : ''}>${esc(s.name)}</option>`).join('')}</select></div>
+        <div class="field"><label for="wzOpp">Opponent squads (handles)</label><div class="row"><input class="input grow" id="wzOpp" placeholder="@squad-handle" autocapitalize="none"><button type="button" class="btn" id="wzOppAdd">Add</button></div><div class="chips" id="wzOppL">${d.opponents.map((o, k) => `<button type="button" class="chip on" data-rm-opp="${k}">@${esc(o)} ${icon('x')}</button>`).join('')}</div><div id="wzOppR" class="spick"></div></div>`;
+      else h = `${d.kind === 'group' && sq.length ? `<div class="field"><label for="wzGs">Invite a whole squad (optional)</label><select class="input" id="wzGs"><option value="">— none —</option>${sq.map(s => `<option value="${s.id}" ${d.squad_id === s.id ? 'selected' : ''}>${esc(s.name)} (${s.members})</option>`).join('')}</select></div>` : ''}
+        <div class="field"><label for="wzQ">${d.kind === 'duel' ? 'Opponent' : 'Add athletes'}</label><input class="input" id="wzQ" placeholder="Search by name or username" autocapitalize="none" autocomplete="off"><div id="wzR" class="spick"></div></div>
+        <div class="chips">${d.invitees.map((u, k) => `<button type="button" class="chip on" data-rm-inv="${k}">${esc(u)} ${icon('x')}</button>`).join('')}</div>`;
+    }
+    if (i === 5) h = `<div class="field"><label for="wzTi">Title</label><input class="input" id="wzTi" maxlength="60" value="${esc(d.title || this.suggest())}"></div><div class="field"><label for="wzDe">Description (optional)</label><textarea class="input" id="wzDe" rows="3" maxlength="280" placeholder="Trash talk welcome. Keep it safe: rest days count too.">${esc(d.description)}</textarea></div>`;
+    if (i === 6) { const R = Arena.rule(Object.assign({}, d, { target: +d.target || (d.metric === 'specific_workout' ? 1 : null), ends_on: this.end() }));
+      h = `<div class="panel flat stack"><b class="h3">${esc(d.title || this.suggest())}</b><div class="kv"><span>Type</span><span>${SOC_KIND[d.kind]}</span></div><div class="kv"><span>Metric</span><span>${esc(R.metric)}</span></div><div class="kv"><span>How it's won</span><span>${esc(R.how)}</span></div><div class="kv"><span>What counts</span><span>${esc(R.count)}</span></div><div class="kv"><span>Ties</span><span>${esc(R.tie)}</span></div><div class="kv"><span>Dates</span><span>${fmtDate(d.starts_on)} – ${fmtDate(this.end())}</span></div><div class="kv"><span>Who</span><span>${d.kind === 'community' ? 'Everyone' : d.kind === 'squad' ? d.opponents.map(o => '@' + esc(o)).join(', ') : esc(d.invitees.join(', ')) + (d.squad_id ? ' + squad members' : '')}</span></div></div><p class="muted" style="font-size:13px">Scores come from workouts logged in the app (self-reported). Results lock one day after the end.</p>`; }
+    box.innerHTML = `<ol class="wsteps" aria-label="Step ${i + 1} of 7">${this.steps.map((s, k) => `<li class="${k < i ? 'done' : k === i ? 'on' : ''}" aria-current="${k === i ? 'step' : 'false'}"><span>${k + 1}</span><small>${s}</small></li>`).join('')}</ol>
+      <h3 class="h3">${['What kind of challenge?', 'What are you measuring?', 'How is it won?', 'When?', d.kind === 'squad' ? 'Which squads?' : 'Who\'s in?', 'Name it', 'Review and publish'][i]}</h3>${h}
+      <p class="err-msg" id="wzErr" role="alert"></p>
+      <div class="grid2">${i ? `<button type="button" class="btn big" id="wzBack">Back</button>` : '<span></span>'}<button type="button" class="btn big ${i === 6 ? 'red' : 'primary'}" id="wzNext">${i === 6 ? 'Publish' : 'Next'}</button></div>`;
+    UI.icons(box);
+    $$('[data-w]', box).forEach(b => b.onclick = () => { this.keep(); const k = b.dataset.w; d[k] = b.dataset.v; if (k === 'kind') { d.squad_id = null; if (!this.goals().includes(d.goal)) d.goal = this.goals()[0]; } if (k === 'metric') { d.filter = d.metric === 'specific_workout' ? (SocAllW()[0] || {}).id : 'any'; if (!this.goals().includes(d.goal)) d.goal = this.goals()[0]; } this.draw(); });
+    $$('[data-rm-inv]', box).forEach(b => b.onclick = () => { d.invitees.splice(+b.dataset.rmInv, 1); this.draw(); });
+    $$('[data-rm-opp]', box).forEach(b => b.onclick = () => { d.opponents.splice(+b.dataset.rmOpp, 1); this.draw(); });
+    const q = $('#wzQ', box); if (q) q.oninput = debounce(async () => {
+      const r = q.value.trim().length < 2 ? [] : await Social.rpc('athlete_search', { p_q: q.value }).catch(() => []);
+      const out = $('#wzR', box); if (!out) return;
+      out.innerHTML = r.filter(u => !d.invitees.includes(u.username)).slice(0, 6).map(u => `<button type="button" class="spick-i" data-add="${esc(u.username)}">${Social.avatar(u, 28)}<span class="grow"><b>${esc(u.name)}</b><small>@${esc(u.username)}</small></span>${icon('plus')}</button>`).join('') || (q.value.trim().length >= 2 ? '<small class="muted">No athletes found. Private accounts only show up for their followers.</small>' : '');
+      UI.icons(out); Social.hydrate(out);
+      $$('[data-add]', out).forEach(b => b.onclick = () => { if (d.kind === 'duel') d.invitees = []; d.invitees.push(b.dataset.add); this.draw(); });
+    }, 250);
+    const oa = $('#wzOppAdd', box); if (oa) {
+      const add = h => { h = String(h).replace(/^@/, '').trim().toLowerCase(); if (h && !d.opponents.includes(h)) d.opponents.push(h); this.keep(); this.draw(); };
+      oa.onclick = () => add($('#wzOpp', box).value);
+      Social.rpc('squad_discover', { p_q: '' }).then(r => { const out = $('#wzOppR', box); if (!out) return; out.innerHTML = r.slice(0, 5).map(s => `<button type="button" class="spick-i" data-opp="${esc(s.handle)}">${icon('shield')}<span class="grow"><b>${esc(s.name)}</b><small>@${esc(s.handle)} · ${s.members} members</small></span>${icon('plus')}</button>`).join(''); UI.icons(out); $$('[data-opp]', out).forEach(b => b.onclick = () => add(b.dataset.opp)); }, () => { });
+    }
+    const bk = $('#wzBack', box); if (bk) bk.onclick = () => { this.keep(); this.i--; this.draw(); };
+    $('#wzNext', box).onclick = e => this.next(e.currentTarget);
+  },
+  keep() {
+    const d = this.d, v = id => { const el = $('#' + id, this.sh); return el ? el.value : null; };
+    if (v('wzF') != null) d.filter = v('wzF'); if (v('wzW') != null) d.filter = v('wzW'); if (v('wzT') != null) d.target = v('wzT');
+    if (v('wzS') != null) d.starts_on = v('wzS'); if (v('wzSq') != null) d.squad_id = v('wzSq'); if (v('wzGs') != null) d.squad_id = v('wzGs') || null;
+    if (v('wzTi') != null) d.title = v('wzTi'); if (v('wzDe') != null) d.description = v('wzDe');
+  },
+  async next(btn) {
+    this.keep(); const d = this.d, er = $('#wzErr', this.sh), fail = t => { er.textContent = t; Haptics.buzz(); };
+    if (this.i === 2 && d.goal !== 'race' && d.metric !== 'specific_workout' && !(+d.target > 0)) return fail('Set a target above zero.');
+    if (this.i === 3 && (!d.starts_on || d.starts_on < todayISO())) return fail('Start today or later.');
+    if (this.i === 4) {
+      if (d.kind === 'duel' && d.invitees.length !== 1) return fail('Pick one opponent.');
+      if (d.kind === 'group' && !d.invitees.length && !d.squad_id) return fail('Add at least one athlete or a squad.');
+      if (d.kind === 'squad' && !d.opponents.length) return fail('Add at least one opponent squad.');
+      if (d.kind === 'squad' && !d.squad_id) { const s = $('#wzSq', this.sh); d.squad_id = s && s.value; }
+    }
+    if (this.i === 5 && (d.title || this.suggest()).trim().length < 3) return fail('Give it a title (3+ characters).');
+    if (this.i < 6) { this.i++; this.draw(); return; }
+    btn.disabled = true; btn.innerHTML = Kinetic.wave('PUBLISHING…');
+    try {
+      const c = await Social.rpc('challenge_create', { p: { kind: d.kind, title: d.title || this.suggest(), description: d.description, metric: d.metric, filter: d.filter, goal: d.goal,
+        target: d.goal === 'race' ? null : (d.metric === 'specific_workout' ? 1 : +d.target), starts_on: d.starts_on, ends_on: this.end(), tie_rule: d.tie_rule,
+        invitees: d.invitees, squad_id: d.squad_id, opponents: d.opponents } });
+      await Sheet.close(); Social.drop('chal'); Social.c['ch:' + c.id] = { v: c, at: Date.now() };
+      UI.toast(d.kind === 'community' ? 'Challenge is live for everyone.' : 'Challenge sent.'); Haptics.beep([523, 784], .1); Nav.go('challenge', c.id);
+    } catch (e) { btn.disabled = false; btn.textContent = 'Publish'; fail(Social.msg(e)); }
+  }
+};
+
+Object.assign(Actions, {
+  'soc-new-challenge': el => Wizard.open(el.dataset.pre ? JSON.parse(el.dataset.pre) : {}),
+  'soc-board': el => { UI.ui.socBoard = el.dataset.k; UI.render(); },
+  'soc-ch-respond': async el => { const c = await Social.act(el, () => Social.rpc('challenge_respond', { p_id: el.dataset.id, p_accept: el.dataset.v === '1' }), el.dataset.v === '1' ? 'You\'re in. Every workout you log now counts.' : 'Declined.'); if (c) { Social.c['ch:' + c.id] = { v: c, at: Date.now() }; Social.drop('chal', 'me', 'xp'); UI.render(); } },
+  'soc-ch-squad': async el => { const c = await Social.act(el, () => Social.rpc('challenge_squad_respond', { p_id: el.dataset.id, p_squad: el.dataset.s, p_accept: el.dataset.v === '1' }), el.dataset.v === '1' ? 'Battle on.' : 'Declined.'); if (c) { Social.c['ch:' + c.id] = { v: c, at: Date.now() }; Social.drop('chal'); UI.render(); } },
+  'soc-ch-join': async el => { const c = await Social.act(el, () => Social.rpc('challenge_join', { p_id: el.dataset.id }), 'Joined. Let\'s go.'); if (c) { Social.c['ch:' + c.id] = { v: c, at: Date.now() }; Social.drop('chal', 'xp'); UI.render(); } },
+  'soc-ch-post': async el => { await Social.act(el, () => Social.rpc('post_create', { p_kind: 'challenge', p_ref: el.dataset.id, p_audience: 'followers' }), 'Posted to your followers.'); Social.drop('feed'); },
+  'soc-ch-menu': async el => {
+    const c = Social.c['ch:' + el.dataset.id] && Social.c['ch:' + el.dataset.id].v; if (!c) return;
+    const opts = [{ id: 'post', label: 'Share to Social' }]; if (c.status !== 'final' && c.my_status === 'accepted') opts.push({ id: 'leave', label: c.own ? 'Leave or cancel' : 'Leave challenge', cls: 'danger' });
+    if (!c.own) opts.push({ id: 'report', label: 'Report the creator', cls: 'danger' });
+    const k = await Sheet.choose({ title: c.title, body: '', options: opts }); if (!k) return;
+    if (k === 'post') return Actions['soc-ch-post']({ dataset: { id: c.id } });
+    if (k === 'report') return Actions['soc-report']({ dataset: { k: 'user', id: c.creator.id } });
+    const ok = await Sheet.confirm({ title: 'Leave this challenge?', body: `<p>Your score is removed from the leaderboard.${c.own ? ' If nobody else has accepted yet, the challenge is cancelled.' : ''}</p>`, ok: 'Leave', danger: true });
+    if (ok && await Social.act(null, () => Social.rpc('challenge_leave', { p_id: c.id }), 'You left the challenge.') !== undefined) { Social.drop('chal', 'ch:' + c.id); Nav.go('social', 'arena'); }
+  }
+});
+
+/* ============ SOCIAL — squads, athlete profiles, journal, notifications, moderation, wiring ============ */
+const SquadUI = {
+  hub() {
+    const e = Social.get('squads', () => Social.rpc('my_squads'), 30000), d = Social.get('sqdisc', () => Social.rpc('squad_discover', { p_q: '' }), 60000);
+    if (!e.v) return e.err ? Social.errBox(e.err, 'squads') : Social.skel(2);
+    const mine = e.v.mine, inv = e.v.invites;
+    const card = s => `<button type="button" class="panel sqcard" data-act="go" data-r="squad" data-p="${s.id}" data-stg>${Social.avatar({ name: s.name, avatar: s.avatar }, 52)}<span class="grow"><b>${esc(s.name)}</b><small class="muted">@${esc(s.handle)} · ${s.members} member${s.members === 1 ? '' : 's'} · ${s.privacy === 'public' ? 'Public' : 'Private'}${s.role !== 'member' ? ' · ' + s.role : ''}</small>
+      ${s.weekly_goal ? `<span class="sq-goal"><span class="dots">${Array.from({ length: s.weekly_goal }, (_, i) => `<i class="${i < s.my_week ? 'on' : ''}"></i>`).join('')}</span><small>You: ${Math.min(s.my_week, 7)}/${s.weekly_goal} training days this week</small></span>` : ''}</span>${icon('chevron-right')}</button>`;
+    return `${inv.length ? `<h2 class="h3 ssec" data-stg>Invitations</h2>${inv.map(s => `<section class="panel sqinv" data-stg>${Social.avatar({ name: s.name, avatar: s.avatar }, 44)}<div class="grow"><b>${esc(s.name)}</b><small class="muted">@${esc(s.handle)} · from ${esc(s.by ? s.by.name : 'a member')}</small></div><div class="row"><button class="btn sm primary" type="button" data-act="soc-sq-join" data-id="${s.id}">Join</button><button class="btn sm ghost" type="button" data-act="soc-sq-decline" data-id="${s.id}">No</button></div></section>`).join('')}` : ''}
+      <button class="btn big primary block" type="button" data-act="soc-sq-new" data-stg>${icon('plus')} Create a squad</button>
+      ${mine.length ? `<h2 class="h3 ssec" data-stg>Your squads</h2>${mine.map(card).join('')}` : Social.empty('shield', 'No squad yet', 'Squads train together: a shared weekly goal, a squad feed, and squad-vs-squad battles.')}
+      <section class="panel stack" data-stg><div class="spread"><h2 class="h3">Discover squads</h2>${icon('compass')}</div>
+        <div class="input-unit"><input class="input" type="search" id="sqQ" placeholder="Search public squads" aria-label="Search public squads"><span>${icon('search')}</span></div>
+        <div id="sqDisc" class="stack">${d.v ? (d.v.length ? d.v.map(s => this.discRow(s)).join('') : '<p class="muted">No public squads to join right now. Private squads are invite-only and never listed.</p>') : d.err ? `<p class="err-msg">${esc(d.err)}</p>` : '<div class="sk sk-l"></div>'}</div></section>`;
+  },
+  discRow(s) { return `<div class="sqrow">${Social.avatar({ name: s.name, avatar: s.avatar }, 40)}<button type="button" class="grow linkish left" data-act="go" data-r="squad" data-p="${s.id}"><b>${esc(s.name)}</b><small class="muted">@${esc(s.handle)} · ${s.members} member${s.members === 1 ? '' : 's'}</small></button><button class="btn sm" type="button" data-act="soc-sq-join" data-id="${s.id}">Join</button></div>`; },
+  form(s) {
+    const v = s || { name: '', handle: '', description: '', privacy: 'private', weekly_goal: 3 };
+    Sheet.open({ title: s ? 'Squad settings' : 'Create a squad', html: `<div class="sqf-av"><label class="cmp-add round" id="sqAvL">${v.avatar ? Social.img(v.avatar, 'Squad logo') : icon('image-plus')}<span>${v.avatar ? 'Change logo' : 'Add logo'}</span><input type="file" id="sqAv" accept="image/*" class="sr-only"></label></div>
+      <div class="field"><label for="sqN">Name</label><input class="input" id="sqN" maxlength="40" value="${esc(v.name)}" placeholder="Lunch Pail Defense"></div>
+      ${s ? '' : `<div class="field"><label for="sqH">Handle</label><div class="input-unit"><input class="input" id="sqH" maxlength="24" autocapitalize="none" spellcheck="false" placeholder="lunchpail"><span>@</span></div><small class="muted">3–24 characters: letters, numbers, - or _. Can't be changed later.</small></div>`}
+      <div class="field"><label for="sqD">Description</label><textarea class="input" id="sqD" rows="2" maxlength="280">${esc(v.description)}</textarea></div>
+      <div class="field"><span class="label">Privacy</span><div class="seg" id="sqP">${[['private', 'Private · invite only'], ['public', 'Public · anyone can join']].map(([k, l]) => `<button type="button" data-v="${k}" aria-pressed="${v.privacy === k}">${l}</button>`).join('')}</div><small class="muted">Private squads never show up in search. Members see each other's weekly training days.</small></div>
+      <div class="field"><label for="sqG">Shared weekly goal (training days per member)</label><input class="input" id="sqG" type="number" min="1" max="7" value="${v.weekly_goal}"></div>
+      <p class="err-msg" id="sqErr"></p><button class="btn big primary block" type="button" id="sqGo">${s ? 'Save' : 'Create squad'}</button>
+      ${s && s.my_role === 'owner' ? `<button class="btn block danger" type="button" id="sqDel">${icon('trash-2')} Delete squad</button>` : ''}`,
+      onMount: sh => {
+        let priv = v.privacy, avatar = null;
+        $$('#sqP button', sh).forEach(b => b.onclick = () => { priv = b.dataset.v; $$('#sqP button', sh).forEach(x => x.setAttribute('aria-pressed', x === b)); });
+        Social.hydrate(sh);
+        $('#sqAv', sh).onchange = async e => { const f = e.target.files[0]; if (!f) return; $('#sqAvL span', sh).textContent = 'Uploading…'; try { avatar = await Social.upload(f, 512); $('#sqAvL', sh).firstElementChild.outerHTML = Social.img(avatar, 'Squad logo'); Social.hydrate(sh); $('#sqAvL span', sh).textContent = 'Change logo'; } catch (er) { $('#sqErr', sh).textContent = Social.msg(er); } };
+        $('#sqGo', sh).onclick = async e => {
+          const btn = e.currentTarget, er = $('#sqErr', sh); er.textContent = ''; btn.disabled = true;
+          try {
+            const r = s ? await Social.rpc('squad_update', { p_id: s.id, p_name: $('#sqN', sh).value, p_description: $('#sqD', sh).value, p_privacy: priv, p_weekly_goal: +$('#sqG', sh).value, p_avatar: avatar })
+              : await Social.rpc('squad_create', { p_name: $('#sqN', sh).value, p_handle: $('#sqH', sh).value.replace(/^@/, ''), p_description: $('#sqD', sh).value, p_privacy: priv, p_weekly_goal: +$('#sqG', sh).value, p_avatar: avatar });
+            await Sheet.close(); Social.drop('squads', 'sq:'); Social.c['sq:' + r.id] = { v: r, at: Date.now() }; UI.toast(s ? 'Saved.' : 'Squad created.'); Nav.go('squad', r.id, { replace: UI.route.name === 'squad' });
+          } catch (x) { btn.disabled = false; er.textContent = Social.msg(x); }
+        };
+        const del = $('#sqDel', sh); if (del) del.onclick = async () => { await Sheet.close(); const ok = await Sheet.confirm({ title: `Delete ${s.name}?`, body: '<p>The squad, its posts and its battle history are removed for everyone. Members keep their own training.</p>', ok: 'Delete forever', danger: true, typed: s.handle.toUpperCase() }); if (ok && await Social.act(null, () => Social.rpc('squad_delete', { p_id: s.id }), 'Squad deleted.') !== undefined) { Social.drop('squads', 'sq:'); Nav.go('social', 'squads'); } };
+      } });
+  }
+};
+
+Screens.squad = function (id) {
+  const e = Social.get('sq:' + id, () => Social.rpc('squad_get', { p_id: id }), 20000);
+  if (!e.v) return `<div class="screen soc">${backBar('Squad')}${e.err ? Social.errBox(e.err, 'sq:' + id) : Social.skel(2)}</div>`;
+  const s = e.v, adm = s.my_role === 'owner' || s.my_role === 'admin', st = s.stats;
+  const feed = s.my_role ? Social.get('sqfeed:' + id, () => Social.rpc('feed_posts', { p_filter: 'squad', p_squad: id }), 20000) : null;
+  const ch = (s.challenges || []).filter(c => c.status !== 'final'), hist = (s.challenges || []).filter(c => c.status === 'final');
+  return `<div class="screen soc">${backBar('Squad', adm ? `<button class="btn icon" type="button" data-act="soc-sq-edit" data-id="${s.id}" aria-label="Squad settings">${icon('settings')}</button>` : s.my_role ? '' : `<button class="btn icon" type="button" data-act="soc-report" data-k="squad" data-id="${s.id}" aria-label="Report squad">${icon('flag')}</button>`)}
+    <section class="panel sqhero" data-stg>${s.cover ? `<div class="sq-cover">${Social.img(s.cover, '')}</div>` : '<div class="sq-cover none"></div>'}
+      <div class="sqhero-in">${Social.avatar({ name: s.name, avatar: s.avatar }, 72)}<div class="grow"><h2 class="chero-t">${esc(s.name)}</h2><span class="muted">@${esc(s.handle)} · ${s.privacy === 'public' ? `${icon('globe')} Public` : `${icon('lock')} Private`}</span></div></div>
+      ${s.description ? `<p>${esc(s.description)}</p>` : ''}
+      ${!s.my_role ? `<button class="btn big red block" type="button" data-act="soc-sq-join" data-id="${s.id}">${s.invited ? 'Accept invitation' : 'Join squad'}</button>${s.invited ? `<button class="btn block ghost" type="button" data-act="soc-sq-decline" data-id="${s.id}">Decline</button>` : ''}` : ''}</section>
+    ${st ? `<section class="panel stack" data-stg><div class="spread"><h2 class="h3">This week</h2><span class="label">Goal: ${s.weekly_goal} day${s.weekly_goal > 1 ? 's' : ''} each</span></div>
+      <div class="sq-stats"><div><b data-count="${st.pct}" data-key="sqp${s.id}" data-suffix="%">${st.pct}%</b><small>hit the goal</small></div><div><b data-count="${st.week_days}" data-key="sqw${s.id}">${st.week_days}</b><small>training days</small></div><div><b data-count="${st.wins}" data-key="sqv${s.id}">${st.wins}</b><small>battle wins</small></div></div>
+      ${Social.bar(st.pct, 'sqbar' + s.id, 'orange big')}<small class="muted">${st.hit} of ${st.members} member${st.members === 1 ? '' : 's'} hit ${s.weekly_goal}+ training days so far.</small></section>` : ''}
+    ${s.members ? `<section class="panel stack" data-stg><div class="spread"><h2 class="h3">Members · ${s.members.length}</h2>${adm ? `<button class="btn sm" type="button" data-act="soc-sq-invite" data-id="${s.id}">${icon('user-plus')} Invite</button>` : ''}</div>
+      ${s.members.map(m => `<div class="sqm">${Social.who(m, m.role !== 'member' ? m.role : '')}${m.week != null ? `<span class="dots" aria-label="${m.week} of ${s.weekly_goal} days">${Array.from({ length: s.weekly_goal }, (_, i) => `<i class="${i < m.week ? 'on' : ''}"></i>`).join('')}</span>` : ''}${adm && m.id !== Cloud.user.id && m.role !== 'owner' ? `<button class="btn icon sm ghost" type="button" data-act="soc-sq-member" data-id="${s.id}" data-u="${m.id}" data-k="${esc(m.name)}" data-role="${m.role}" aria-label="Manage ${esc(m.name)}">${icon('ellipsis')}</button>` : ''}</div>`).join('')}
+      ${adm && s.pending && s.pending.length ? `<small class="muted">Invited: ${s.pending.map(p => esc(p.name)).join(', ')}</small>` : ''}</section>` : ''}
+    ${s.my_role ? `<section class="panel stack" data-stg><div class="spread"><h2 class="h3">Battles</h2>${adm ? `<button class="btn sm red" type="button" data-act="soc-new-challenge" data-pre='${esc(JSON.stringify({ kind: 'squad', squad_id: s.id }))}'>${icon('swords')} Start a battle</button>` : ''}</div>
+      ${ch.length ? ch.map(c => `<button type="button" class="list-item" data-act="go" data-r="challenge" data-p="${c.id}">${icon('swords')}<div class="grow"><b>${esc(c.title)}</b><div class="muted" style="font-size:12.5px">${c.squad_status === 'invited' ? 'Waiting for an answer' : Arena.left(c)}</div></div>${icon('chevron-right')}</button>`).join('') : '<p class="muted">No active battles.</p>'}
+      ${hist.length ? `<details class="sfold"><summary>History · ${hist.length}</summary>${hist.map(c => `<button type="button" class="list-item" data-act="go" data-r="challenge" data-p="${c.id}">${icon(c.won ? 'crown' : 'flag')}<div class="grow"><b>${esc(c.title)}</b><div class="muted" style="font-size:12.5px">${c.won ? 'Won' : c.rank ? 'Placed #' + c.rank : 'Finished'}</div></div></button>`).join('')}</details>` : ''}</section>
+    <section class="stack" data-stg><div class="spread"><h2 class="h3">Squad feed</h2><button class="btn sm primary" type="button" data-act="soc-sq-post" data-id="${s.id}">${icon('pencil')} Post</button></div>
+      ${feed.v ? (feed.v.length ? feed.v.map(p => Posts.card(p)).join('') : '<p class="muted">Nothing posted to the squad yet.</p>') : feed.err ? Social.errBox(feed.err, 'sqfeed:' + id) : Social.skel(1)}</section>
+    <button class="btn block danger" type="button" data-act="soc-sq-leave" data-id="${s.id}" data-k="${esc(s.name)}" data-stg>${icon('log-out')} Leave squad</button>` : ''}</div>`;
+};
+
+/* ---------- athlete profiles ---------- */
+const AthleteUI = {
+  view(id, mine) {
+    const e = Social.get('ath:' + id, () => Social.rpc('athlete_get', { p_id: id }), 20000);
+    if (!e.v) return e.err ? Social.errBox(e.err, 'ath:' + id) : Social.skel(2);
+    const a = e.v, x = mine ? (Social.c.xp && Social.c.xp.v) || a.xp : a.xp;
+    const posts = a.full ? Social.get('user:' + id, () => Social.rpc('feed_posts', { p_filter: 'user', p_user: id }), 20000) : null;
+    const follow = a.me ? `<button class="btn sm" type="button" data-act="soc-edit-me">${icon('pencil')} Edit profile</button>`
+      : a.follow === 'accepted' ? `<button class="btn sm" type="button" data-act="soc-unfollow" data-id="${a.id}">${icon('user-check')} Following</button>`
+      : a.follow === 'pending' ? `<button class="btn sm" type="button" data-act="soc-unfollow" data-id="${a.id}">Requested</button>`
+      : `<button class="btn sm primary" type="button" data-act="soc-follow" data-id="${a.id}">${icon('user-plus')} ${a.follows_me ? 'Follow back' : 'Follow'}</button>`;
+    const badges = x ? `<section class="panel stack" data-stg><div class="spread"><h2 class="h3">Badges</h2><span class="label">${x.badges.filter(b => b.have >= b.goal).length} / ${x.badges.length}</span></div>
+      <div class="sbadges">${x.badges.map(b => { const on = b.have >= b.goal, h = (a.badge_history || []).find(y => y.badge === b.key); return `<div class="sbadge ${on ? 'on' : ''}" title="${esc(b.desc)}"><div class="smedal ${on ? 'on' : ''}">${icon(SOC_BADGE_ICON[b.key] || 'award')}</div><b>${esc(b.name)}</b><small>${on ? (h ? fmtDate(String(h.earned_at).slice(0, 10)) : 'Earned') : `${b.have}/${b.goal}`}</small>${!on && b.goal > 1 ? Social.bar(b.have / b.goal * 100, 'bdg' + b.key) : ''}</div>`; }).join('')}</div></section>` : '';
+    const xpCard = x ? `<section class="panel sxp" data-stg><div class="sxp-l"><small>LEVEL</small><b data-count="${x.level}" data-key="lvl${id}">${x.level}</b></div><div class="grow stack" style="gap:6px"><div class="spread"><b><span data-count="${x.xp}" data-key="xp${id}">${fmtNum(x.xp, 0)}</span> XP</b><small class="muted">next level at ${fmtNum(x.next, 0)}</small></div>${Social.bar((x.xp - x.floor) / (x.next - x.floor) * 100, 'xpb' + id, 'orange big')}
+      ${mine ? `<details class="sfold"><summary>How XP is earned</summary><div class="kv"><span>Training days · ${x.parts.training_days}</span><span>50 each (1 per day)</span></div><div class="kv"><span>Personal records · ${x.parts.prs}</span><span>40 each (max 3 a day)</span></div><div class="kv"><span>Consistent weeks · ${x.parts.consistent_weeks}</span><span>100 per week with 3+ days</span></div><div class="kv"><span>Challenges finished · ${x.parts.challenges}</span><span>150 each (max 4 a week)</span></div><div class="kv"><span>Wins · ${x.parts.wins + x.parts.squad_wins}</span><span>100 each</span></div><small class="muted">XP is worked out by the database from your logged workouts — it can't be added by hand, and extra sessions on the same day don't earn more.</small></details>` : ''}</div></section>` : '';
+    const st = a.stats;
+    return `<section class="panel ahero" data-stg>${a.cover ? `<div class="sq-cover">${Social.img(a.cover, '')}</div>` : '<div class="sq-cover none"></div>'}
+      <div class="sqhero-in">${Social.avatar(a, 76)}<div class="grow"><h2 class="chero-t">${esc(a.name)}</h2><span class="muted">@${esc(a.username)}${a.private ? ` · ${icon('lock')} Private` : ''}</span></div></div>
+      ${a.bio ? `<p>${esc(a.bio)}</p>` : ''}
+      <div class="row wrap"><button type="button" class="linkish" data-act="soc-follows" data-id="${a.id}" data-k="followers"><b>${a.followers}</b> follower${a.followers === 1 ? '' : 's'}</button><button type="button" class="linkish" data-act="soc-follows" data-id="${a.id}" data-k="following"><b>${a.following}</b> following</button>${a.follows_me && !a.me ? '<span class="badge">Follows you</span>' : ''}</div>
+      <div class="row wrap">${follow}${a.me ? `<button class="btn sm ghost" type="button" data-act="go" data-r="journal">${icon('book-open')} Journal</button><button class="btn sm ghost" type="button" data-act="soc-settings">${icon('shield')} Privacy</button>` : `<button class="btn sm ghost icon" type="button" data-act="soc-ath-menu" data-id="${a.id}" data-k="${esc(a.name)}" aria-label="More">${icon('ellipsis')}</button>`}</div></section>
+    ${!a.full ? Social.empty('lock', 'This account is private', a.follow === 'pending' ? 'Your follow request is waiting for approval.' : 'Follow to see their training, records and posts.') : ''}
+    ${a.me && Social.c.me && Social.c.me.v && Social.c.me.v.requests ? `<button class="panel list-item" type="button" data-act="soc-follows" data-id="${a.id}" data-k="requests" data-stg>${icon('user-plus')}<div class="grow"><b>${Social.c.me.v.requests} follow request${Social.c.me.v.requests > 1 ? 's' : ''}</b><div class="muted" style="font-size:12.5px">Approve who can see your training</div></div>${icon('chevron-right')}</button>` : ''}
+    ${xpCard}
+    ${st ? `<section class="panel sq-stats" data-stg><div><b data-count="${st.workouts}" data-key="aw${id}">${st.workouts}</b><small>workouts done</small></div><div><b data-count="${st.days28}" data-key="ad${id}">${st.days28}</b><small>days · last 4 weeks</small></div><div><b data-count="${st.week}" data-key="awk${id}">${st.week}</b><small>days this week</small></div></section>` : ''}
+    ${badges}
+    ${a.prs && a.prs.length ? `<section class="panel stack" data-stg><h2 class="h3">Personal records</h2>${a.prs.map(p => `<div class="kv"><span>${icon('trophy')} ${esc(p.name)}</span><span>${esc(p.desc || '')} · ${fmtDate(p.date)}</span></div>`).join('')}<small class="muted">Self-logged test results.</small></section>` : ''}
+    ${a.challenges && a.challenges.length ? `<section class="panel stack" data-stg><h2 class="h3">Challenges</h2>${a.challenges.map(c => `<div class="kv"><span>${icon(c.won ? 'crown' : c.status === 'final' ? 'flag' : 'swords')} ${esc(c.title)}</span><span>${c.status === 'final' ? (c.won ? 'Won' : c.done ? 'Finished' : c.rank ? '#' + c.rank : 'Took part') : 'In progress'}</span></div>`).join('')}</section>` : ''}
+    ${a.squads && a.squads.length ? `<section class="panel stack" data-stg><h2 class="h3">Squads</h2>${a.squads.map(s => `<button type="button" class="list-item" data-act="go" data-r="squad" data-p="${s.id}">${Social.avatar({ name: s.name, avatar: s.avatar }, 32)}<div class="grow"><b>${esc(s.name)}</b><div class="muted" style="font-size:12.5px">@${esc(s.handle)}${s.role !== 'member' ? ' · ' + s.role : ''}</div></div>${icon('chevron-right')}</button>`).join('')}</section>` : ''}
+    ${posts ? `<h2 class="h3 ssec" data-stg>Posts</h2>${posts.v ? (posts.v.length ? posts.v.map(p => Posts.card(p)).join('') : '<p class="muted" data-stg>No posts yet.</p>') : posts.err ? Social.errBox(posts.err, 'user:' + id) : Social.skel(1)}` : ''}`;
+  },
+  edit() {
+    const m = (Social.c.me && Social.c.me.v) || {}; let av = null, cv = null;
+    Sheet.open({ title: 'Edit profile', html: `<div class="sqf-av"><label class="cmp-add round" id="peAvL">${m.avatar ? Social.img(m.avatar, 'Your photo') : icon('camera')}<span>Profile photo</span><input type="file" id="peAv" accept="image/*" class="sr-only"></label><label class="cmp-add wide" id="peCvL">${m.cover ? Social.img(m.cover, 'Cover') : icon('image')}<span>Cover image</span><input type="file" id="peCv" accept="image/*" class="sr-only"></label></div>
+      <div class="field"><label for="peN">Display name</label><input class="input" id="peN" maxlength="40" value="${esc(m.display_name || '')}" placeholder="${esc(m.username || '')}"></div>
+      <div class="field"><label for="peB">Bio</label><textarea class="input" id="peB" rows="3" maxlength="280" placeholder="Position, goals, what you're chasing this summer">${esc(m.bio || '')}</textarea></div>
+      <p class="err-msg" id="peErr"></p><button class="btn big primary block" type="button" id="peGo">Save</button>${m.avatar ? '<button class="btn block ghost" type="button" id="peAvX">Remove profile photo</button>' : ''}`,
+      onMount: sh => {
+        Social.hydrate(sh);
+        const up = (inp, lab, max, set) => { $(inp, sh).onchange = async e => { const f = e.target.files[0]; if (!f) return; $(lab + ' span', sh).textContent = 'Uploading…'; try { const p = await Social.upload(f, max); set(p); $(lab, sh).firstElementChild.outerHTML = Social.img(p, ''); Social.hydrate(sh); $(lab + ' span', sh).textContent = 'Ready'; } catch (er) { $('#peErr', sh).textContent = Social.msg(er); } }; };
+        up('#peAv', '#peAvL', 512, p => av = p); up('#peCv', '#peCvL', 1600, p => cv = p);
+        const x = $('#peAvX', sh); if (x) x.onclick = () => { av = ''; x.textContent = 'Photo will be removed when you save'; };
+        $('#peGo', sh).onclick = async e => {
+          const r = await Social.act(e.currentTarget, () => Social.rpc('my_social_update', { p_display_name: $('#peN', sh).value, p_bio: $('#peB', sh).value, p_avatar: av, p_cover: cv }));
+          if (r) { const old = [av !== null && m.avatar, cv !== null && m.cover].filter(Boolean); if (old.length) Social.removeFiles(old); Social.c.me = { v: r, at: Date.now() }; Social.drop('ath:', 'feed'); await Sheet.close(); UI.toast('Profile saved.'); Social.repaint(); }
+        };
+      } });
+  },
+  settings() {
+    const m = (Social.c.me && Social.c.me.v) || {}, p = Object.assign({ account: 'public', discoverable: true, stats: true, prs: true, challenges: true, squads: true }, m.privacy || {}), n = m.notify_prefs || {};
+    const tog = (k, l, d) => `<label class="srow"><span class="grow"><b>${l}</b><small class="muted">${d}</small></span><input type="checkbox" class="sw" data-pv="${k}" ${p[k] ? 'checked' : ''}></label>`;
+    const ntog = (k, l) => `<label class="srow"><span class="grow"><b>${l}</b></span><input type="checkbox" class="sw" data-nt="${k}" ${n[k] !== 'off' ? 'checked' : ''}></label>`;
+    Sheet.open({ title: 'Privacy & notifications', html: `<div class="field"><span class="label">Account</span><div class="seg" id="stAcc">${[['public', 'Public'], ['private', 'Private']].map(([k, l]) => `<button type="button" data-v="${k}" aria-pressed="${p.account === k}">${icon(k === 'private' ? 'lock' : 'globe')} ${l}</button>`).join('')}</div><small class="muted">Private: only followers you approve see your posts and stats, and you're hidden from search.</small></div>
+      <div class="stack">${tog('discoverable', 'Show me in search', 'Let athletes find you by name')}${tog('stats', 'Training stats & XP', 'Workouts done, training days, level, badges, leaderboards')}${tog('prs', 'Personal records', 'Your test records on your profile')}${tog('challenges', 'Challenges', 'Challenges you joined and results')}${tog('squads', 'Squads', 'Public squads you belong to')}</div>
+      <small class="muted">Body weight, measurements, notes and workout details are never shown to anyone unless you post them.</small>
+      <h3 class="h3">In-app notifications</h3><div class="stack">${ntog('social', 'Follows, reactions & comments')}${ntog('challenges', 'Challenges')}${ntog('squads', 'Squads')}${ntog('achievements', 'Badges')}${m.is_admin ? ntog('moderation', 'Reports (admin)') : ''}</div>
+      <small class="muted">These show inside the app (the bell). Phone push alerts are only set up for the admin's new-athlete alerts.</small>
+      <button class="list-item" type="button" id="stBlocks">${icon('user-x')}<div class="grow"><b>Blocked athletes</b></div>${icon('chevron-right')}</button>
+      <p class="err-msg" id="stErr"></p><button class="btn big primary block" type="button" id="stGo">Save</button>`,
+      onMount: sh => {
+        let acc = p.account; $$('#stAcc button', sh).forEach(b => b.onclick = () => { acc = b.dataset.v; $$('#stAcc button', sh).forEach(x => x.setAttribute('aria-pressed', x === b)); });
+        $('#stBlocks', sh).onclick = () => { Sheet.close(); setTimeout(() => AthleteUI.blocks(), 50); };
+        $('#stGo', sh).onclick = async e => {
+          const pv = { account: acc }; $$('[data-pv]', sh).forEach(i => pv[i.dataset.pv] = i.checked);
+          const nt = {}; $$('[data-nt]', sh).forEach(i => nt[i.dataset.nt] = i.checked ? 'on' : 'off');
+          const r = await Social.act(e.currentTarget, () => Social.rpc('my_social_update', { p_privacy: pv, p_notify: nt }));
+          if (r) { Social.c.me = { v: r, at: Date.now() }; Social.drop('ath:', 'lb:'); await Sheet.close(); UI.toast('Privacy saved.'); Social.repaint(); }
+        };
+      } });
+  },
+  async blocks() {
+    Sheet.open({ title: 'Blocked athletes', html: `<div id="blk">${Kinetic.wave('LOADING…')}</div>`, onMount: async sh => {
+      const draw = async () => { const L = await Social.rpc('my_blocks').catch(e => { $('#blk', sh).innerHTML = `<p class="err-msg">${esc(Social.msg(e))}</p>`; return null; }); if (!L) return;
+        $('#blk', sh).innerHTML = L.length ? L.map(u => `<div class="sqrow">${Social.avatar(u, 36)}<span class="grow"><b>${esc(u.name)}</b><small class="muted">@${esc(u.username)}</small></span><button class="btn sm" type="button" data-unb="${u.id}">Unblock</button></div>`).join('') : '<p class="muted">Nobody blocked. Blocked athletes can\'t see your profile or posts, follow you, comment, react or invite you.</p>';
+        Social.hydrate(sh); $$('[data-unb]', sh).forEach(b => b.onclick = async () => { if (await Social.act(b, () => Social.rpc('unblock_user', { p_id: b.dataset.unb }), 'Unblocked.') !== undefined) { Social.drop('ath:', 'feed'); draw(); } }); };
+      draw(); } });
+  },
+  async follows(id, which) {
+    Sheet.open({ title: which === 'requests' ? 'Follow requests' : which === 'followers' ? 'Followers' : 'Following', html: `<div id="fl">${Kinetic.wave('LOADING…')}</div>`, onMount: async sh => {
+      const draw = async () => {
+        const L = await Social.rpc('follow_list', { p_id: id, p_which: which }).catch(e => { $('#fl', sh).innerHTML = `<p class="err-msg">${esc(Social.msg(e))}</p>`; return null; }); if (!L) return;
+        $('#fl', sh).innerHTML = L.length ? L.map(u => `<div class="sqrow">${Social.avatar(u, 36)}<button type="button" class="grow linkish left" data-goath="${u.id}"><b>${esc(u.name)}</b><small class="muted">@${esc(u.username)}</small></button>
+          ${which === 'requests' ? `<button class="btn sm primary" type="button" data-fr="${u.id}" data-v="1">Approve</button><button class="btn sm ghost" type="button" data-fr="${u.id}" data-v="0">Decline</button>` : which === 'followers' && id === Cloud.user.id ? `<button class="btn sm ghost" type="button" data-frm="${u.id}">Remove</button>` : ''}</div>`).join('') : '<p class="muted">Nobody here yet.</p>';
+        Social.hydrate(sh);
+        $$('[data-goath]', sh).forEach(b => b.onclick = async () => { await Sheet.close(); Nav.go('athlete', b.dataset.goath); });
+        $$('[data-fr]', sh).forEach(b => b.onclick = async () => { if (await Social.act(b, () => Social.rpc('follow_respond', { p_id: b.dataset.fr, p_accept: b.dataset.v === '1' }), b.dataset.v === '1' ? 'Approved.' : 'Declined.') !== undefined) { Social.drop('me', 'ath:'); draw(); } });
+        $$('[data-frm]', sh).forEach(b => b.onclick = async () => { if (await Social.act(b, () => Social.rpc('follower_remove', { p_id: b.dataset.frm }), 'Removed.') !== undefined) { Social.drop('ath:'); draw(); } });
+      };
+      draw(); }, onClose: () => Social.repaint() });
+  }
+};
+Screens.athlete = function (id) { return `<div class="screen soc">${backBar('Athlete')}${AthleteUI.view(id, id === (Cloud.user && Cloud.user.id))}</div>`; };
+
+/* ---------- progress journal ---------- */
+Screens.journal = function () {
+  const e = Social.get('journal', () => Social.rpc('feed_posts', { p_filter: 'journal', p_limit: 50 }), 20000), cmp = UI.ui.socCmp || [];
+  const L = e.v || [];
+  const list = e.v ? (L.length ? `<ol class="jtl">${L.map(p => `<li class="panel jent ${cmp.includes(p.id) ? 'sel' : ''}" data-stg><div class="jdate"><b>${fmtDate(p.payload.entry_date)}</b><span class="saud">${icon(SOC_AUD[p.audience][0])} ${SOC_AUD[p.audience][1]}</span></div>
+      ${p.media[0] ? `<button type="button" class="phbtn" data-act="soc-photo" data-path="${esc(p.media[0])}" aria-label="Open photo">${Social.img(p.media[0], 'Progress photo from ' + p.payload.entry_date)}</button>` : ''}
+      ${p.body ? `<p>${esc(p.body).replace(/\n/g, '<br>')}</p>` : ''}
+      <div class="row wrap">${p.media[0] ? `<button type="button" class="btn sm ${cmp.includes(p.id) ? 'primary' : 'ghost'}" data-act="soc-j-cmp" data-id="${p.id}" aria-pressed="${cmp.includes(p.id)}">${icon('columns-2')} Compare</button>` : ''}<button type="button" class="btn sm ghost" data-act="soc-j-share" data-id="${p.id}">${icon(p.audience === 'private' ? 'share-2' : 'lock')} ${p.audience === 'private' ? 'Share' : 'Change who sees it'}</button><button type="button" class="btn sm ghost danger" data-act="soc-j-del" data-id="${p.id}">${icon('trash-2')}</button></div></li>`).join('')}</ol>`
+    : Social.empty('book-open', 'Start your journal', 'Photos and notes are private unless you choose to share one. It\'s about consistency and how training feels — not how you look.'))
+    : e.err ? Social.errBox(e.err, 'journal') : Social.skel(2);
+  return `<div class="screen soc">${backBar('Journal', `<button class="btn icon primary" type="button" data-act="soc-compose" data-k="progress" aria-label="New entry">${icon('plus')}</button>`)}
+    <section class="panel flat" data-stg><p style="font-size:14px">${icon('lock')} <b>Private by default.</b> Nothing here is shared, scored or rated unless you pick an audience for a single entry. Body weight and measurements are never added automatically.</p></section>
+    ${cmp.length ? `<section class="panel stack" data-stg><div class="spread"><b>${cmp.length === 2 ? 'Ready to compare' : 'Pick one more photo'}</b><button class="btn sm ghost" type="button" data-act="soc-j-cmp-x">Clear</button></div>${cmp.length === 2 ? `<button class="btn block primary" type="button" data-act="soc-j-cmp-go">${icon('columns-2')} Compare side by side</button>` : ''}</section>` : ''}
+    <button class="btn big primary block" type="button" data-act="soc-compose" data-k="progress" data-stg>${icon('plus')} New entry</button>${list}</div>`;
+};
+
+/* ---------- notifications ---------- */
+Screens.notifs = function () {
+  const e = Social.get('notifs', () => Social.rpc('notif_list'), 10000), me = Social.me().v;
+  const ic = { follow: 'user-plus', follow_request: 'user-plus', follow_accept: 'user-check', reaction: 'heart', comment: 'message-circle', reply: 'reply', challenge_invite: 'swords', challenge_squad: 'shield', challenge_accept: 'check', challenge_lead: 'trending-up', challenge_target: 'target', challenge_final: 'flag', squad_invite: 'shield', squad_join: 'users', squad_goal: 'party-popper', badge: 'award', report: 'flag' };
+  const L = e.v || [], today = todayISO(), grp = { Today: L.filter(n => String(n.created_at).slice(0, 10) === today), Earlier: L.filter(n => String(n.created_at).slice(0, 10) !== today) };
+  const row = n => `<button type="button" class="nrow ${n.read ? '' : 'unread'}" data-act="soc-notif" data-id="${n.id}" data-k="${esc(n.ref_kind)}" data-ref="${esc(n.ref_id)}">${n.actor ? Social.avatar(n.actor, 40) : `<span class="sav n" style="--s:40px">${icon(ic[n.kind] || 'bell')}</span>`}
+      <span class="grow"><span>${n.actor ? `<b>${esc(n.actor.name)}</b> ` : ''}${esc(n.body)}</span><small class="muted">${Social.ago(n.created_at)}</small></span>${n.read ? '' : '<i class="udot" aria-label="Unread"></i>'}</button>`;
+  return `<div class="screen soc">${backBar('Notifications', `<button class="btn icon" type="button" data-act="soc-settings" aria-label="Notification settings">${icon('settings')}</button>`)}
+    ${me && me.requests ? `<button class="panel list-item" type="button" data-act="soc-follows" data-id="${Cloud.user.id}" data-k="requests" data-stg>${icon('user-plus')}<div class="grow"><b>${me.requests} follow request${me.requests > 1 ? 's' : ''}</b></div>${icon('chevron-right')}</button>` : ''}
+    ${e.v ? (L.length ? `${L.some(n => !n.read) ? `<button class="btn sm ghost" type="button" data-act="soc-notif-all" data-stg>${icon('check-check')} Mark all as read</button>` : ''}${Object.entries(grp).filter(([, v]) => v.length).map(([k, v]) => `<section class="panel nlist" data-stg><span class="label">${k}</span>${v.map(row).join('')}</section>`).join('')}`
+      : Social.empty('bell', 'All quiet', 'Challenge invites, comments, new followers and badges show up here.')) : e.err ? Social.errBox(e.err, 'notifs') : Social.skel(2)}</div>`;
+};
+
+/* ---------- moderation (admin) ---------- */
+Screens.moderation = function () {
+  if (!Cloud.isAdmin()) return `<div class="screen">${backBar('Moderation')}<section class="panel"><p>Only an admin can open this page.</p></section></div>`;
+  const e = Social.get('reports', () => Social.rpc('admin_reports'), 15000);
+  const L = e.v || [];
+  return `<div class="screen soc">${backBar('Moderation')}<section class="panel flat" data-stg><p style="font-size:14px">Reports from athletes. <b>Hide</b> removes a post or comment for everyone. To switch an athlete off completely, use Team access.</p></section>
+    ${e.v ? (L.length ? L.map(r => { const pv = r.preview || {}; return `<section class="panel stack rep ${r.status}" data-stg><div class="spread"><span class="label">${esc(r.kind)} · ${r.count} report${r.count > 1 ? 's' : ''}</span><span class="badge ${r.status === 'open' ? 'red' : ''}">${r.status}</span></div>
+      <div>${pv.author ? `<b>${esc(pv.author.name)}</b> @${esc(pv.author.username)}` : pv.name ? `<b>${esc(pv.name)}</b>${pv.username ? ' @' + esc(pv.username) : pv.handle ? ' @' + esc(pv.handle) : ''}` : ''}${pv.body ? `<p class="rep-b">${esc(pv.body)}</p>` : ''}${pv.hidden ? '<span class="badge">hidden</span>' : ''}${pv.deleted ? '<span class="badge">deleted</span>' : ''}</div>
+      <small class="muted">Reasons: ${r.reasons.map(esc).join(', ')} · ${Social.ago(r.last)}</small>
+      <div class="row wrap">${r.kind === 'post' || r.kind === 'comment' || r.kind === 'squad' ? `<button class="btn sm danger" type="button" data-act="soc-mod" data-k="${r.kind}" data-id="${r.target}" data-v="hide">${icon('eye-off')} Hide</button>` : ''}${r.kind === 'post' && pv.hidden ? `<button class="btn sm" type="button" data-act="soc-mod" data-k="post" data-id="${r.target}" data-v="restore">Restore</button>` : ''}${r.status === 'open' ? `<button class="btn sm ghost" type="button" data-act="soc-mod" data-k="${r.kind}" data-id="${r.target}" data-v="dismiss">Dismiss</button>` : ''}${r.kind === 'user' ? `<button class="btn sm ghost" type="button" data-act="go" data-r="admin">Team access</button>` : ''}</div></section>`; }).join('')
+      : Social.empty('shield-check', 'No reports', 'When an athlete reports a post, comment, profile or squad, it shows up here.')) : e.err ? Social.errBox(e.err, 'reports') : Social.skel(1)}</div>`;
+};
+
+/* ---------- search ---------- */
+const SocSearch = {
+  open() {
+    Sheet.open({ title: 'Find athletes & squads', html: `<div class="input-unit"><input class="input" type="search" id="ssQ" placeholder="Name or username" autocapitalize="none" autocomplete="off" aria-label="Search"><span>${icon('search')}</span></div><div id="ssR" class="stack"><p class="muted">Type at least 2 letters. Private accounts only appear to their followers.</p></div>`,
+      onMount: sh => { const q = $('#ssQ', sh); setTimeout(() => q.focus(), 60);
+        q.oninput = debounce(async () => {
+          const v = q.value.trim(), out = $('#ssR', sh); if (v.length < 2) { out.innerHTML = '<p class="muted">Type at least 2 letters.</p>'; return; }
+          out.innerHTML = Kinetic.wave('SEARCHING…');
+          const [a, s] = await Promise.all([Social.rpc('athlete_search', { p_q: v }).catch(() => []), Social.rpc('squad_discover', { p_q: v }).catch(() => [])]);
+          if (q.value.trim() !== v) return;
+          out.innerHTML = (a.length ? `<span class="label">Athletes</span>${a.map(u => `<div class="sqrow">${Social.avatar(u, 36)}<button type="button" class="grow linkish left" data-ga="${u.id}"><b>${esc(u.name)}</b><small class="muted">@${esc(u.username)}</small></button>${u.follow === 'none' ? `<button class="btn sm primary" type="button" data-fo="${u.id}">Follow</button>` : `<span class="badge">${u.follow === 'pending' ? 'Requested' : 'Following'}</span>`}</div>`).join('')}` : '')
+            + (s.length ? `<span class="label">Squads</span>${s.map(x => `<div class="sqrow">${Social.avatar({ name: x.name, avatar: x.avatar }, 36)}<button type="button" class="grow linkish left" data-gs="${x.id}"><b>${esc(x.name)}</b><small class="muted">@${esc(x.handle)} · ${x.members} members</small></button></div>`).join('')}` : '')
+            || '<p class="muted">Nobody found.</p>';
+          UI.icons(out); Social.hydrate(out);
+          $$('[data-ga]', out).forEach(b => b.onclick = async () => { await Sheet.close(); Nav.go('athlete', b.dataset.ga); });
+          $$('[data-gs]', out).forEach(b => b.onclick = async () => { await Sheet.close(); Nav.go('squad', b.dataset.gs); });
+          $$('[data-fo]', out).forEach(b => b.onclick = async () => { const st = await Social.act(b, () => Social.rpc('follow_user', { p_id: b.dataset.fo })); if (st) { b.outerHTML = `<span class="badge">${st === 'pending' ? 'Requested' : 'Following'}</span>`; Social.drop('feed', 'lb:', 'ath:'); } });
+        }, 250); } });
+  }
+};
+
+Object.assign(Actions, {
+  'soc-search': () => SocSearch.open(),
+  'soc-settings': () => { Social.me(); AthleteUI.settings(); },
+  'soc-edit-me': () => AthleteUI.edit(),
+  'soc-follows': el => AthleteUI.follows(el.dataset.id, el.dataset.k),
+  'soc-follow': async el => { const st = await Social.act(el, () => Social.rpc('follow_user', { p_id: el.dataset.id }), null); if (st) { UI.toast(st === 'pending' ? 'Request sent.' : 'Following.'); Haptics.tap(); Social.drop('ath:' + el.dataset.id, 'user:' + el.dataset.id, 'feed', 'lb:'); UI.render(); } },
+  'soc-unfollow': async el => { const ok = await Sheet.confirm({ title: 'Unfollow?', body: '<p>Their followers-only posts will disappear from your feed.</p>', ok: 'Unfollow' }); if (ok && await Social.act(null, () => Social.rpc('unfollow_user', { p_id: el.dataset.id })) !== undefined) { Social.drop('ath:' + el.dataset.id, 'user:' + el.dataset.id, 'feed', 'lb:'); UI.render(); } },
+  'soc-ath-menu': async el => {
+    const k = await Sheet.choose({ title: el.dataset.k, body: '', options: [{ id: 'challenge', label: 'Challenge them' }, { id: 'report', label: 'Report', cls: 'danger' }, { id: 'block', label: 'Block', cls: 'danger' }] }); if (!k) return;
+    if (k === 'challenge') { const a = Social.c['ath:' + el.dataset.id] && Social.c['ath:' + el.dataset.id].v; return Wizard.open({ kind: 'duel', invitees: a ? [a.username] : [] }); }
+    if (k === 'report') return Actions['soc-report']({ dataset: { k: 'user', id: el.dataset.id } });
+    const ok = await Sheet.confirm({ title: `Block ${el.dataset.k}?`, body: '<p>You stop following each other. They can\'t see your profile or posts, comment, react, follow or invite you, and you won\'t see theirs. They aren\'t told.</p>', ok: 'Block', danger: true });
+    if (ok && await Social.act(null, () => Social.rpc('block_user', { p_id: el.dataset.id }), 'Blocked.') !== undefined) { Social.drop(); Nav.go('social', 'feed'); }
+  },
+  'soc-sq-new': () => SquadUI.form(null),
+  'soc-sq-edit': el => SquadUI.form(Social.c['sq:' + el.dataset.id].v),
+  'soc-sq-join': async el => { const r = await Social.act(el, () => Social.rpc('squad_join', { p_id: el.dataset.id }), 'Welcome to the squad.'); if (r) { Social.c['sq:' + r.id] = { v: r, at: Date.now() }; Social.drop('squads', 'sqdisc', 'me', 'lb:squads'); Nav.go('squad', r.id, { replace: UI.route.name === 'squad' }); } },
+  'soc-sq-decline': async el => { if (await Social.act(el, () => Social.rpc('squad_decline', { p_id: el.dataset.id }), 'Invitation declined.') !== undefined) { Social.drop('squads', 'sq:' + el.dataset.id, 'me'); if (UI.route.name === 'squad') Nav.go('social', 'squads'); else UI.render(); } },
+  'soc-sq-leave': async el => { const ok = await Sheet.confirm({ title: `Leave ${el.dataset.k}?`, body: '<p>You can rejoin a public squad any time; a private one needs a new invite. If you\'re the owner, ownership passes to an admin or the longest-standing member.</p>', ok: 'Leave squad', danger: true }); if (ok && await Social.act(null, () => Social.rpc('squad_leave', { p_id: el.dataset.id }), 'You left the squad.') !== undefined) { Social.drop('squads', 'sq:', 'sqfeed:'); Nav.go('social', 'squads'); } },
+  'soc-sq-post': el => { const s = Social.c['sq:' + el.dataset.id] && Social.c['sq:' + el.dataset.id].v; Composer.open('text', { audience: 'squad', squad: el.dataset.id, squadName: s && s.name }); },
+  'soc-sq-invite': el => {
+    Sheet.open({ title: 'Invite to squad', html: `<div class="field"><label for="siQ">Search athletes</label><input class="input" id="siQ" placeholder="Name or username" autocapitalize="none" autocomplete="off"></div><div id="siR" class="stack"></div>`,
+      onMount: sh => { const q = $('#siQ', sh); setTimeout(() => q.focus(), 60); q.oninput = debounce(async () => {
+        const r = q.value.trim().length < 2 ? [] : await Social.rpc('athlete_search', { p_q: q.value }).catch(() => []), out = $('#siR', sh);
+        out.innerHTML = r.map(u => `<div class="sqrow">${Social.avatar(u, 36)}<span class="grow"><b>${esc(u.name)}</b><small class="muted">@${esc(u.username)}</small></span><button class="btn sm primary" type="button" data-inv="${esc(u.username)}">Invite</button></div>`).join('') || (q.value.trim().length >= 2 ? '<p class="muted">Nobody found.</p>' : '');
+        Social.hydrate(out); $$('[data-inv]', out).forEach(b => b.onclick = async () => { if (await Social.act(b, () => Social.rpc('squad_invite', { p_id: el.dataset.id, p_username: b.dataset.inv }), 'Invite sent.') !== undefined) { b.outerHTML = '<span class="badge">Invited</span>'; Social.drop('sq:' + el.dataset.id); } });
+      }, 250); }, onClose: () => Social.repaint() });
+  },
+  'soc-sq-member': async el => {
+    const s = Social.c['sq:' + el.dataset.id].v, owner = s.my_role === 'owner', opts = [];
+    if (owner) opts.push(el.dataset.role === 'admin' ? { id: 'member', label: 'Remove admin role' } : { id: 'admin', label: 'Make squad admin' });
+    if (owner || el.dataset.role === 'member') opts.push({ id: 'remove', label: 'Remove from squad', cls: 'danger' });
+    const k = await Sheet.choose({ title: el.dataset.k, body: '', options: opts }); if (!k) return;
+    const r = k === 'remove' ? await Social.act(null, () => Social.rpc('squad_remove', { p_id: s.id, p_user: el.dataset.u }), 'Removed.') : await Social.act(null, () => Social.rpc('squad_role', { p_id: s.id, p_user: el.dataset.u, p_role: k }), 'Role updated.');
+    if (r !== undefined) { Social.drop('sq:' + s.id); UI.render(); }
+  },
+  'soc-notif': async el => {
+    const k = el.dataset.k, ref = String(el.dataset.ref).split(':')[0];
+    Social.rpc('notif_read', { p_ids: [+el.dataset.id] }).then(() => { Social.drop('notifs', 'me'); Social.pollUnread(); }, () => { });
+    if (k === 'post') Nav.go('post', ref); else if (k === 'challenge') Nav.go('challenge', ref); else if (k === 'user') Nav.go('athlete', ref);
+    else if (k === 'squad') Nav.go('squad', ref); else if (k === 'badge') Nav.go('social', 'me'); else if (['comment', 'post'].includes(k) && Cloud.isAdmin()) Nav.go('moderation'); else if (Cloud.isAdmin()) Nav.go('moderation');
+  },
+  'soc-notif-all': async el => { if (await Social.act(el, () => Social.rpc('notif_read', { p_ids: null }), 'All caught up.') !== undefined) { Social.drop('notifs', 'me'); Social.setDot(0); UI.render(); } },
+  'soc-mod': async el => { if (await Social.act(el, () => Social.rpc('admin_report_resolve', { p_kind: el.dataset.k, p_target: el.dataset.id, p_action: el.dataset.v }), el.dataset.v === 'hide' ? 'Hidden for everyone.' : 'Done.') !== undefined) { Social.drop('reports', 'feed', 'post:'); UI.render(); } },
+  'soc-j-cmp': el => { const c = UI.ui.socCmp = UI.ui.socCmp || [], i = c.indexOf(el.dataset.id); if (i >= 0) c.splice(i, 1); else { c.push(el.dataset.id); if (c.length > 2) c.shift(); } Social.repaint(); },
+  'soc-j-cmp-x': () => { UI.ui.socCmp = []; Social.repaint(); },
+  'soc-j-cmp-go': () => {
+    const L = (Social.c.journal && Social.c.journal.v) || [], [a, b] = (UI.ui.socCmp || []).map(id => L.find(p => p.id === id)).filter(Boolean).sort((x, y) => x.payload.entry_date.localeCompare(y.payload.entry_date)); if (!a || !b) return;
+    const days = Math.round((parseISO(b.payload.entry_date) - parseISO(a.payload.entry_date)) / 864e5);
+    Sheet.open({ title: 'Compare', wide: true, html: `<div class="jcmp">${[a, b].map(p => `<figure>${Social.img(p.media[0], 'Progress photo from ' + p.payload.entry_date)}<figcaption><b>${fmtDate(p.payload.entry_date)}</b>${p.body ? `<small>${esc(p.body.slice(0, 80))}</small>` : ''}</figcaption></figure>`).join('')}</div><p class="muted" style="text-align:center">${days} day${days === 1 ? '' : 's'} apart. Every training day between them counts — whatever the photo shows.</p>`, onMount: sh => Social.hydrate(sh) });
+  },
+  'soc-j-share': el => { const p = ((Social.c.journal && Social.c.journal.v) || []).find(x => x.id === el.dataset.id); if (p) PostEdit.audience(p); },
+  'soc-j-del': async el => {
+    const ok = await Sheet.confirm({ title: 'Delete this entry?', body: '<p>The entry and its photo are deleted permanently.</p>', ok: 'Delete', danger: true }); if (!ok) return;
+    const r = await Social.act(null, () => Social.rpc('post_delete', { p_id: el.dataset.id }), 'Entry deleted.'); if (!r) return;
+    await Social.removeFiles(r.media); UI.ui.socCmp = (UI.ui.socCmp || []).filter(x => x !== el.dataset.id); Social.drop('journal', 'feed', 'user:'); UI.render();
+  }
+});
+
+/* ---------- wiring into the existing app ---------- */
+['social', 'post', 'challenge', 'squad', 'athlete', 'journal', 'notifs', 'moderation'].forEach(r => TAB_OF[r] = 'social');
+TABS.splice(TABS.indexOf('more'), 0, 'social');
+Object.assign(Kinetic.NAMES, { social: 'SOCIAL', post: 'POST', challenge: 'ARENA', squad: 'SQUAD', athlete: 'ATHLETE', journal: 'JOURNAL', notifs: 'ALERTS', moderation: 'MODERATION' });
+(() => {
+  const more = document.querySelector('#nav [data-tab="more"]');
+  if (more && !document.querySelector('#nav [data-tab="social"]')) { const b = document.createElement('button'); b.type = 'button'; b.dataset.tab = 'social'; b.innerHTML = '<span>Social</span>'; more.before(b); }
+})();
+const socAfter = view => {
+  Social.hydrate(view); UI.observeCounts(view);
+  $$('.sbar > i[data-bk]', view).forEach(i => { const k = i.dataset.bk; if (Motion.off || Social.seen.has(k)) return; Social.seen.add(k); i.classList.add('grow'); });
+  if (!Motion.off) $$('.lb li[data-lbr]', view).forEach(li => { const k = 'lb' + li.closest('section').textContent.slice(0, 40) + li.style.getPropertyValue('--i'); if (Social.seen.has(k)) return; Social.seen.add(k); li.classList.add('in'); });
+};
+['social', 'post', 'challenge', 'squad', 'athlete', 'journal', 'notifs', 'moderation'].forEach(r => After[r] = socAfter);
+// a finished workout can go straight to the feed; the session report gets the same button
+(() => {
+  const w = Celebrate.workout; Celebrate.workout = function (s, fresh) {
+    w.call(Celebrate, s, fresh);
+    if (Social.on()) { const sh = $('#celebrate [data-act="share-session"]'); if (sh) sh.insertAdjacentHTML('afterend', `<button class="btn big block" type="button" data-act="soc-post-workout" data-id="${s.id}">${icon('users')} Post to Social</button>`); UI.icons($('#celebrate')); Social.drop('xp', 'chal', 'me'); setTimeout(() => Social.flush().then(() => Social.xp()), 3000); }
+  };
+  const ss = Screens.session; Screens.session = function (id) {
+    const h = ss.call(Screens, id), s = State.sessions.find(x => x.id === id);
+    return Social.on() && s && s.status === 'completed' ? h.replace(/(data-act="share-session"[^>]*>[\s\S]*?<\/button>)/, `$1<button class="btn block" type="button" data-act="soc-post-workout" data-id="${s.id}" data-stg>${icon('users')} Post to Social</button>`) : h;
+  };
+  const mo = Screens.more; Screens.more = function () {
+    const h = mo.call(Screens);
+    return Cloud.isAdmin() ? h.replace(/(data-r="admin"[\s\S]*?<\/button>)/, `$1<button class="list-item" type="button" data-act="go" data-r="moderation">${icon('flag')}<div class="grow"><b>Moderation</b><div class="muted" style="font-size:12.5px">Reports from athletes about posts, comments, profiles and squads</div></div>${icon('chevron-right')}</button>`) : h;
+  };
+  setInterval(() => Social.pollUnread(), 90000);
+  document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') Social.pollUnread(); });
+  setTimeout(() => Social.pollUnread(), 4000);
+})();
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 
