@@ -1458,6 +1458,38 @@ body:not(.theme-light) .bub{background:rgba(255,255,255,.08);color:#fff}
 .chat-form textarea{resize:none;min-height:46px;max-height:140px;border-radius:16px}
 .chat-off{text-align:center;font-size:14px}
 .onl-t{display:inline-flex;align-items:center;gap:3px}.onl-t.online{color:#2FB45A;font-weight:600}
+.build-id{text-align:center;font:600 12px var(--f-mono,monospace);letter-spacing:.04em;margin-top:6px}
+/* active rest pill + timers */
+.wp.ar{border-style:dashed;background:rgba(232,119,34,.06)}.wp.ar .ic{border-color:#E87722;color:#E87722}.wp.ar.completed .ic{background:#E87722;border-color:#E87722;color:#fff}
+.weekpills .wp{padding:8px 6px}.weekpills .wp b{font-size:16px}
+#alarmFlash{position:fixed;inset:0;z-index:90;pointer-events:none;opacity:0;background:radial-gradient(circle at 50% 50%,rgba(232,119,34,.0),rgba(232,119,34,.55))}
+#alarmFlash.on{animation:alarmF 1.4s ease-out}@keyframes alarmF{0%,30%,60%{opacity:1}15%,45%,100%{opacity:0}}
+.iv-btn{margin-top:10px}
+.pk-iv{margin:6px auto 0;display:flex;gap:6px;min-height:46px}
+#ivx{position:fixed;inset:0;z-index:80;background:radial-gradient(120% 80% at 50% 0%,#861F41,#3A0A1C 70%,#1A0710);color:#fff;overflow:auto;padding:calc(var(--safe-t) + 14px) 18px calc(var(--safe-b) + 18px)}
+#ivx[hidden]{display:none!important}
+.ivx-in{max-width:520px;margin:0 auto;display:flex;flex-direction:column;gap:12px;min-height:100%}
+.ivx-top{display:flex;justify-content:space-between;align-items:center;gap:10px}.ivx-top .label{color:rgba(255,255,255,.75)!important}
+.ivx-title{font:900 clamp(34px,10vw,52px)/.95 var(--f-display,Impact,sans-serif);text-transform:uppercase;margin:0}
+.ivx-sub,.ivx-note{color:rgba(255,255,255,.75);font-size:14px;margin:0}
+.ivx-plan{list-style:none;margin:0;padding:0;border-radius:16px;background:rgba(255,255,255,.08);counter-reset:p}
+.ivx-plan li{display:flex;justify-content:space-between;gap:10px;padding:11px 14px;border-bottom:1px solid rgba(255,255,255,.1);counter-increment:p}.ivx-plan li:last-child{border:0}
+.ivx-plan li span::before{content:counter(p) ". ";color:#E87722;font-weight:800}.ivx-plan small{color:rgba(255,255,255,.6);font-weight:500}
+#ivx .chip{background:rgba(255,255,255,.1);color:#fff;border-color:rgba(255,255,255,.25)}#ivx .chip[aria-pressed="true"]{background:#E87722;border-color:#E87722;color:#1A1D20}
+#ivx .label{color:rgba(255,255,255,.8)}#ivx .btn:not(.red){background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.25)}
+.ivx-opts{gap:8px}
+.ivx-in.run{justify-content:space-between;text-align:center;align-items:center}
+.ivx-dots{display:flex;gap:6px;justify-content:center;flex-wrap:wrap}.ivx-dots i{width:22px;height:6px;border-radius:3px;background:rgba(255,255,255,.2)}.ivx-dots i.done{background:#fff}.ivx-dots i.cur{background:#E87722}
+.ivx-kind{font:700 13px var(--f-mono,monospace);letter-spacing:.14em;text-transform:uppercase;color:#FFB36B}
+.ivx-now{font:900 clamp(40px,12vw,72px)/.95 var(--f-display,Impact,sans-serif);text-transform:uppercase;margin:0;overflow-wrap:anywhere}
+.ivx-in.rest .ivx-now{color:rgba(255,255,255,.75)}
+.ivx-ring{position:relative;width:min(72vw,300px);aspect-ratio:1}.ivx-ring svg{width:100%;height:100%}
+.ivx-ring b{position:absolute;inset:0;display:grid;place-items:center;font:900 clamp(80px,26vw,130px)/1 var(--f-display,Impact,sans-serif);font-variant-numeric:tabular-nums}
+.ivx-next{font-size:17px;color:rgba(255,255,255,.85);min-height:24px}
+.ivx-acts{display:grid;grid-template-columns:1fr 1.3fr 1fr;gap:8px;width:100%}
+.ivx-in.done{justify-content:center}
+#ivx .pk-x{display:inline-flex;align-items:center;gap:4px;min-height:40px;padding:0 12px;border-radius:12px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);color:#fff;font-weight:700}
+.ivx-acts{grid-template-columns:repeat(3,minmax(0,1fr))}.ivx-acts .btn{font-size:15px;padding:0 6px;min-width:0;gap:4px}
 
 </style>
 </head>
@@ -1550,6 +1582,7 @@ body:not(.theme-light) .bub{background:rgba(255,255,255,.08);color:#fff}
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="https://unpkg.com/lucide@0.454.0/dist/umd/lucide.min.js"></script>
 <script>
+const BUILD_ID = 'Oct 15 · 22:42';
 /* ============ LOAD-UP EFFECT ============
    The splash is static HTML/CSS at the top of <body>, so it paints instantly while the app boots
    underneath. It plays for ~2 s on every open (shorter in Minimal / reduced motion); tap to skip. */
@@ -2448,7 +2481,7 @@ const Rest = {
   loop() { clearInterval(this.iv); this.iv = setInterval(() => this.tick(), 250); },
   tick() {
     const t = this.st; if (!t) { clearInterval(this.iv); return; }
-    if (t.running && Date.now() >= t.endAt) { t.running = false; t.remaining = 0; t.done = true; this.save(); Haptics.beep(); Haptics.buzz(); UI.toast('Rest complete. Next set.'); }
+    if (t.running && Date.now() >= t.endAt) { t.running = false; t.remaining = 0; t.done = true; this.save(); Alarm.ring('Rest complete. Next set.'); }
     this.paint();
   },
   render() {
@@ -6643,6 +6676,18 @@ Object.assign(Actions, {
 });
 /* wire into existing screens without changing how they work */
 (() => {
+  const sh = Season.html.bind(Season); Season.html = function (st, opts) {
+    const h = sh(st, opts); try {
+      const wk = st.programWeek; if (st.preSeason || !wk) return h;
+      AR.sync(); const rd = (State.program.restDays || []).filter(r => r.ar && r.week === wk), ws = Program.week(wk); if (!rd.length) return h;
+      return h.replace(/<div class="weekpills">([\s\S]*?)<\/div><\/div>/, (m, inner) => {
+        const items = (inner.match(/<button class="wp[\s\S]*?<\/button>/g) || []).map(b => ({ d: +((b.match(/aria-label="Day (\d+)/) || [])[1] || 0), html: b }));
+        const pill = r => { const d = AR.dateOf(r), L = d ? AR.logFor(d) : []; return { d: r.day + .5, html: `<button class="wp ar ${L.length ? 'completed' : ''}" type="button" data-act="ar-log" data-date="${d || ''}" data-week="${r.week}" data-day="${r.day}" aria-label="${DAYN(r.day)}, active rest${L.length ? ', logged' : ''}"><span class="ic">${icon(L.length ? 'check' : 'heart')}</span><b>${DAYN(r.day)}</b><small>${L.length ? esc(L.map(s => AR.total(s) + ' min').join(' + ')) : 'Active rest'}</small></button>` }; };
+        const all = items.concat(rd.map(pill)).sort((a, b) => a.d - b.d);
+        return `<div class="weekpills" style="grid-template-columns:repeat(${all.length},minmax(0,1fr))">${all.map(i => i.html).join('')}</div></div>`;
+      });
+    } catch (e) { return h; }
+  };
   const r = UI.render.bind(UI); UI.render = function (o) { try { AR.sync(); } catch (e) { } return r(o); };
   const mc = Screens.missionCard; Screens.missionCard = function (st, act) { return mc.call(Screens, st, act) + (act ? '' : AR.card()); };
   const wo = Screens.workout; Screens.workout = function () { const h = wo.call(Screens); return Workout.active() || AR.today() ? h : h.replace(/(<section class="stack" data-stg><span class="label">Week)/, `<button class="btn block" type="button" data-act="ar-log" data-date="${todayISO()}" data-stg>${icon('timer')} Log active rest (basketball, laps, a walk…)</button>$1`); };
@@ -6779,7 +6824,7 @@ After.chat = view => { socAfter(view); Chat.toEnd(); Chat.start(); };
   const hub = Screens.social; Screens.social = function (tab) {
     let h = hub.call(Screens, tab); const m = Social.c.me && Social.c.me.v, n = m ? m.messages || 0 : 0;
     h = h.replace('<button class="btn icon" type="button" data-act="soc-search"', `<button class="btn icon sbell" type="button" data-act="go" data-r="inbox" aria-label="Messages${n ? `, ${n} unread` : ''}">${icon('message-circle')}${n ? `<span class="sdot">${n > 9 ? '9+' : n}</span>` : ''}</button><button class="btn icon" type="button" data-act="soc-search"`);
-    if ((tab || UI.ui.socTab || 'feed') === 'feed' && Social.on() && !Social.missing) h = h.replace('<section class="panel scompose"', Online.strip({ quiet: true, more: true }) + '<section class="panel scompose"');
+    if ((tab || UI.ui.socTab || 'feed') === 'feed' && Social.on() && !Social.missing) h = h.replace('<section class="panel scompose"', Online.strip({ more: true }) + '<section class="panel scompose"');
     return h;
   };
   const av = AthleteUI.view.bind(AthleteUI); AthleteUI.view = function (id, mine) {
@@ -6788,10 +6833,196 @@ After.chat = view => { socAfter(view); Chat.toEnd(); Chat.start(); };
     if (a.can_message) h = h.replace('<button class="btn sm ghost icon" type="button" data-act="soc-ath-menu"', `<button class="btn sm" type="button" data-act="soc-chat" data-id="${a.id}">${icon('message-circle')} Message</button><button class="btn sm ghost icon" type="button" data-act="soc-ath-menu"`);
     return h;
   };
+  const mo = Screens.more; Screens.more = function () { return mo.call(Screens).replace(/<\/div>$/, `<p class="muted build-id" data-stg>App version: ${BUILD_ID}</p></div>`); };
   const nav = Nav.go.bind(Nav); Nav.go = function (n, p, o) { if (n !== 'chat') Chat.stop(); return nav(n, p, o); };
   Presence.start();
   const cs = Cloud.start.bind(Cloud); Cloud.start = async function () { const r = await cs(); if (r) setTimeout(() => { Presence.ping(); Social.pollUnread(); }, 1500); return r; };
   setInterval(() => Social.pollUnread(), 45000);
+})();
+
+/* ============ TIMER ALARMS + GUIDED INTERVAL TIMER (jump rope & timed drills) ============
+   Why the rest alarm could stay silent on iPhone:
+   1. the sound engine was only created when the timer ended — iOS keeps sound engines muted unless they
+      are switched on during a tap; it is now unlocked on the very first tap in the app;
+   2. with the ringer switch on silent, iOS mutes "mix with music" sounds. Setting → Timer alarms:
+      Loud (default) briefly takes the speaker so the beep plays even on silent; Quiet mixes with music.
+   The guided timer walks through the sheet's patterns (e.g. Running → Forward Hops → Single Leg Hops →
+   Lateral Jumps), calls out each one, counts down 3-2-1 and beeps at every switch, then logs the set. */
+Object.entries({ play: 'M6 4l14 8-14 8z', square: 'M5 5h14v14H5z', 'volume-2': 'M11 5 6 9H2v6h4l5 4zM15.5 8.5a5 5 0 0 1 0 7M19 5a10 10 0 0 1 0 14' }).forEach(([k, v]) => { if (!ICONS[k]) ICONS[k] = v; });
+const Sound = {
+  ctx: null, unlocked: false,
+  get() { if (!this.ctx) { try { this.ctx = new (window.AudioContext || window.webkitAudioContext)(); } catch (e) { } } return this.ctx; },
+  unlock() {
+    const c = this.get(); if (!c) return;
+    try { if (c.state !== 'running') c.resume(); const b = c.createBuffer(1, 1, 22050), s = c.createBufferSource(); s.buffer = b; s.connect(c.destination); s.start(0); this.unlocked = true; } catch (e) { }
+    try { if (window.speechSynthesis && !this.spoke) { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); this.spoke = true; } } catch (e) { }
+  },
+  loud() { return !['quiet', 'off'].includes(State.settings.alarmMode); },
+  tone(freqs, gap = .16, vol = .55, len = .22, type = 'square') {
+    const c = this.get(); if (!c) return;
+    try {
+      if (c.state !== 'running') c.resume();
+      const t = c.currentTime + .03;
+      freqs.forEach((f, i) => { const o = c.createOscillator(), g = c.createGain(); o.type = type; o.frequency.value = f; g.gain.setValueAtTime(0, t + i * gap); g.gain.linearRampToValueAtTime(vol, t + i * gap + .015); g.gain.exponentialRampToValueAtTime(.001, t + i * gap + len); o.connect(g).connect(c.destination); o.start(t + i * gap); o.stop(t + i * gap + len + .03); });
+    } catch (e) { }
+  },
+  /* a beep the athlete must hear: on "Loud", borrow the speaker for a moment (works with the ringer on silent) */
+  on() { return State.settings.alarmMode !== 'off'; },   // timer alarms have their own switch (the general "Sound" setting is for celebration tones)
+  alert(freqs, gap, vol, len) {
+    if (!this.on()) return;
+    if (this.loud() && !(typeof LockTrack !== 'undefined' && LockTrack.playing)) { AudioMix.set('playback'); clearTimeout(this.back); this.back = setTimeout(() => { if (!Interval.on && !(typeof LockTrack !== 'undefined' && LockTrack.playing)) AudioMix.set('ambient'); }, 2200); }
+    this.tone(freqs, gap, vol, len);
+  },
+  say(text) {
+    if (!this.on() || State.settings.voice === false || !window.speechSynthesis) return;
+    try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.rate = 1.05; u.volume = 1; u.lang = 'en-US'; speechSynthesis.speak(u); } catch (e) { }
+  }
+};
+['pointerdown', 'touchend', 'keydown'].forEach(ev => document.addEventListener(ev, () => { const c = Sound.ctx; if (!Sound.unlocked || (c && c.state !== 'running')) Sound.unlock(); }, { capture: true, passive: true }));
+/* existing app sounds now go through the unlocked engine too */
+Haptics.beep = function (freqs = [880, 1175], gap = .16) { if (!State.settings.sound || (typeof LockTrack !== 'undefined' && LockTrack.playing)) return; Sound.tone(freqs, gap, .25, .22, 'triangle'); };
+
+const Alarm = {
+  ring(msg) {
+    Sound.alert([1046, 1046, 1046, 1568], .22, .6, .16); Haptics.buzz(); if (msg) UI.toast(msg);
+    let f = $('#alarmFlash'); if (!f) { f = document.createElement('div'); f.id = 'alarmFlash'; f.setAttribute('aria-hidden', 'true'); document.body.appendChild(f); }
+    f.classList.remove('on'); void f.offsetWidth; f.classList.add('on');
+  }
+};
+
+/* ---------- guided interval timer ---------- */
+const ROPE_SPEED = ['Two feet', 'One foot', 'Run in place', '2 right / 2 left', 'Shuffle', 'Four square', 'Lateral', 'Double rotations', 'Speed jump', 'Run forward', 'Hop forward', 'Lateral moving jumps'];
+const Interval = {
+  on: false,
+  eligible(x) { return !!x && !x.skipped && (x.type === 'timed' || (x.exId === 'jump_rope' && x.type === 'check')); },
+  patterns(x) { const n = String(x.pNote || ''); const m = n.match(/\d+\.\s*[^·]+/g); return m ? m.map(s => s.replace(/^\d+\.\s*/, '').trim()) : null; },
+  /* the plan for this exercise: [{name, sec, rest}] */
+  plan(x, cfg) {
+    const pats = this.patterns(x), rope = x.exId === 'jump_rope', sets = x.sets.filter(t => !t.warm);
+    if (rope && pats) return pats.map((p, i) => ({ name: p, sec: cfg.work, rest: i < pats.length - 1 ? cfg.rest : 0 }));
+    if (rope && x.type === 'timed') { const total = (sets[0] && sets[0].pSec) || 90, every = 15, n = Math.max(1, Math.round(total / every)); return Array.from({ length: n }, (_, i) => ({ name: ROPE_SPEED[i % ROPE_SPEED.length], sec: every, rest: 0 })); }
+    return sets.map((t, i) => ({ name: `${x.name} · set ${i + 1} of ${sets.length}`, sec: t.pSec || cfg.work, rest: i < sets.length - 1 ? cfg.rest : 0 }));
+  },
+  open(ei) {
+    const s = Workout.active(); if (!s) return; const x = s.ex[ei]; if (!this.eligible(x)) return;
+    this.s = s; this.ei = ei; this.x = x;
+    const pats = this.patterns(x), rope = x.exId === 'jump_rope';
+    this.cfg = Object.assign({ work: rope ? 30 : ((x.sets[0] || {}).pSec || 30), rest: rope ? 15 : (x.rest || 20) }, LSX.get('bbp.iv.cfg.' + (rope && pats ? 'rope' : 'gen'), {}));
+    if (!(rope && pats) && x.type === 'timed') this.cfg.work = (x.sets.find(t => !t.warm) || {}).pSec || this.cfg.work;
+    this.setup();
+  },
+  el() { let el = $('#ivx'); if (!el) { el = document.createElement('div'); el.id = 'ivx'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Interval timer'); document.body.appendChild(el); } el.hidden = false; return el; },
+  setup() {
+    const x = this.x, P = this.plan(x, this.cfg), rope = x.exId === 'jump_rope', pats = this.patterns(x), adj = (rope && pats) || x.type !== 'timed' || P.length > 1;
+    const total = P.reduce((a, p) => a + p.sec + p.rest, 0), el = this.el();
+    const chip = (k, v, l) => `<button type="button" class="chip" data-ivc="${k}" data-v="${v}" aria-pressed="${+this.cfg[k] === v}">${l}</button>`;
+    el.innerHTML = `<div class="ivx-in"><div class="ivx-top"><span class="label">${rope ? 'JUMP ROPE TIMER' : 'INTERVAL TIMER'}</span><button type="button" class="pk-x" data-iv="close" aria-label="Close">${icon('x')}<span>Close</span></button></div>
+      <h2 class="ivx-title">${esc(x.name)}</h2><p class="ivx-sub">${P.length} ${rope ? 'patterns' : 'rounds'} · ${fmtDur(total * 1000)} total${x.pNote && !pats ? ' · ' + esc(x.pNote) : ''}</p>
+      <ol class="ivx-plan">${P.map(p => `<li><span>${esc(p.name)}</span><b>${p.sec}s${p.rest ? ` <small>+ ${p.rest}s rest</small>` : ''}</b></li>`).join('')}</ol>
+      ${rope && pats ? `<div class="field"><span class="label">Each pattern</span><div class="chips">${[15, 20, 30, 45, 60].map(v => chip('work', v, v + 's')).join('')}</div></div>` : ''}
+      ${P.length > 1 && !(rope && x.type === 'timed') ? `<div class="field"><span class="label">Rest between</span><div class="chips">${[0, 10, 15, 20, 30, 60].map(v => chip('rest', v, v ? v + 's' : 'None')).join('')}</div></div>` : ''}
+      <div class="row wrap ivx-opts"><button type="button" class="chip" data-ivo="voice" aria-pressed="${State.settings.voice !== false}">${icon('volume-2')} Call out patterns</button><button type="button" class="chip" data-ivo="loud" aria-pressed="${Sound.loud()}">${icon('bell')} Loud on silent</button></div>
+      <button type="button" class="btn big red block" data-iv="go">${icon('play')} Start</button>
+      <p class="ivx-note">Keep the screen on — the app keeps it awake. You'll hear 3-2-1 before each switch.</p></div>`;
+    UI.icons(el);
+    el.onclick = e => {
+      const c = e.target.closest('[data-ivc]'); if (c) { this.cfg[c.dataset.ivc] = +c.dataset.v; LSX.set('bbp.iv.cfg.' + ((this.x.exId === 'jump_rope' && this.patterns(this.x)) ? 'rope' : 'gen'), { work: this.cfg.work, rest: this.cfg.rest }); return this.setup(); }
+      const o = e.target.closest('[data-ivo]'); if (o) { if (o.dataset.ivo === 'voice') State.settings.voice = State.settings.voice === false; else State.settings.alarmMode = Sound.loud() ? 'quiet' : 'loud'; Store.saveSettings(); return this.setup(); }
+      const b = e.target.closest('[data-iv]'); if (b) this.act(b.dataset.iv);
+    };
+  },
+  act(a) {
+    if (a === 'close') return this.close();
+    if (a === 'go') return this.start();
+    if (a === 'pause') { if (this.paused) { this.t0 += Date.now() - this.paused; this.paused = 0; } else this.paused = Date.now(); this.paintStatic(); return; }
+    if (a === 'skip') { const k = this.idx(); this.t0 -= (this.ends[k.i] - k.el) * 1000; return; }
+    if (a === 'stop') return this.finish(true);
+    if (a === 'save') return this.save();
+    if (a === 'again') return this.setup();
+  },
+  /* the timeline: lead-in, then work / rest blocks */
+  start() {
+    Sound.unlock(); this.P = this.plan(this.x, this.cfg); this.steps = [{ kind: 'ready', name: 'Get ready', sec: 5 }];
+    this.P.forEach((p, i) => { this.steps.push({ kind: 'work', name: p.name, sec: p.sec, n: i }); if (p.rest) this.steps.push({ kind: 'rest', name: 'Rest', sec: p.rest, next: this.P[i + 1] && this.P[i + 1].name }); });
+    let acc = 0; this.ends = this.steps.map(st => (acc += st.sec));
+    this.t0 = Date.now(); this.paused = 0; this.last = -1; this.lastPip = null; this.on = true;
+    if (Sound.loud() && Sound.on()) AudioMix.set('playback');
+    WakeLock.on(); this.paintStatic(); Sound.say(`Get ready. First: ${this.steps[1].name}`);
+    clearInterval(this.iv); this.iv = setInterval(() => this.tick(), 100);
+  },
+  elapsed() { return ((this.paused || Date.now()) - this.t0) / 1000; },
+  idx() { const e = this.elapsed(); let i = this.ends.findIndex(x => e < x); return { i, el: e }; },
+  tick() {
+    const { i, el } = this.idx(); if (i < 0) return this.finish(false);
+    const st = this.steps[i], left = Math.max(0, this.ends[i] - el), whole = Math.ceil(left);
+    if (i !== this.last) {
+      this.last = i; this.lastPip = null; this.paintStatic();
+      if (st.kind === 'work') { Sound.alert([880, 1318], .13, .55, .16); Sound.say(st.name); Haptics.buzz(); }
+      else if (st.kind === 'rest') { Sound.alert([660], .1, .45, .3); Sound.say(st.next ? `Rest. Next: ${st.next}` : 'Rest'); }
+    }
+    if (whole <= 3 && whole >= 1 && whole !== this.lastPip && left < whole) { this.lastPip = whole; Sound.alert([whole === 1 ? 988 : 784], .1, .45, .1); }
+    const n = $('#ivNum'), r = $('#ivArc'); if (n) n.textContent = whole >= 60 ? fmtDur(whole * 1000) : whole;
+    if (r) r.style.strokeDashoffset = (2 * Math.PI * 120 * (1 - left / st.sec)).toFixed(1);
+    const tot = $('#ivTot'); if (tot) tot.textContent = fmtDur(Math.max(0, this.ends[this.ends.length - 1] - el) * 1000) + ' left';
+  },
+  paintStatic() {
+    const { i } = this.idx(), st = this.steps[Math.max(0, i)], el = this.el(), nxt = this.steps.slice(i + 1).find(s => s.kind === 'work');
+    const C2 = 2 * Math.PI * 120, works = this.steps.filter(s => s.kind === 'work');
+    el.innerHTML = `<div class="ivx-in run ${st.kind}"><div class="ivx-top"><span class="label">${esc(this.x.name.toUpperCase())}</span><span class="label" id="ivTot"></span></div>
+      <div class="ivx-dots">${works.map(w => `<i class="${w.n < (st.kind === 'work' ? st.n : nxt ? nxt.n : works.length) ? 'done' : w === st ? 'cur' : ''}"></i>`).join('')}</div>
+      <div class="ivx-kind">${st.kind === 'work' ? `Pattern ${st.n + 1} of ${works.length}` : st.kind === 'rest' ? 'Rest' : 'Get ready'}</div>
+      <h2 class="ivx-now">${esc(st.kind === 'rest' ? 'Breathe' : st.name)}</h2>
+      <div class="ivx-ring"><svg viewBox="0 0 260 260" aria-hidden="true"><circle cx="130" cy="130" r="120" fill="none" stroke="rgba(255,255,255,.14)" stroke-width="14"/><circle id="ivArc" cx="130" cy="130" r="120" fill="none" stroke="${st.kind === 'work' ? '#E87722' : '#FFFFFF'}" stroke-width="14" stroke-linecap="round" stroke-dasharray="${C2.toFixed(1)}" transform="rotate(-90 130 130)"/></svg><b id="ivNum" aria-live="off"></b></div>
+      <div class="ivx-next">${nxt && nxt !== st ? `Next: <b>${esc(nxt.name)}</b>` : st.kind === 'work' ? '<b>Last one — finish strong</b>' : ''}</div>
+      <div class="ivx-acts"><button type="button" class="btn big" data-iv="stop">${icon('square')} Stop</button><button type="button" class="btn big red" data-iv="pause">${icon(this.paused ? 'play' : 'pause')} ${this.paused ? 'Resume' : 'Pause'}</button><button type="button" class="btn big" data-iv="skip">${icon('skip-forward')} Skip</button></div></div>`;
+    UI.icons(el); this.tick && i >= 0 && this.tickPaint();
+  },
+  tickPaint() { const { i, el } = this.idx(); if (i < 0) return; const st = this.steps[i], left = Math.max(0, this.ends[i] - el), n = $('#ivNum'), r = $('#ivArc'); if (n) n.textContent = Math.ceil(left); if (r) r.style.strokeDashoffset = (2 * Math.PI * 120 * (1 - left / st.sec)).toFixed(1); },
+  finish(stopped) {
+    clearInterval(this.iv); this.on = false; const done = stopped ? Math.max(0, this.steps.slice(0, Math.max(0, this.idx().i)).filter(s => s.kind === 'work').length) : this.P.length;
+    const worked = Math.round(this.steps.filter((s, k) => s.kind === 'work' && (k < this.idx().i || this.idx().i < 0)).reduce((a, s) => a + s.sec, 0));
+    this.result = { done, worked, all: !stopped || done >= this.P.length };
+    if (!stopped) { Sound.alert([784, 988, 1175, 1568], .14, .6, .3); Sound.say('Done. Great work.'); }
+    setTimeout(() => { if (!Interval.on && !(typeof LockTrack !== 'undefined' && LockTrack.playing)) AudioMix.set('ambient'); }, 2500);
+    const el = this.el();
+    el.innerHTML = `<div class="ivx-in done"><div class="ivx-top"><span class="label">${stopped ? 'STOPPED' : 'COMPLETE'}</span><button type="button" class="pk-x" data-iv="close" aria-label="Close">${icon('x')}<span>Close</span></button></div>
+      <h2 class="ivx-title">${stopped ? 'Stopped early' : 'Done!'}</h2><p class="ivx-sub">${done} of ${this.P.length} ${this.x.exId === 'jump_rope' ? 'patterns' : 'rounds'} · ${fmtDur(worked * 1000)} of work</p>
+      ${done ? `<button type="button" class="btn big red block" data-iv="save">${icon('check')} Log it in my workout</button>` : ''}<button type="button" class="btn big block" data-iv="again">${icon('rotate-ccw')} Run it again</button><button type="button" class="btn block ghost" data-iv="close">Close without logging</button></div>`;
+    UI.icons(el);
+  },
+  save() {
+    const s = Workout.active(); if (!s || s.id !== this.s.id) return this.close();
+    const x = s.ex[this.ei], sets = x.sets.filter(t => !t.warm), r = this.result;
+    if (x.exId === 'jump_rope' && x.type === 'check') { const t = sets.find(q => !q.done); if (t) { t.workSec = r.worked; SetLog.toggle(s, this.ei, x.sets.indexOf(t)); } }
+    else if (x.exId === 'jump_rope' && x.type === 'timed') { const t = sets.find(q => !q.done); if (t) { SetLog.setField(s, this.ei, x.sets.indexOf(t), 'sec', r.worked); SetLog.toggle(s, this.ei, x.sets.indexOf(t)); } }
+    else { let n = r.done; sets.forEach(t => { if (n > 0 && !t.done) { const si = x.sets.indexOf(t); SetLog.setField(s, this.ei, si, 'sec', t.pSec || this.cfg.work); SetLog.toggle(s, this.ei, si); n--; } }); }
+    Rest.stop(); UI.toast('Logged.'); this.close();
+  },
+  close() { clearInterval(this.iv); this.on = false; try { speechSynthesis.cancel(); } catch (e) { } if (!(typeof LockTrack !== 'undefined' && LockTrack.playing)) AudioMix.set('ambient'); const el = $('#ivx'); if (el) { el.hidden = true; el.innerHTML = ''; el.onclick = null; } if (!Pocket.open) WakeLock.off(); if (UI.route.name === 'workout') UI.renderLogger(); }
+};
+Object.assign(Actions, { 'iv-open': el => Interval.open(+el.dataset.e) });
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible' && Interval.on) { Interval.last = -1; Interval.tick(); } });
+
+/* ---------- wiring: a Start-timer button on the exercise card and in Pocket mode; a Settings choice ---------- */
+(() => {
+  const lg = Screens.logger; Screens.logger = function (s) {
+    const h = lg.call(Screens, s), ei = s.cur, x = s.ex[ei];
+    if (!Interval.eligible(x)) return h;
+    const rope = x.exId === 'jump_rope', pats = Interval.patterns(x);
+    return h.replace('<div class="ex-tools" data-rev>', `<button class="btn big red block iv-btn" type="button" data-act="iv-open" data-e="${ei}" data-rev>${icon('timer')} ${rope ? (pats ? `Rope timer · ${pats.length} patterns` : 'Rope timer · 15s switches') : 'Interval timer'}</button><div class="ex-tools" data-rev>`);
+  };
+  const ps = Pocket.paint.bind(Pocket); Pocket.paint = function (st) {
+    ps(st); const s = Workout.active(), box = $('#pkSw'); if (!s || !box) return;
+    const x = s.ex[s.cur]; let b = $('#pkIv');
+    if (Interval.eligible(x) && x.sets.some(t => !t.done && !t.warm)) { if (!b) { b = document.createElement('button'); b.type = 'button'; b.id = 'pkIv'; b.className = 'btn red pk-iv'; box.after(b); } const k = `${s.id}:${s.cur}`; if (b.dataset.k !== k) { b.dataset.k = k; b.dataset.act = 'iv-open'; b.dataset.e = s.cur; b.innerHTML = `${icon('timer')} ${x.exId === 'jump_rope' ? 'Rope timer' : 'Interval timer'}`; } }
+    else if (b) b.remove();
+  };
+  const sg = Screens.settings; Screens.settings = function () {
+    const s = State.settings, mode = ['quiet', 'off'].includes(s.alarmMode) ? s.alarmMode : 'loud';
+    return sg.call(Screens).replace(/(<section class="panel stack" data-stg><h2 class="h3">Appearance)/, `<section class="panel stack" data-stg><h2 class="h3">Timer alarms</h2><div class="field"><span class="label">When a timer ends</span><div class="seg" role="group" aria-label="Timer alarms">${[['loud', 'Loud'], ['quiet', 'Mix with music'], ['off', 'Off']].map(([v, l]) => `<button type="button" data-act="set-seg" data-k="alarmMode" data-v="${v}" aria-pressed="${mode === v}">${l}</button>`).join('')}</div></div>
+      <p class="muted" style="font-size:12.5px"><b>Loud</b> beeps even when the phone is on silent (on iPhone it can pause your music for a moment). <b>Mix with music</b> keeps your music playing but is muted when the phone is on silent. Applies to the rest timer and the rope / interval timer.</p><button class="btn" type="button" data-act="alarm-test">${icon('bell')} Test the alarm</button></section>$1`);
+  };
+  Actions['alarm-test'] = () => Alarm.ring('This is your timer alarm.');
 })();
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
