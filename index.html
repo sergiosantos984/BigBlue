@@ -1421,6 +1421,13 @@ body.motion-off .sbar>i.grow,body.motion-off .lb li.in{animation:none!important}
 #view .soc>.topbar>h1.h2.grow{font-size:clamp(24px,7vw,34px)!important}
 .sqhero-in{margin-top:0!important;align-items:flex-start}.sqhero-in .sav{margin-top:-38px}.sqhero-in .grow{padding-top:8px}
 .scompose-q{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}.scompose-q .btn{flex-direction:column;gap:2px;font-size:12px;min-height:56px;padding:6px 2px}
+/* active rest */
+.wk-item.ar{border-style:dashed;cursor:pointer;text-align:left;width:100%}.wk-item.ar.done{border-style:solid;background:rgba(232,119,34,.07)}
+.ar-card{border-left:4px solid var(--vt-orange)}
+.ar-clock{display:flex;flex-direction:column;align-items:center;gap:8px;padding:14px;border-radius:18px;background:linear-gradient(150deg,var(--vt-maroon),#5C102D);color:#fff;text-align:center}
+.ar-clock small{color:rgba(255,255,255,.75)!important}.ar-clock .btn.ghost{color:#fff;border-color:rgba(255,255,255,.35)}
+.ar-time{font:900 54px/1 var(--f-display,Impact,sans-serif);font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.ar-act .chips{flex-wrap:wrap}
 
 </style>
 </head>
@@ -2745,7 +2752,7 @@ function prepCard() {
 const numVal = v => v == null || !isFinite(v) ? '' : String(Math.round(v * 100) / 100);
 const ST_LABEL = { completed: 'Completed', in_progress: 'In progress', skipped: 'Skipped', missed: 'Missed', upcoming: 'Upcoming', due: 'Today', abandoned: 'Abandoned' };
 const DAYN = d => (State.program.dayNames || ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'])[d - 1] || 'Day ' + d;
-const restItem = r => `<div class="wk-item rest" data-stg><span class="wk-day" style="font-size:13px">${DAYN(r.day)}</span><span class="grow"><b style="display:block">${esc(r.title)}</b><span class="muted" style="font-size:12.5px">${esc(r.note)}</span></span><span class="st upcoming">Rest</span></div>`;
+const restItem = r => r.ar ? AR.item(r) : `<div class="wk-item rest" data-stg><span class="wk-day" style="font-size:13px">${DAYN(r.day)}</span><span class="grow"><b style="display:block">${esc(r.title)}</b><span class="muted" style="font-size:12.5px">${esc(r.note)}</span></span><span class="st upcoming">Rest</span></div>`;
 const stBadge = st => `<span class="st ${st}">${ST_LABEL[st] || st}</span>`;
 const shield = (s = 30) => `<svg class="shield" width="${s}" height="${s}" viewBox="0 0 40 40" aria-hidden="true"><g transform="rotate(-35 20 20)"><ellipse cx="20" cy="20" rx="17" ry="10.5" fill="#861F41" stroke="#E87722" stroke-width="2"/><path d="M10 20h20" stroke="#fff" stroke-width="1.6"/><path d="M14 17.5v5M17.3 17.5v5M20.6 17.5v5M23.9 17.5v5M27 18v4" stroke="#fff" stroke-width="1.4" stroke-linecap="round"/></g></svg>`;
 const brand = () => `<div class="brandmark">${shield()}<div><b>HOKIE POWER</b><small>SUMMER 2005 · ${esc(String(State.settings.name || 'Cliff').toUpperCase())}</small></div></div>`;
@@ -3290,7 +3297,7 @@ const Screens = {
         <div></div>
         <div class="field"><label for="h-from">From</label><input class="input" type="date" id="h-from" data-ui="histFrom" value="${esc(f.histFrom)}"></div><div class="field"><label for="h-to">To</label><input class="input" type="date" id="h-to" data-ui="histTo" value="${esc(f.histTo)}"></div>
       </div></details></div>
-      <section class="stack" data-stg>${list.length ? list.map(s => { const ss = Stats.sessionStats(s); return `<button class="wk-item" type="button" data-act="go" data-r="session" data-p="${s.id}"><span class="wk-day" style="font-size:15px;line-height:1">W${s.week}<br>D${s.day}</span><span class="grow"><b style="display:block">${esc(s.title)}</b><span class="muted" style="font-size:12.5px">${fmtDate(s.date)}${s.status !== 'skipped' ? ` · ${s.endedAt ? fmtDur(Workout.elapsed(s)) : '—'} · ${ss.exDone}/${ss.exTotal} ex · ${ss.sets} sets${ss.vol ? ` · ${fmtNum(Units.fromKg(ss.vol, u), 0)} ${u}` : ''}` : ''}</span></span><span class="stack" style="gap:4px;align-items:flex-end">${stBadge(s.status)}${ss.prs ? `<span class="badge red">${ss.prs} PR</span>` : ''}</span></button>`; }).join('') : `<div class="empty"><span class="display">${State.sessions.length ? 'No sessions match' : 'No sessions yet'}</span><span>${State.sessions.length ? 'Clear a filter to see more.' : 'Completed, skipped and abandoned workouts appear here.'}</span></div>`}</section></div>`;
+      <section class="stack" data-stg>${list.length ? list.map(s => { if (s.kind === 'active') return AR.histRow(s); const ss = Stats.sessionStats(s); return `<button class="wk-item" type="button" data-act="go" data-r="session" data-p="${s.id}"><span class="wk-day" style="font-size:15px;line-height:1">W${s.week}<br>D${s.day}</span><span class="grow"><b style="display:block">${esc(s.title)}</b><span class="muted" style="font-size:12.5px">${fmtDate(s.date)}${s.status !== 'skipped' ? ` · ${s.endedAt ? fmtDur(Workout.elapsed(s)) : '—'} · ${ss.exDone}/${ss.exTotal} ex · ${ss.sets} sets${ss.vol ? ` · ${fmtNum(Units.fromKg(ss.vol, u), 0)} ${u}` : ''}` : ''}</span></span><span class="stack" style="gap:4px;align-items:flex-end">${stBadge(s.status)}${ss.prs ? `<span class="badge red">${ss.prs} PR</span>` : ''}</span></button>`; }).join('') : `<div class="empty"><span class="display">${State.sessions.length ? 'No sessions match' : 'No sessions yet'}</span><span>${State.sessions.length ? 'Clear a filter to see more.' : 'Completed, skipped and abandoned workouts appear here.'}</span></div>`}</section></div>`;
   },
   session(id) {
     const s = State.sessions.find(x => x.id === id);
@@ -6472,6 +6479,143 @@ const socAfter = view => {
   setInterval(() => Social.pollUnread(), 90000);
   document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') Social.pollUnread(); });
   setTimeout(() => Social.pollUnread(), 4000);
+})();
+
+/* ============ ACTIVE REST DAYS ============
+   Cliff's schedule: weeks 1–2 → Wednesday; week 3 on → Tuesday and Thursday (editable in Settings).
+   On those days the athlete logs whatever he did — basketball, laps, a walk, a run — with the time,
+   typed in or timed with a stopwatch. Entries are saved with the rest of the training (and synced),
+   as sessions marked kind:'active' / status:'rest', so they never change workout stats or streaks. */
+const AR_SUGGEST = ['Basketball', 'Swimming laps', 'Walking', 'Running', 'Cycling', 'Tennis / racquet', 'Agility drills', 'Mobility / stretching'];
+const AR_NOTE = 'Light, fun movement: basketball, racquetball, tennis, swimming laps, a walk or an easy 1-mile run plus the agility program.';
+const AR = {
+  sig: '',
+  rule() { const s = State.settings; return { early: Array.isArray(s.arEarly) ? s.arEarly : [3], later: Array.isArray(s.arLater) ? s.arLater : [2, 4] }; },
+  daysOf(week) { const r = this.rule(); return (week <= 2 ? r.early : r.later).slice().sort(); },
+  /* rebuild the program's rest-day list from the rule (keeps "Day off" entries from the source program) */
+  sync() {
+    const P = State.program; if (!P || !P.weeks) return;
+    const sig = JSON.stringify(this.rule()) + P.id + P.weeks; if (sig === this.sig && (P.restDays || []).some(r => r.ar)) return; this.sig = sig;
+    if (!P._restBase) Object.defineProperty(P, '_restBase', { value: (P.restDays || []).filter(r => !/active rest/i.test(r.title || '')), enumerable: false, writable: true });
+    const out = P._restBase.slice();
+    for (let w = 1; w <= P.weeks; w++) this.daysOf(w).forEach(d => { if (!out.some(r => r.week === w && r.day === d)) out.push({ id: `ar${w}d${d}`, week: w, day: d, title: 'Active rest', note: AR_NOTE, ar: true }); });
+    P.restDays = out;
+  },
+  dateOf(r) { const s = Program.weekStart(r.week); return s ? addDays(s, r.day - 1) : null; },
+  logs() { return State.sessions.filter(s => s.kind === 'active'); },
+  logFor(date) { return this.logs().filter(s => s.date === date); },
+  today() { this.sync(); const t = todayISO(); return (State.program.restDays || []).find(r => r.ar && this.dateOf(r) === t) || null; },
+  total(s) { return (s.activities || []).reduce((a, x) => a + (+x.min || 0), 0); },
+  what(s) { return (s.activities || []).map(a => `${a.name}${a.min ? ` ${a.min} min` : ''}`).join(' · ') || 'Active rest'; },
+  /* the item shown in a week's list (Training → Journey) */
+  item(r) {
+    const d = this.dateOf(r), L = d ? this.logFor(d) : [], done = L.length;
+    return `<button class="wk-item rest ar ${done ? 'done' : ''}" type="button" data-act="ar-log" data-date="${d || ''}" data-week="${r.week}" data-day="${r.day}" data-stg><span class="wk-day" style="font-size:13px">${DAYN(r.day)}</span><span class="grow"><b style="display:block">Active rest</b><span class="muted" style="font-size:12.5px">${done ? esc(L.map(s => this.what(s)).join(' · ')) : (d ? fmtDate(d) + ' · ' : '') + 'Tap to log what you did'}</span></span><span class="st ${done ? 'completed' : 'upcoming'}">${done ? 'Logged' : 'Log it'}</span></button>`;
+  },
+  card() {
+    const r = this.today(); if (!r) return '';
+    const L = this.logFor(todayISO());
+    return `<section class="panel ar-card" data-stg><div class="spread"><span class="label">${icon('heart')} Today · Active rest</span>${L.length ? `<span class="st completed">Logged</span>` : ''}</div>
+      <h2 class="h3" style="margin:4px 0">${L.length ? esc(L.map(s => this.what(s)).join(' · ')) : 'Move, have fun, recover'}</h2>
+      <p class="muted" style="font-size:13.5px">${L.length ? `${this.total(L[0])} min logged. Add more if you did something else.` : AR_NOTE}</p>
+      <button class="btn ${L.length ? '' : 'red'} block" type="button" data-act="ar-log" data-date="${todayISO()}">${icon(L.length ? 'plus' : 'timer')} ${L.length ? 'Log another activity' : 'Log active rest'}</button></section>`;
+  },
+  histRow(s) {
+    return `<button class="wk-item" type="button" data-act="go" data-r="session" data-p="${s.id}"><span class="wk-day" style="font-size:15px;line-height:1">W${s.week}<br>${DAYN(s.day)}</span><span class="grow"><b style="display:block">Active rest</b><span class="muted" style="font-size:12.5px">${fmtDate(s.date)} · ${esc(this.what(s))}</span></span><span class="st completed">${this.total(s)} min</span></button>`;
+  },
+  view(s) {
+    return `<div class="screen">${backBar('Active rest')}
+      <section class="panel stack" data-stg><span class="label">${wkLabel(s.week)} · ${DAYN(s.day)} · ${fmtDate(s.date)}</span><h2 class="h1" style="font-size:40px">${this.total(s)} min</h2>
+        ${(s.activities || []).map(a => `<div class="kv"><span>${esc(a.name)}</span><span>${a.min ? a.min + ' min' : '—'}</span></div>`).join('')}
+        ${s.notes ? `<p>${esc(s.notes)}</p>` : ''}</section>
+      <div class="grid2" data-stg><button class="btn" type="button" data-act="ar-edit" data-id="${s.id}">${icon('pencil')} Edit</button><button class="btn danger" type="button" data-act="ar-del" data-id="${s.id}">${icon('trash-2')} Delete</button></div></div>`;
+  },
+
+  /* ---------- the log sheet: blank spot + a clock ---------- */
+  key() { return LS.settings.replace(/settings$/, 'ardraft'); },
+  open({ date, week, day, edit } = {}) {
+    const old = edit ? State.sessions.find(x => x.id === edit) : null;
+    const dr = LSX.get(this.key(), null);
+    const st = this.st = old ? { date: old.date, acts: JSON.parse(JSON.stringify(old.activities || [])), notes: old.notes || '', edit: old.id, sw: { on: false, acc: 0, from: 0 } }
+      : dr && dr.date === (date || todayISO()) ? dr : { date: date || todayISO(), acts: [{ name: '', min: '' }], notes: '', sw: { on: false, acc: 0, from: 0 } };
+    st.week = week; st.day = day;
+    Sheet.open({ title: old ? 'Edit active rest' : 'Log active rest', html: '<div id="arBox" class="stack"></div>', onMount: sh => { this.sh = sh; this.draw(); },
+      onClose: () => { clearInterval(this.iv); if (!this.saved) this.keep(true); this.saved = false; } });
+  },
+  swTime() { const w = this.st.sw; return w.acc + (w.on ? Date.now() - w.from : 0); },
+  draw() {
+    const st = this.st, box = $('#arBox', this.sh); if (!box) return;
+    const t = this.swTime(), fmt = ms => { const s = Math.floor(ms / 1000); return `${Math.floor(s / 3600) ? Math.floor(s / 3600) + ':' : ''}${pad2(Math.floor(s % 3600 / 60))}:${pad2(s % 60)}`; };
+    box.innerHTML = `<div class="field"><label for="arDate">Date</label><input class="input" type="date" id="arDate" value="${esc(st.date)}" max="${todayISO()}"></div>
+      <div class="ar-clock"><div class="ar-time" id="arTime" aria-live="off">${fmt(t)}</div>
+        <div class="row" style="justify-content:center;gap:8px"><button type="button" class="btn ${st.sw.on ? '' : 'red'}" id="arSw">${icon(st.sw.on ? 'pause' : 'timer')} ${st.sw.on ? 'Pause' : t ? 'Resume' : 'Start clock'}</button><button type="button" class="btn ghost" id="arSwR" ${t ? '' : 'disabled'}>${icon('rotate-ccw')} Reset</button>${t >= 60000 ? `<button type="button" class="btn ghost" id="arSwUse">Use ${Math.round(t / 60000)} min</button>` : ''}</div>
+        <small class="muted">Start it when you start, or just type the minutes below. It keeps running if you close this.</small></div>
+      ${st.acts.map((a, i) => `<div class="panel flat stack ar-act"><div class="field"><label for="arN${i}">What did you do?</label><input class="input" id="arN${i}" data-i="${i}" maxlength="60" placeholder="Basketball, swam laps, walked…" value="${esc(a.name)}" list="arList"></div>
+        <div class="chips">${AR_SUGGEST.map(x => `<button type="button" class="chip" data-pick="${i}" data-v="${esc(x)}" aria-pressed="${a.name === x}">${esc(x)}</button>`).join('')}</div>
+        <div class="field"><label for="arM${i}">Minutes</label><div class="row" style="gap:6px"><button type="button" class="btn icon" data-step="${i}" data-v="-5" aria-label="Minus 5 minutes">−</button><input class="input num grow" id="arM${i}" inputmode="numeric" maxlength="3" value="${esc(a.min)}" placeholder="0"><button type="button" class="btn icon" data-step="${i}" data-v="5" aria-label="Plus 5 minutes">+</button></div>
+          <div class="chips">${[15, 30, 45, 60, 90].map(m => `<button type="button" class="chip" data-min="${i}" data-v="${m}" aria-pressed="${+a.min === m}">${m}</button>`).join('')}</div></div>
+        ${st.acts.length > 1 ? `<button type="button" class="btn sm ghost" data-rm="${i}">${icon('x')} Remove</button>` : ''}</div>`).join('')}
+      <datalist id="arList">${AR_SUGGEST.map(x => `<option value="${esc(x)}">`).join('')}</datalist>
+      <button type="button" class="btn ghost block" id="arAdd">${icon('plus')} Add another activity</button>
+      <div class="field"><label for="arNotes">Notes (optional)</label><textarea class="input" id="arNotes" rows="2" maxlength="500" placeholder="How it felt, who you played with…">${esc(st.notes)}</textarea></div>
+      <p class="err-msg" id="arErr" role="alert"></p>
+      <button type="button" class="btn big primary block" id="arGo">${icon('check')} Save active rest</button>`;
+    UI.icons(box);
+    clearInterval(this.iv); if (st.sw.on) this.iv = setInterval(() => { const el = $('#arTime', this.sh); if (el) el.textContent = fmt(this.swTime()); else clearInterval(this.iv); }, 500);
+    const redraw = () => { this.keep(); this.draw(); };
+    $('#arSw', box).onclick = () => { this.keep(); const w = st.sw; if (w.on) { w.acc += Date.now() - w.from; w.on = false; } else { w.from = Date.now(); w.on = true; } Haptics.tap(); this.keep(true); this.draw(); };
+    $('#arSwR', box).onclick = () => { this.keep(); st.sw = { on: false, acc: 0, from: 0 }; this.keep(true); this.draw(); };
+    const use = $('#arSwUse', box); if (use) use.onclick = () => { this.keep(); const i = st.acts.findIndex(a => !+a.min); st.acts[i >= 0 ? i : st.acts.length - 1].min = String(Math.round(this.swTime() / 60000)); this.draw(); };
+    $$('[data-pick]', box).forEach(b => b.onclick = () => { this.keep(); st.acts[+b.dataset.pick].name = b.dataset.v; this.draw(); });
+    $$('[data-min]', box).forEach(b => b.onclick = () => { this.keep(); st.acts[+b.dataset.min].min = b.dataset.v; this.draw(); });
+    $$('[data-step]', box).forEach(b => b.onclick = () => { this.keep(); const a = st.acts[+b.dataset.step]; a.min = String(Math.max(0, Math.min(600, (+a.min || 0) + +b.dataset.v))); this.draw(); });
+    $$('[data-rm]', box).forEach(b => b.onclick = () => { this.keep(); st.acts.splice(+b.dataset.rm, 1); this.draw(); });
+    $('#arAdd', box).onclick = () => { this.keep(); st.acts.push({ name: '', min: '' }); redraw(); };
+    $('#arGo', box).onclick = () => this.save();
+  },
+  keep(persist) {
+    const st = this.st; if (!st || !this.sh) return;
+    const d = $('#arDate', this.sh); if (d) st.date = d.value || st.date;
+    st.acts.forEach((a, i) => { const n = $('#arN' + i, this.sh), m = $('#arM' + i, this.sh); if (n) a.name = n.value.trim(); if (m) a.min = m.value.replace(/[^\d]/g, ''); });
+    const no = $('#arNotes', this.sh); if (no) st.notes = no.value;
+    if (persist && !st.edit) LSX.set(this.key(), { date: st.date, acts: st.acts, notes: st.notes, sw: st.sw });
+  },
+  async save() {
+    this.keep(); const st = this.st, er = $('#arErr', this.sh);
+    const acts = st.acts.filter(a => a.name || +a.min).map(a => ({ name: a.name || 'Activity', min: Math.max(0, Math.min(600, +a.min || 0)) }));
+    if (!acts.length) { er.textContent = 'Type what you did (or tap one), and how long.'; Haptics.buzz(); return; }
+    if (acts.some(a => !a.min)) { er.textContent = 'Add the minutes for each activity — or use the clock.'; Haptics.buzz(); return; }
+    if (!st.date || st.date > todayISO()) { er.textContent = 'Pick today or an earlier date.'; return; }
+    const wk = this.weekOf(st.date), wd = ((parseISO(st.date).getDay() + 6) % 7) + 1;
+    const old = st.edit ? State.sessions.find(x => x.id === st.edit) : null;
+    const rec = Object.assign({}, old || { id: uid('ses'), createdAt: Date.now() }, { kind: 'active', tid: `ar-${st.date}`, title: 'Active rest', category: 'active_rest', week: wk, day: wd, cycle: Program.cycleOf(wk).id, date: st.date, status: 'rest', activities: acts, minutes: acts.reduce((a, x) => a + x.min, 0), notes: st.notes.trim(), ex: [], startedAt: null, endedAt: null, updatedAt: Date.now() });
+    await Store.save('sessions', rec); this.saved = true; LSX.del(this.key()); clearInterval(this.iv);
+    await Sheet.close(); Haptics.beep([523, 784], .08); UI.toast(`Active rest logged · ${rec.minutes} min.`);
+    const y = scrollY; UI.render(); scrollTo(0, y);
+  },
+  weekOf(date) { const s = State.profile && State.profile.startDate; if (!s) return 1; return Math.max(1, Math.min(State.program.weeks, Math.floor(daysBetween(s, date) / 7) + 1)); }
+};
+ST_LABEL.rest = 'Active rest';
+Object.assign(Actions, {
+  'ar-log': el => AR.open({ date: el.dataset.date || todayISO(), week: +el.dataset.week || null, day: +el.dataset.day || null }),
+  'ar-edit': el => AR.open({ edit: el.dataset.id }),
+  'ar-del': async el => { const ok = await Sheet.confirm({ title: 'Delete this active rest entry?', body: '', ok: 'Delete', danger: true }); if (!ok) return; await Store.remove('sessions', el.dataset.id); UI.toast('Deleted.'); Nav.back(); },
+  'ar-day': el => {
+    const g = el.dataset.g === 'early' ? 'arEarly' : 'arLater', r = AR.rule(), cur = (g === 'arEarly' ? r.early : r.later).slice(), d = +el.dataset.v, i = cur.indexOf(d);
+    if (i >= 0) cur.splice(i, 1); else cur.push(d); State.settings[g] = cur.sort(); Store.saveSettings(); AR.sync();
+    const y = scrollY; UI.render(); scrollTo(0, y); UI.toast('Active rest days saved.');
+  }
+});
+/* wire into existing screens without changing how they work */
+(() => {
+  const r = UI.render.bind(UI); UI.render = function (o) { try { AR.sync(); } catch (e) { } return r(o); };
+  const mc = Screens.missionCard; Screens.missionCard = function (st, act) { return mc.call(Screens, st, act) + (act ? '' : AR.card()); };
+  const wo = Screens.workout; Screens.workout = function () { const h = wo.call(Screens); return Workout.active() || AR.today() ? h : h.replace(/(<section class="stack" data-stg><span class="label">Week)/, `<button class="btn block" type="button" data-act="ar-log" data-date="${todayISO()}" data-stg>${icon('timer')} Log active rest (basketball, laps, a walk…)</button>$1`); };
+  const se = Screens.session; Screens.session = function (id) { const s = State.sessions.find(x => x.id === id); return s && s.kind === 'active' ? AR.view(s) : se.call(Screens, id); };
+  const sg = Screens.settings; Screens.settings = function () {
+    const r = AR.rule(), row = (g, sel, label) => `<div class="field"><span class="label">${label}</span><div class="chips" role="group" aria-label="${label}">${['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map((n, i) => `<button type="button" class="chip" data-act="ar-day" data-g="${g}" data-v="${i + 1}" aria-pressed="${sel.includes(i + 1)}">${n}</button>`).join('')}</div></div>`;
+    return sg.call(Screens).replace(/(<section class="panel stack" data-stg><h2 class="h3">Appearance)/, `<section class="panel stack" data-stg><h2 class="h3">Active rest days</h2>${row('early', r.early, 'Weeks 1–2')}${row('later', r.later, 'Week 3 on')}<p class="muted" style="font-size:12.5px">On these days the plan shows an Active rest slot where you log what you did and for how long.</p></section>$1`);
+  };
 })();
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
