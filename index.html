@@ -1582,7 +1582,7 @@ body:not(.theme-light) .bub{background:rgba(255,255,255,.08);color:#fff}
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="https://unpkg.com/lucide@0.454.0/dist/umd/lucide.min.js"></script>
 <script>
-const BUILD_ID = 'Oct 15 · 23:51';
+const BUILD_ID = 'Oct 16 · 14:10';
 /* ============ LOAD-UP EFFECT ============
    The splash is static HTML/CSS at the top of <body>, so it paints instantly while the app boots
    underneath. It plays for ~2 s on every open (shorter in Minimal / reduced motion); tap to skip. */
@@ -6857,7 +6857,7 @@ const Sound = {
     try { if (c.state !== 'running') c.resume(); const b = c.createBuffer(1, 1, 22050), s = c.createBufferSource(); s.buffer = b; s.connect(c.destination); s.start(0); this.unlocked = true; } catch (e) { }
     try { if (window.speechSynthesis && !this.spoke) { const u = new SpeechSynthesisUtterance(' '); u.volume = 0; speechSynthesis.speak(u); this.spoke = true; } } catch (e) { }
   },
-  loud() { return !['quiet', 'off'].includes(State.settings.alarmMode); },
+  loud() { return State.settings.alarmMode === 'loud'; },   // default is "mix": beeps play over music and never stop it
   tone(freqs, gap = .16, vol = .55, len = .22, type = 'square') {
     const c = this.get(); if (!c) return;
     try {
@@ -6874,7 +6874,7 @@ const Sound = {
     this.tone(freqs, gap, vol, len);
   },
   say(text) {
-    if (!this.on() || State.settings.voice === false || !window.speechSynthesis) return;
+    if (!this.on() || State.settings.voice !== true || !window.speechSynthesis) return;   // spoken call-outs are opt-in: iPhone lowers music while it speaks
     try { speechSynthesis.cancel(); const u = new SpeechSynthesisUtterance(text); u.rate = 1.05; u.volume = 1; u.lang = 'en-US'; speechSynthesis.speak(u); } catch (e) { }
   }
 };
@@ -6891,6 +6891,8 @@ const Alarm = {
 };
 
 /* ---------- guided interval timer ---------- */
+/* VIRGINIA TECH JUMP ROPE ROUTINE (the sheet): [name, length s, rest s]. "As you get in better shape, decrease the rest intervals to 10 seconds." */
+const VT_ROPE = [['Both feet', 30, 15], ['Right foot', 15, 0], ['Left foot', 15, 15], ['Alternate foot', 30, 15], ['Shuffle', 30, 15], ['Twice on right, twice on left', 30, 15], ['Double-over with rope', 20, 15], ['As many jumps as you can get', 30, 15]];
 const ROPE_SPEED = ['Two feet', 'One foot', 'Run in place', '2 right / 2 left', 'Shuffle', 'Four square', 'Lateral', 'Double rotations', 'Speed jump', 'Run forward', 'Hop forward', 'Lateral moving jumps'];
 const Interval = {
   on: false,
@@ -6899,8 +6901,9 @@ const Interval = {
   /* the plan for this exercise: [{name, sec, rest}] */
   plan(x, cfg) {
     const pats = this.patterns(x), rope = x.exId === 'jump_rope', sets = x.sets.filter(t => !t.warm);
-    if (rope && pats) return pats.map((p, i) => ({ name: p, sec: cfg.work, rest: i < pats.length - 1 ? cfg.rest : 0 }));
-    if (rope && x.type === 'timed') { const total = (sets[0] && sets[0].pSec) || 90, every = 15, n = Math.max(1, Math.round(total / every)); return Array.from({ length: n }, (_, i) => ({ name: ROPE_SPEED[i % ROPE_SPEED.length], sec: every, rest: 0 })); }
+    if (rope && (cfg.routine || 'vt') === 'vt') return VT_ROPE.map(([n, sec, r], i) => ({ name: n, sec, rest: i === VT_ROPE.length - 1 ? 0 : (r ? (cfg.fit ? 10 : r) : 0) }));
+    if (rope && pats && cfg.routine === 'sheet') return pats.map((p, i) => ({ name: p, sec: cfg.work, rest: i < pats.length - 1 ? cfg.rest : 0 }));
+    if (rope && x.type === 'timed' && cfg.routine === 'speed') { const total = (sets[0] && sets[0].pSec) || 90, every = 15, n = Math.max(1, Math.round(total / every)); return Array.from({ length: n }, (_, i) => ({ name: ROPE_SPEED[i % ROPE_SPEED.length], sec: every, rest: 0 })); }
     return sets.map((t, i) => ({ name: `${x.name} · set ${i + 1} of ${sets.length}`, sec: t.pSec || cfg.work, rest: i < sets.length - 1 ? cfg.rest : 0 }));
   },
   open(ei) {
@@ -6908,7 +6911,8 @@ const Interval = {
     this.s = s; this.ei = ei; this.x = x;
     const pats = this.patterns(x), rope = x.exId === 'jump_rope';
     this.cfg = Object.assign({ work: rope ? 30 : ((x.sets[0] || {}).pSec || 30), rest: rope ? 15 : (x.rest || 20) }, LSX.get('bbp.iv.cfg.' + (rope && pats ? 'rope' : 'gen'), {}));
-    if (!(rope && pats) && x.type === 'timed') this.cfg.work = (x.sets.find(t => !t.warm) || {}).pSec || this.cfg.work;
+    if (!rope && x.type === 'timed') this.cfg.work = (x.sets.find(t => !t.warm) || {}).pSec || this.cfg.work;
+    if (rope) { this.cfg = Object.assign({ routine: 'vt', fit: false }, LSX.get('bbp.iv.rope', {}), { work: this.cfg.work, rest: this.cfg.rest }); if (this.cfg.routine === 'sheet' && !pats) this.cfg.routine = 'vt'; if (this.cfg.routine === 'speed' && x.type !== 'timed') this.cfg.routine = 'vt'; }
     this.setup();
   },
   el() { let el = $('#ivx'); if (!el) { el = document.createElement('div'); el.id = 'ivx'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', 'Interval timer'); document.body.appendChild(el); } el.hidden = false; return el; },
@@ -6919,15 +6923,19 @@ const Interval = {
     el.innerHTML = `<div class="ivx-in"><div class="ivx-top"><span class="label">${rope ? 'JUMP ROPE TIMER' : 'INTERVAL TIMER'}</span><button type="button" class="pk-x" data-iv="close" aria-label="Close">${icon('x')}<span>Close</span></button></div>
       <h2 class="ivx-title">${esc(x.name)}</h2><p class="ivx-sub">${P.length} ${rope ? 'patterns' : 'rounds'} · ${fmtDur(total * 1000)} total${x.pNote && !pats ? ' · ' + esc(x.pNote) : ''}</p>
       <ol class="ivx-plan">${P.map(p => `<li><span>${esc(p.name)}</span><b>${p.sec}s${p.rest ? ` <small>+ ${p.rest}s rest</small>` : ''}</b></li>`).join('')}</ol>
-      ${rope && pats ? `<div class="field"><span class="label">Each pattern</span><div class="chips">${[15, 20, 30, 45, 60].map(v => chip('work', v, v + 's')).join('')}</div></div>` : ''}
-      ${P.length > 1 && !(rope && x.type === 'timed') ? `<div class="field"><span class="label">Rest between</span><div class="chips">${[0, 10, 15, 20, 30, 60].map(v => chip('rest', v, v ? v + 's' : 'None')).join('')}</div></div>` : ''}
-      <div class="row wrap ivx-opts"><button type="button" class="chip" data-ivo="voice" aria-pressed="${State.settings.voice !== false}">${icon('volume-2')} Call out patterns</button><button type="button" class="chip" data-ivo="loud" aria-pressed="${Sound.loud()}">${icon('bell')} Loud on silent</button></div>
+      ${rope ? `<div class="field"><span class="label">Routine</span><div class="chips"><button type="button" class="chip" data-ivr="vt" aria-pressed="${this.cfg.routine === 'vt'}">VT Jump Rope Routine</button>${pats ? `<button type="button" class="chip" data-ivr="sheet" aria-pressed="${this.cfg.routine === 'sheet'}">This week's list</button>` : ''}${x.type === 'timed' ? `<button type="button" class="chip" data-ivr="speed" aria-pressed="${this.cfg.routine === 'speed'}">15-second switches</button>` : ''}</div></div>` : ''}
+      ${rope && this.cfg.routine === 'vt' ? `<div class="field"><span class="label">Rest intervals</span><div class="chips"><button type="button" class="chip" data-ivf="0" aria-pressed="${!this.cfg.fit}">As on the sheet</button><button type="button" class="chip" data-ivf="1" aria-pressed="${!!this.cfg.fit}">10 s — in better shape</button></div></div>` : ''}
+      ${rope && pats && this.cfg.routine === 'sheet' ? `<div class="field"><span class="label">Each pattern</span><div class="chips">${[15, 20, 30, 45, 60].map(v => chip('work', v, v + 's')).join('')}</div></div>` : ''}
+      ${P.length > 1 && (!rope || this.cfg.routine === 'sheet') ? `<div class="field"><span class="label">Rest between</span><div class="chips">${[0, 10, 15, 20, 30, 60].map(v => chip('rest', v, v ? v + 's' : 'None')).join('')}</div></div>` : ''}
+      <div class="row wrap ivx-opts"><button type="button" class="chip" data-ivo="voice" aria-pressed="${State.settings.voice === true}">${icon('volume-2')} Call out patterns</button><button type="button" class="chip" data-ivo="loud" aria-pressed="${Sound.loud()}">${icon('bell')} Loud on silent (pauses music)</button></div>
       <button type="button" class="btn big red block" data-iv="go">${icon('play')} Start</button>
-      <p class="ivx-note">Keep the screen on — the app keeps it awake. You'll hear 3-2-1 before each switch.</p></div>`;
+      <p class="ivx-note">It runs straight through, one interval into the next — just jump. 3-2-1 beeps before every switch, played over your music. Keep the app open (the screen stays awake).${Sound.loud() ? '' : ' If your phone is on silent, flip the ringer on to hear the beeps.'}</p></div>`;
     UI.icons(el);
     el.onclick = e => {
       const c = e.target.closest('[data-ivc]'); if (c) { this.cfg[c.dataset.ivc] = +c.dataset.v; LSX.set('bbp.iv.cfg.' + ((this.x.exId === 'jump_rope' && this.patterns(this.x)) ? 'rope' : 'gen'), { work: this.cfg.work, rest: this.cfg.rest }); return this.setup(); }
-      const o = e.target.closest('[data-ivo]'); if (o) { if (o.dataset.ivo === 'voice') State.settings.voice = State.settings.voice === false; else State.settings.alarmMode = Sound.loud() ? 'quiet' : 'loud'; Store.saveSettings(); return this.setup(); }
+      const rr = e.target.closest('[data-ivr]'), ff = e.target.closest('[data-ivf]');
+      if (rr || ff) { if (rr) this.cfg.routine = rr.dataset.ivr; if (ff) this.cfg.fit = ff.dataset.ivf === '1'; LSX.set('bbp.iv.rope', { routine: this.cfg.routine, fit: this.cfg.fit }); return this.setup(); }
+      const o = e.target.closest('[data-ivo]'); if (o) { if (o.dataset.ivo === 'voice') State.settings.voice = State.settings.voice !== true; else State.settings.alarmMode = Sound.loud() ? 'mix' : 'loud'; Store.saveSettings(); return this.setup(); }
       const b = e.target.closest('[data-iv]'); if (b) this.act(b.dataset.iv);
     };
   },
@@ -7009,7 +7017,7 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
     const h = lg.call(Screens, s), ei = s.cur, x = s.ex[ei];
     if (!Interval.eligible(x)) return h;
     const rope = x.exId === 'jump_rope', pats = Interval.patterns(x);
-    return h.replace('<div class="ex-tools" data-rev>', `<button class="btn big red block iv-btn" type="button" data-act="iv-open" data-e="${ei}" data-rev>${icon('timer')} ${rope ? (pats ? `Rope timer · ${pats.length} patterns` : 'Rope timer · 15s switches') : 'Interval timer'}</button><div class="ex-tools" data-rev>`);
+    return h.replace('<div class="ex-tools" data-rev>', `<button class="btn big red block iv-btn" type="button" data-act="iv-open" data-e="${ei}" data-rev>${icon('timer')} ${rope ? 'Rope timer · VT routine' : 'Interval timer'}</button><div class="ex-tools" data-rev>`);
   };
   const ps = Pocket.paint.bind(Pocket); Pocket.paint = function (st) {
     ps(st); const s = Workout.active(), box = $('#pkSw'); if (!s || !box) return;
@@ -7018,9 +7026,9 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
     else if (b) b.remove();
   };
   const sg = Screens.settings; Screens.settings = function () {
-    const s = State.settings, mode = ['quiet', 'off'].includes(s.alarmMode) ? s.alarmMode : 'loud';
-    return sg.call(Screens).replace(/(<section class="panel stack" data-stg><h2 class="h3">Appearance)/, `<section class="panel stack" data-stg><h2 class="h3">Timer alarms</h2><div class="field"><span class="label">When a timer ends</span><div class="seg" role="group" aria-label="Timer alarms">${[['loud', 'Loud'], ['quiet', 'Mix with music'], ['off', 'Off']].map(([v, l]) => `<button type="button" data-act="set-seg" data-k="alarmMode" data-v="${v}" aria-pressed="${mode === v}">${l}</button>`).join('')}</div></div>
-      <p class="muted" style="font-size:12.5px"><b>Loud</b> beeps even when the phone is on silent (on iPhone it can pause your music for a moment). <b>Mix with music</b> keeps your music playing but is muted when the phone is on silent. Applies to the rest timer and the rope / interval timer.</p><button class="btn" type="button" data-act="alarm-test">${icon('bell')} Test the alarm</button></section>$1`);
+    const s = State.settings, mode = ['loud', 'off'].includes(s.alarmMode) ? s.alarmMode : 'mix';
+    return sg.call(Screens).replace(/(<section class="panel stack" data-stg><h2 class="h3">Appearance)/, `<section class="panel stack" data-stg><h2 class="h3">Timer alarms</h2><div class="field"><span class="label">When a timer ends</span><div class="seg" role="group" aria-label="Timer alarms">${[['mix', 'Over my music'], ['loud', 'Loud on silent'], ['off', 'Off']].map(([v, l]) => `<button type="button" data-act="set-seg" data-k="alarmMode" data-v="${v}" aria-pressed="${mode === v}">${l}</button>`).join('')}</div></div>
+      <p class="muted" style="font-size:12.5px"><b>Over my music</b> (recommended) plays the beeps on top of whatever you're listening to — your music never stops. iPhone mutes it when the ringer switch is on silent. <b>Loud on silent</b> beeps even on silent, but iPhone pauses your music to do it. Applies to the rest timer and the rope / interval timer.</p><button class="btn" type="button" data-act="alarm-test">${icon('bell')} Test the alarm</button></section>$1`);
   };
   Actions['alarm-test'] = () => Alarm.ring('This is your timer alarm.');
 })();
