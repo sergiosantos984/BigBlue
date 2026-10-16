@@ -1490,6 +1490,17 @@ body:not(.theme-light) .bub{background:rgba(255,255,255,.08);color:#fff}
 .ivx-in.done{justify-content:center}
 #ivx .pk-x{display:inline-flex;align-items:center;gap:4px;min-height:40px;padding:0 12px;border-radius:12px;background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.3);color:#fff;font-weight:700}
 .ivx-acts{grid-template-columns:repeat(3,minmax(0,1fr))}.ivx-acts .btn{font-size:15px;padding:0 6px;min-width:0;gap:4px}
+/* @mentions */
+.mention{display:inline;padding:0;border:0;background:none;color:var(--vt-maroon);font:inherit;font-weight:700;cursor:pointer}
+body:not(.theme-light) .mention{color:#FFB36B}
+.post-card .mention,.chero .mention{color:#FFB36B}
+.mnt-list{margin-top:6px;border-radius:14px;background:#fff;border:1px solid var(--line);box-shadow:0 14px 30px -18px rgba(92,16,45,.5);overflow:hidden;display:flex;flex-direction:column}
+.mnt-list[hidden]{display:none}
+.mnt-i{display:flex;align-items:center;gap:10px;padding:8px 12px;background:none;border:0;border-bottom:1px solid var(--line);text-align:left;color:inherit;min-height:48px}
+.mnt-i:last-child{border-bottom:0}.mnt-i small{display:block;color:var(--muted);font-size:12px}
+.mnt-msg{padding:10px 12px}
+.mnt-btn{align-self:flex-start;margin-top:6px}
+body:not(.theme-light) .mnt-list{background:#2D0D18}
 
 </style>
 </head>
@@ -1582,7 +1593,7 @@ body:not(.theme-light) .bub{background:rgba(255,255,255,.08);color:#fff}
 <div id="toast" role="status" aria-live="polite"></div>
 <script src="https://unpkg.com/lucide@0.454.0/dist/umd/lucide.min.js"></script>
 <script>
-const BUILD_ID = 'Oct 16 · 14:10';
+const BUILD_ID = 'Oct 16 · 16:05';
 /* ============ LOAD-UP EFFECT ============
    The splash is static HTML/CSS at the top of <body>, so it paints instantly while the app boots
    underneath. It plays for ~2 s on every open (shorter in Minimal / reduced motion); tap to skip. */
@@ -5771,7 +5782,7 @@ const Posts = {
     const r = p.reactions || {}, total = Object.values(r).reduce((x, y) => x + y, 0);
     return `<article class="panel post" data-stg data-post="${p.id}">
       <header class="post-h">${Social.who(a, sub)}<button class="btn icon ghost sm" type="button" data-act="soc-post-menu" data-id="${p.id}" aria-label="Post options">${icon('ellipsis')}</button></header>
-      ${p.body ? `<div class="post-b">${esc(p.body).replace(/\n/g, '<br>')}</div>` : ''}
+      ${p.body ? `<div class="post-b">${Mention.fmt(p.body)}</div>` : ''}
       ${this.attach(p)}
       ${opts.noBar ? '' : `<footer class="post-f">
         <div class="reacts" role="group" aria-label="Reactions">${Object.entries(SOC_REACT).map(([k, [e, l]]) => `<button type="button" class="react" data-act="soc-react" data-id="${p.id}" data-k="${k}" aria-pressed="${p.mine === k}" aria-label="${l}${r[k] ? ', ' + r[k] : ''}"><span>${e}</span>${r[k] ? `<b>${r[k]}</b>` : ''}</button>`).join('')}</div>
@@ -5929,7 +5940,7 @@ Screens.post = function (id) {
   const e = Social.get('post:' + id, () => Social.rpc('post_detail', { p_id: id }), 15000);
   if (!e.v) return `<div class="screen soc">${backBar('Post')}${e.err ? Social.errBox(e.err, 'post:' + id) : Social.skel(1)}</div>`;
   const p = e.v.post, cs = e.v.comments, kids = id => cs.filter(c => c.parent_id === id);
-  const one = (c, reply) => `<div class="cmt ${reply ? 'reply' : ''}" data-stg>${Social.avatar(c.author, 32)}<div class="grow"><div class="cmt-b"><button type="button" class="linkish" data-act="go" data-r="athlete" data-p="${c.author.id}"><b>${esc(c.author.name)}</b></button> ${esc(c.body).replace(/\n/g, '<br>')}</div>
+  const one = (c, reply) => `<div class="cmt ${reply ? 'reply' : ''}" data-stg>${Social.avatar(c.author, 32)}<div class="grow"><div class="cmt-b"><button type="button" class="linkish" data-act="go" data-r="athlete" data-p="${c.author.id}"><b>${esc(c.author.name)}</b></button> ${Mention.fmt(c.body)}</div>
       <div class="cmt-m"><span>${Social.ago(c.created_at)}</span>${!reply ? `<button type="button" class="linkish" data-act="soc-reply" data-id="${c.id}" data-k="${esc(c.author.name)}">Reply</button>` : ''}${c.can_delete ? `<button type="button" class="linkish" data-act="soc-cdel" data-id="${c.id}" data-p="${p.id}">Delete</button>` : `<button type="button" class="linkish" data-act="soc-report" data-k="comment" data-id="${c.id}">Report</button>`}</div></div></div>`;
   const tree = cs.filter(c => !c.parent_id || !cs.some(x => x.id === c.parent_id)).map(c => one(c) + kids(c.id).map(k => one(k, true)).join('')).join('');
   return `<div class="screen soc">${backBar('Post')}${Posts.card(p)}
@@ -6413,7 +6424,7 @@ Screens.journal = function () {
 /* ---------- notifications ---------- */
 Screens.notifs = function () {
   const e = Social.get('notifs', () => Social.rpc('notif_list'), 10000), me = Social.me().v;
-  const ic = { follow: 'user-plus', follow_request: 'user-plus', follow_accept: 'user-check', reaction: 'heart', comment: 'message-circle', reply: 'reply', challenge_invite: 'swords', challenge_squad: 'shield', challenge_accept: 'check', challenge_lead: 'trending-up', challenge_target: 'target', challenge_final: 'flag', squad_invite: 'shield', squad_join: 'users', squad_goal: 'party-popper', badge: 'award', report: 'flag' };
+  const ic = { mention: 'at-sign', mention_comment: 'at-sign', follow: 'user-plus', follow_request: 'user-plus', follow_accept: 'user-check', reaction: 'heart', comment: 'message-circle', reply: 'reply', challenge_invite: 'swords', challenge_squad: 'shield', challenge_accept: 'check', challenge_lead: 'trending-up', challenge_target: 'target', challenge_final: 'flag', squad_invite: 'shield', squad_join: 'users', squad_goal: 'party-popper', badge: 'award', report: 'flag' };
   const L = e.v || [], today = todayISO(), grp = { Today: L.filter(n => String(n.created_at).slice(0, 10) === today), Earlier: L.filter(n => String(n.created_at).slice(0, 10) !== today) };
   const row = n => `<button type="button" class="nrow ${n.read ? '' : 'unread'}" data-act="soc-notif" data-id="${n.id}" data-k="${esc(n.ref_kind)}" data-ref="${esc(n.ref_id)}">${n.actor ? Social.avatar(n.actor, 40) : `<span class="sav n" style="--s:40px">${icon(ic[n.kind] || 'bell')}</span>`}
       <span class="grow"><span>${n.actor ? `<b>${esc(n.actor.name)}</b> ` : ''}${esc(n.body)}</span><small class="muted">${Social.ago(n.created_at)}</small></span>${n.read ? '' : '<i class="udot" aria-label="Unread"></i>'}</button>`;
@@ -7031,6 +7042,49 @@ document.addEventListener('visibilitychange', () => { if (document.visibilitySta
       <p class="muted" style="font-size:12.5px"><b>Over my music</b> (recommended) plays the beeps on top of whatever you're listening to — your music never stops. iPhone mutes it when the ringer switch is on silent. <b>Loud on silent</b> beeps even on silent, but iPhone pauses your music to do it. Applies to the rest timer and the rope / interval timer.</p><button class="btn" type="button" data-act="alarm-test">${icon('bell')} Test the alarm</button></section>$1`);
   };
   Actions['alarm-test'] = () => Alarm.ring('This is your timer alarm.');
+})();
+
+/* ============ SOCIAL — @mentions ============
+   Type "@" in a post, caption, edit or comment and pick an athlete; the database notifies everyone
+   mentioned who is allowed to see the post (never through a private post, never a blocked athlete). */
+if (!ICONS['at-sign']) ICONS['at-sign'] = 'M12 8a4 4 0 1 0 0 8a4 4 0 1 0 0-8M16 12v1.5a2.5 2.5 0 0 0 5 0V12a9 9 0 1 0-3.5 7.1';
+const MENTION_RE = /(^|[^a-z0-9._-])@([a-z0-9][a-z0-9._-]{2,23})/gi;
+const Mention = {
+  /* safe HTML for a post or comment, with @names as links */
+  fmt(t) { return esc(t).replace(MENTION_RE, (m, pre, u) => `${pre}<button type="button" class="mention" data-act="soc-mention" data-u="${esc(u.toLowerCase().replace(/\.$/, ''))}">@${u}</button>`).replace(/\n/g, '<br>'); },
+  token(ta) { const v = ta.value.slice(0, ta.selectionStart || 0), m = v.match(/(^|[^a-z0-9._-])@([a-z0-9._-]{0,24})$/i); return m ? { q: m[2], start: v.length - m[2].length - 1 } : null; },
+  attach(ta) {
+    if (!ta || ta.dataset.mnt) return; ta.dataset.mnt = '1';
+    const box = document.createElement('div'); box.className = 'mnt-list'; box.hidden = true; box.setAttribute('role', 'listbox'); box.setAttribute('aria-label', 'Mention an athlete'); ta.after(box);
+    let seq = 0;
+    const pick = u => { const t = this.token(ta); if (!t) return; const v = ta.value, end = ta.selectionStart; ta.value = v.slice(0, t.start) + '@' + u + ' ' + v.slice(end); const c = t.start + u.length + 2; ta.focus(); ta.setSelectionRange(c, c); box.hidden = true; ta.dispatchEvent(new Event('input', { bubbles: true })); };
+    const show = (L, msg) => {
+      box.innerHTML = L.length ? L.slice(0, 6).map(u => `<button type="button" role="option" class="mnt-i" data-u="${esc(u.username)}">${Social.avatar(u, 28)}<span class="grow"><b>${esc(u.name)}</b><small>@${esc(u.username)}</small></span></button>`).join('') : `<small class="muted mnt-msg">${msg}</small>`;
+      box.hidden = false; Social.hydrate(box); $$('[data-u]', box).forEach(b => b.onpointerdown = e => { e.preventDefault(); pick(b.dataset.u); });
+    };
+    const run = debounce(async () => {
+      const t = this.token(ta); if (!t) { box.hidden = true; return; }
+      const my = ++seq;
+      if (t.q.length < 2) { const on = (Social.c.online && Social.c.online.v) || []; return show(on, 'Type a name or username'); }
+      const r = await Social.rpc('athlete_search', { p_q: t.q }).catch(() => []); if (my !== seq) return;
+      show(r, 'Nobody found. Private accounts only show for their followers.');
+    }, 180);
+    ta.addEventListener('input', run); ta.addEventListener('click', run); ta.addEventListener('keyup', e => { if (['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(e.key)) run(); });
+    ta.addEventListener('blur', () => setTimeout(() => { box.hidden = true; }, 150));
+  },
+  insertAt(ta) { const s = ta.selectionStart ?? ta.value.length, pre = s && !/\s/.test(ta.value[s - 1]) ? ' @' : '@'; ta.value = ta.value.slice(0, s) + pre + ta.value.slice(s); const c = s + pre.length; ta.focus(); ta.setSelectionRange(c, c); ta.dispatchEvent(new Event('input', { bubbles: true })); }
+};
+Object.assign(Actions, {
+  'soc-mention': async el => { const a = await Social.act(null, () => Social.rpc('athlete_get', { p_username: el.dataset.u })); if (a) { Social.c['ath:' + a.id] = { v: a, at: Date.now() }; Nav.go('athlete', a.id); } },
+  'soc-at': el => { const ta = document.getElementById(el.dataset.for); ta && Mention.insertAt(ta); }
+});
+(() => {
+  const d = Composer.draw.bind(Composer); Composer.draw = function () {
+    d(); const ta = $('#cmpBody', this.sh); if (!ta) return; Mention.attach(ta);
+    if (!$('#cmpAt', this.sh)) ta.parentElement.insertAdjacentHTML('beforeend', `<button type="button" class="btn sm ghost mnt-btn" id="cmpAt" data-act="soc-at" data-for="cmpBody">${icon('at-sign')} Mention someone</button>`); UI.icons(this.sh);
+  };
+  const pe = PostEdit.body.bind(PostEdit); PostEdit.body = function (p) { pe(p); setTimeout(() => Mention.attach($('#peBody')), 60); };
+  const ap = After.post; After.post = view => { ap(view); Mention.attach($('#cmtBody', view)); Online.get(); };
 })();
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
